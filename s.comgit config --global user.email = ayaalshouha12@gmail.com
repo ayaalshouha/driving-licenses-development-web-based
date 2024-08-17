@@ -1,0 +1,236 @@
+[33mcommit a45b9f9eb2b806c54334153dc4f35e44f12e98a6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Jan 19 16:17:19 2024 +0300
+
+    Add EventLog feature to Data_Access_Errors
+
+[33mcommit 9ce1e2a91554c8a16ebd6315bc4bd44637c1c1e5[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Jan 19 11:00:40 2024 +0300
+
+    update registry key path
+
+[33mcommit 747dc49b74023fa664a4816377a4d48a4229c105[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Thu Jan 18 17:44:57 2024 +0300
+
+    Improvments in RememberMe feature while login(using WindowsRegistry instead of Files).
+
+[33mcommit 56be7950929ae17d1b9f2997391787d8e722b4e4[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Tue Jan 9 20:56:30 2024 +0300
+
+    adding delegate logger to save logged in username/password to a file incase RememberMe Checked
+
+[33mcommit abeaa863a77627c1b8d834f13bef59a7b64a98c9[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Tue Jan 9 20:36:49 2024 +0300
+
+    using delegate/logger to save login details to database
+
+[33mcommit 44221eea70979232ded5621f3dc6e2686a6a8162[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Sun Jan 7 17:33:51 2024 +0300
+
+    Improvments in UserControl, EventArgs was Added
+
+[33mcommit 83c47d0cddc6b56e159bbb60c8b02eabc84529e9[m
+Merge: d843102 14206db
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Sun Jan 7 16:56:18 2024 +0300
+
+    Merge branch 'main' of https://github.com/ayaalshouha/DVLD---Driving-Licenses-Managment
+
+[33mcommit d84310241fe41a49e1f70948fea201362809e1dc[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Sun Jan 7 16:54:46 2024 +0300
+
+    Improvments in User Control, Added EventArgs
+
+[33mcommit 14206dba8f7183dd4dbe5a2cef76ece16ec25de4[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 17:39:41 2024 +0300
+
+    Update README.md
+
+[33mcommit 0992e8f782d3ea5047ec4a97322c3fdbef002988[m
+Merge: 704142e 293fd50
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Thu Jan 4 17:35:17 2024 +0300
+
+    Merge branch 'main' of https://github.com/ayaalshouha/DVLD---Driving-Licenses-Managment
+
+[33mcommit 704142e9314ef4d15fae1a4f2729f0a6e192e510[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Thu Jan 4 17:34:16 2024 +0300
+
+    Changed Login and Main Menu forms Background
+
+[33mcommit 293fd50419f4a9c96a84197f7487cf6444ae2e9f[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 17:20:46 2024 +0300
+
+    Update README.md
+
+[33mcommit 0604b64536a4607262f062d7c30910bbbcc80d3c[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 17:14:53 2024 +0300
+
+    Update README.md
+
+[33mcommit fbb2f5baf180440f79e5a98acdac47562051ff43[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:51:26 2024 +0300
+
+    Update README.md
+
+[33mcommit df768d33c9eec827e9cc3dcd2af6b8d3633355b7[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:50:42 2024 +0300
+
+    Update README.md
+
+[33mcommit 20723a517af967f22d3a0ac3c4dd5de68bb1514d[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:47:54 2024 +0300
+
+    Update README.md
+
+[33mcommit ee057e2223259fe4fddf305e3888a51a658934f2[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:44:56 2024 +0300
+
+    Update README.md
+
+[33mcommit 964b7eaeadedbec111285e9e7ecb080e9cbea9b9[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:29:57 2024 +0300
+
+    Update README.md
+
+[33mcommit 98f7353eb06607185e73e84b1fe7f676e745980b[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:23:22 2024 +0300
+
+    Update README.md
+
+[33mcommit 1aa19ce89f5dda415ebb88fd46367e7d64390c41[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:22:16 2024 +0300
+
+    Update README.md
+
+[33mcommit b0c81da4130f75045dbe5f435e9efa490daea0bf[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:05:40 2024 +0300
+
+    Update README.md
+
+[33mcommit 2ab6be3715c951c6087edf1a359de337bcbc6a34[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 16:03:10 2024 +0300
+
+    Update README.md
+
+[33mcommit b7e9003f55eb06a6593ec2ffd5e161a81f7d8064[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 15:32:26 2024 +0300
+
+    Update README.md
+
+[33mcommit 65a91bad72cb1fa28a2d49720990a761f834a26f[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 15:30:56 2024 +0300
+
+    Update README.md
+
+[33mcommit 022c9b641c5f6c043b9f569bb252358cb81cf768[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 15:27:16 2024 +0300
+
+    Update README.md
+
+[33mcommit d96d6227757462928a3e7cf7a0b7395cea2ade45[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 11:45:18 2024 +0300
+
+    Update README.md
+
+[33mcommit 5f841f5169caf8bfdfbf08f6523bf6cee098a42b[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 11:43:18 2024 +0300
+
+    Update README.md
+
+[33mcommit 28d1620d5f7f71b8c790447c79fe39c79099e0db[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 11:37:25 2024 +0300
+
+    Update README.md
+
+[33mcommit 0956c1e2a11a59abbaeb1a8a886a22120c1b4a1a[m
+Author: Aya Al-Shouha <ayaalshouha12@gmail.com>
+Date:   Thu Jan 4 11:29:07 2024 +0300
+
+    Update README.md
+
+[33mcommit ffd5254a3974f695983165c18d575a55c2266664[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Thu Jan 4 10:35:17 2024 +0300
+
+    Make various updates and improvements
+
+[33mcommit c4722e1f1c851661de38c6851335bc3f1d4b5807[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Thu Jan 4 10:32:30 2024 +0300
+
+    Handled images/Save images to project file
+
+[33mcommit 45007433f5ea597380afdcb0ac5abe819ebdc9ff[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Wed Jan 3 16:05:10 2024 +0300
+
+    Added contextMenuStrip to Drivers DataGridView to show driver licenses history
+
+[33mcommit d2366e43c9652ca3904f6b3f8537d7f376838502[m
+Merge: b484634 370a820
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Tue Jan 2 15:46:07 2024 +0300
+
+    Merge branch 'main' of https://github.com/ayaalshouha/DVLD---Driving-Licenses-Managment
+
+[33mcommit b48463475a90e6c2a76de543d34d95fa994025ed[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Tue Jan 2 15:45:16 2024 +0300
+
+    Handled previous test result in schedule tests control
+
+[33mcommit 6321ac070aa1ddd928d052ae5507e450103eb5bb[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Dec 29 14:19:39 2023 +0300
+
+    Test1
+
+[33mcommit 370a8207cd92777784bf156b7b134ac7bacd22af[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Dec 29 14:19:39 2023 +0300
+
+    "est1
+
+[33mcommit 25a348e122e7a7173b9fe378ec4f11d692277885[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Dec 29 14:18:01 2023 +0300
+
+    test
+
+[33mcommit 96eacff254300c9d83a18aeb33ad15e5f0033bc4[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Dec 29 14:13:05 2023 +0300
+
+    Add project files.
+
+[33mcommit 09c96db7449f39f8b522764ea0fc6faa513f8f06[m
+Author: ayaalshouha <ayaalshouha12@mail.com>
+Date:   Fri Dec 29 14:13:00 2023 +0300
+
+    Add .gitattributes and .gitignore.
