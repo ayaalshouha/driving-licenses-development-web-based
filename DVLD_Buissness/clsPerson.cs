@@ -25,7 +25,7 @@ namespace DVLD_Buissness
         public DateTime CreationDate { get; set; }
         public int UpdateByUserID { get; set; }
         public DateTime UpdateDate { get; set; }
-        public Person personDTO
+        public Person full_person
         {
             get
             {
@@ -33,6 +33,15 @@ namespace DVLD_Buissness
                 this.NationalNumber, this.Address, this.Email, this.PhoneNumber,
                 this.BirthDate, this.PersonalPicture, this.Nationality, this.Gender,
                 this.CreatedByUserID, this.CreationDate, this.UpdateByUserID, this.UpdateDate);
+            }
+        }
+        public Person_View person_view_DTO
+        {
+            get
+            {
+                return new Person_View(this.ID, this.FirstName, this.SecondName, this.ThirdName, this.LastName,
+                this.NationalNumber, this.Email, this.PhoneNumber,
+                this.BirthDate,this.Nationality, this.Gender);
             }
         }
         public string FullName()
@@ -91,7 +100,7 @@ namespace DVLD_Buissness
         }
         public static Person FindPersonDTO(int ID)
         {
-            return Find(ID).personDTO;
+            return Find(ID).full_person;
         }
         public static clsPerson Find(string NationalNumber)
         {
@@ -102,12 +111,12 @@ namespace DVLD_Buissness
         }
         private bool _AddNew()
         {
-            this.ID = PersonData.Add(personDTO);
+            this.ID = PersonData.Add(full_person);
             return this.ID != -1;
         }
         private bool _Update()
         {
-            return PersonData.Update(personDTO);
+            return PersonData.Update(full_person);
         }
         public bool Save()
         {
@@ -146,7 +155,7 @@ namespace DVLD_Buissness
         {
             return PersonData.isExist(NationalNumber);
         }
-        public static List<Person> PeopleList()
+        public static List<Person_View> PeopleList()
         {
             return PersonData.List();
         }

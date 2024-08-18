@@ -319,9 +319,9 @@ namespace DVLD_Data
             }
             return isFound;
         }
-        public static List<Person> List()
+        public static List<Person_View> List()
         {
-            var peopleList = new List<Person>();
+            var peopleList = new List<Person_View>();
             try
             {
                 using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
@@ -334,7 +334,7 @@ namespace DVLD_Data
                         {
                             if (Reader.HasRows)
                             {
-                                peopleList.Add(new Person
+                                peopleList.Add(new Person_View
                                 (
                                     Reader.GetInt32(Reader.GetOrdinal("ID")),
                                     Reader.GetString(Reader.GetOrdinal("FirstName")),
@@ -342,18 +342,12 @@ namespace DVLD_Data
                                     Reader.GetString(Reader.GetOrdinal("ThirdName")),
                                     Reader.GetString(Reader.GetOrdinal("LastName")),
                                     Reader.GetString(Reader.GetOrdinal("NationalID")),
-                                    Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
                                     Reader.GetDateTime(Reader.GetOrdinal("BirthDate")),
-                                    Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
-                                    Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
-                                    Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
-                                    Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
-                                ));
+                                    Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female")
+                                );
                             }
                         }
                     }

@@ -53,6 +53,35 @@ namespace DTOs
             this.UpdatedByUserID = updatedByUserId;
             this.UpdatedDate = updatedDate;
         }
+    }
+    public class Person_View
+    {
+        public int ID { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public string ThirdName { get; set; }
+        public string LastName { get; set; }
+        public string NationalNumber { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string Nationality { get; set; }
+        public string Gender { get; set; }
+
+        public Person_View(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string email, string phoneNumber, DateTime birthDate, string nationality, string gender)
+        {
+            this.ID = id;
+            this.FirstName = firstName;
+            this.SecondName = secondName;
+            this.ThirdName = thirdName;
+            this.LastName = lastName;
+            this.NationalNumber = nationalNumber;
+            this.Email = email;
+            this.PhoneNumber = phoneNumber;
+            this.BirthDate = birthDate;
+            this.Nationality = nationality;
+            this.Gender = gender;
+        }
 
     }
     public class User
