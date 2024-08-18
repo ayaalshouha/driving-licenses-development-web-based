@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DVLD_Data
