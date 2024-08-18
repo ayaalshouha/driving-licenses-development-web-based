@@ -9,7 +9,7 @@ namespace DVLD_Buissness
 {
     public class clsPerson
     {
-        private enMode _Mode { get; set; }
+        public enMode _Mode { get; set; }
         public int ID { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }

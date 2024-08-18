@@ -1,5 +1,7 @@
 ﻿using DVLD_Data;
 using System.Data;
+using DTOs;
+using System.Collections.Generic;
 
 namespace DVLD_Buissness
 {
@@ -11,9 +13,14 @@ namespace DVLD_Buissness
         public string username { get; set; }
         public string password { get; set; }
         public bool isActive { get; set; }
-        public enum enMode { Add, Update };
         public enMode _Mode { get; set; }
-
+        public User UserDTO
+        {
+            get
+            {
+                return new User(this.ID, this.username, this.password, this.isActive, this.PersonID);
+            }
+        }
         public clsUser()
         {
             ID = -1;
@@ -21,10 +28,9 @@ namespace DVLD_Buissness
             username = "";
             password = "";
             isActive = false; 
-            _Mode = enMode.Add;
+            _Mode = enMode.add;
         }
-
-        private clsUser(stUser User)
+        private clsUser(User User)
         {
             ID = User.ID;
             PersonID = User.PersonID; 
@@ -32,88 +38,63 @@ namespace DVLD_Buissness
             password = User.password;
             isActive = User.isActive;
             PersonInfo = clsPerson.Find(this.PersonID); 
-            _Mode = enMode.Update;
+            _Mode = enMode.update;
         }
-
         public static clsUser Find_ByPersonID(int PersonID)
         {
-            stUser User = new stUser();
-            if (UserData.getUserInfo_ByPersonID(PersonID, ref User))
-                return new clsUser(User);
+            User user = UserData.getUserInfo_ByPersonID(PersonID); 
+            if (user != null)
+                return new clsUser(user);
             else return null;
         }
-
         public static string Username(int userID)
         {
             return UserData.getUsername(userID);
         }
         public static clsUser Find(int UserID)
         {
-            stUser User = new stUser();
-            if (UserData.getUserInfo_ByID(UserID, ref User))
-                return new clsUser(User);
+            User user = UserData.getUserInfo_ByID(UserID);
+            if (user != null)
+                return new clsUser(user);
             else return null;
         }
-
         public static clsUser Find(string username)
         {
-            stUser User = new stUser();
-            if (UserData.getUserInfo(username, ref User))
-                return new clsUser(User);
+            User user = UserData.getUserInfo(username);
+            if (user != null)
+                return new clsUser(user);
             else return null;
         }
-
         public bool _AddNew()
         {
-            stUser User = new stUser
-            {
-                PersonID = this.PersonID,
-                username = this.username,
-                password = this.password,
-                isActive = this.isActive,
-            };
-           
-            this.ID = UserData.Add(User);
+            this.ID = UserData.Add(UserDTO);
             return this.ID != -1;
         }
-
         public bool _Update()
         {
-            stUser User = new stUser
-            {
-                ID = this.ID,
-                PersonID=this.PersonID,
-                username = this.username,
-                password = this.password,
-                isActive=this.isActive,
-            };
-
-            return UserData.Update(User);
+            return UserData.Update(UserDTO);
         }
         public bool Save()
         {
             switch (_Mode)
             {
-                case enMode.Add:
+                case enMode.add:
                     if (_AddNew())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
+                case enMode.update:
                     return _Update();
             }
 
             return false;
         }
-
         public static bool Delete(int ID)
         {
             return UserData.Delete(ID);
         }
-
-
         public static bool isExist(int ID)
         {
             return UserData.isExist(ID);
@@ -130,16 +111,15 @@ namespace DVLD_Buissness
         {
             return UserData.isExist_ByPersonID(personid);
         }
-
-        public static DataTable UsersList()
+        public static List<User> UsersList()
         {
             return UserData.List();
         }
-        public static DataTable ActiveUsersList()
+        public static List<User> ActiveUsersList()
         {
             return UserData.ActiveUsersList();
         }
-        public static DataTable NonActiveUsersList()
+        public static List<User> NonActiveUsersList()
         {
             return UserData.NonActiveUsersList();
         }
@@ -147,8 +127,7 @@ namespace DVLD_Buissness
         {
             return DataSettings.Authintication(username, password); 
         }
-
-        public static bool SaveLogin(clsUser user)
+        public static bool SaveLogin(User user)
         {
             return DataSettings.SaveLoginRecord(user.ID);
         }
