@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Input;
+using DTOs; 
 
 namespace DVLD_Data
 {
     public static class UserData
     {
-        //user data
-        public static bool getUserInfo_ByPersonID(int PersonID, ref stUser User)
+        public static User getUserInfo_ByPersonID(int PersonID)
         {
-            bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -22,12 +22,13 @@ namespace DVLD_Data
                 SqlDataReader Reader = Command.ExecuteReader();
                 while (Reader.Read())
                 {
-                    isFound = true;
-                    User.ID = (int)Reader["ID"];
-                    User.PersonID = (int)Reader["PersonID"];
-                    User.username = (string)Reader["username"];
-                    User.password = (string)Reader["password"]; 
-                    User.isActive = Convert.ToBoolean(Reader["isActive"]);
+                    return new User(
+                        Reader.GetInt32(Reader.GetOrdinal("ID")),
+                        Reader.GetString(Reader.GetOrdinal("username")),
+                        Reader.GetString(Reader.GetOrdinal("password")),
+                        Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                        Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                        );
                 }
                 Reader.Close();
             }
@@ -39,12 +40,10 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static bool getUserInfo_ByID(int UserID, ref stUser User)
+        public static User getUserInfo_ByID(int UserID)
         {
-            bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -56,12 +55,13 @@ namespace DVLD_Data
                 SqlDataReader Reader = Command.ExecuteReader();
                 while (Reader.Read())
                 {
-                    isFound = true;
-                    User.ID = (int)Reader["ID"];
-                    User.PersonID = (int)Reader["PersonID"];
-                    User.username = (string)Reader["username"];
-                    User.password = (string)Reader["password"];
-                    User.isActive = Convert.ToBoolean(Reader["isActive"]);
+                    return new User(
+                         Reader.GetInt32(Reader.GetOrdinal("ID")),
+                         Reader.GetString(Reader.GetOrdinal("username")),
+                         Reader.GetString(Reader.GetOrdinal("password")),
+                         Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                         Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                         );
                 }
                 Reader.Close();
             }
@@ -73,12 +73,10 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static bool getUserInfo(string username, ref stUser User)
+        public static User getUserInfo(string username)
         {
-            bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -90,12 +88,13 @@ namespace DVLD_Data
                 SqlDataReader Reader = Command.ExecuteReader();
                 while (Reader.Read())
                 {
-                    isFound = true;
-                    User.ID = (int)Reader["ID"];
-                    User.PersonID = (int)Reader["PersonID"];
-                    User.username = (string)Reader["username"];
-                    User.password = (string)Reader["password"];
-                    User.isActive = Convert.ToBoolean(Reader["isActive"]);
+                    return new User(
+                         Reader.GetInt32(Reader.GetOrdinal("ID")),
+                         Reader.GetString(Reader.GetOrdinal("username")),
+                         Reader.GetString(Reader.GetOrdinal("password")),
+                         Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                         Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                         );
                 }
                 Reader.Close();
             }
@@ -107,7 +106,7 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return isFound;
+            return null;
         }
         public static string getUsername(int userID)
         {
@@ -136,9 +135,7 @@ namespace DVLD_Data
             }
             return username;
         }
-
-        //adding user
-        public static int Add(stUser User)
+        public static int Add(User user)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -151,19 +148,19 @@ namespace DVLD_Data
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
 
-                if(User.username == string.Empty)
+                if(user.username == string.Empty)
                     Command.Parameters.AddWithValue("@username",DBNull.Value);
                 else 
-                    Command.Parameters.AddWithValue("@username", User.username);
+                    Command.Parameters.AddWithValue("@username", user.username);
 
-                if (User.password == string.Empty)
+                if (user.password == string.Empty)
                     Command.Parameters.AddWithValue("@password", DBNull.Value);
                 else
-                    Command.Parameters.AddWithValue("@password", User.password);
+                    Command.Parameters.AddWithValue("@password", user.password);
 
 
-                Command.Parameters.AddWithValue("@isActive", User.isActive);
-                Command.Parameters.AddWithValue("@PersonID", User.PersonID);
+                Command.Parameters.AddWithValue("@isActive", user.isActive);
+                Command.Parameters.AddWithValue("@PersonID", user.PersonID);
 
                 Connection.Open();
                 object result = Command.ExecuteScalar();
@@ -184,8 +181,7 @@ namespace DVLD_Data
 
             return newID;
         }
-
-        public static bool Update(stUser User)
+        public static bool Update(User user)
         {
             int RowAffected = 0;
 
@@ -199,10 +195,10 @@ namespace DVLD_Data
                    WHERE ID = @UserID;";
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
-                Command.Parameters.AddWithValue("@UserID", User.ID);
-                Command.Parameters.AddWithValue("@username", User.username);
-                Command.Parameters.AddWithValue("@password", User.password);
-                Command.Parameters.AddWithValue("@isActive", User.isActive);
+                Command.Parameters.AddWithValue("@UserID", user.ID);
+                Command.Parameters.AddWithValue("@username", user.username);
+                Command.Parameters.AddWithValue("@password", user.password);
+                Command.Parameters.AddWithValue("@isActive", user.isActive);
 
                 Connection.Open();
                 RowAffected = Command.ExecuteNonQuery();
@@ -219,7 +215,6 @@ namespace DVLD_Data
 
             return RowAffected > 0;
         }
-
         public static bool Delete(int UserID)
         {
             int RowAffected = 0;
@@ -242,7 +237,6 @@ namespace DVLD_Data
             }
             return RowAffected > 0;
         }
-
         public static bool isExist(int UserID)
         {
             bool isFound = false;
@@ -267,7 +261,6 @@ namespace DVLD_Data
             }
             return isFound;
         }
-
         public static bool isExist(string username)
         {
             bool isFound = false;
@@ -339,9 +332,9 @@ namespace DVLD_Data
             }
             return isFound;
         }
-        public static DataTable List()
+        public static List<User> List()
         {
-            DataTable dt = new DataTable();
+            var UsersList = new List<User>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -352,7 +345,14 @@ namespace DVLD_Data
                 SqlDataReader Reader = command.ExecuteReader();
                 if (Reader.HasRows)
                 {
-                    dt.Load(Reader);
+                    UsersList.Add(new User
+                       (
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetString(Reader.GetOrdinal("username")),
+                            Reader.GetString(Reader.GetOrdinal("password")),
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                       ));
                 }
                 Reader.Close();
             }
@@ -364,11 +364,11 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return dt;
+            return UsersList;
         }
-        public static DataTable ActiveUsersList()
+        public static List<User> ActiveUsersList()
         {
-            DataTable dt = new DataTable();
+            var UsersList = new List<User>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -379,7 +379,14 @@ namespace DVLD_Data
                 SqlDataReader Reader = command.ExecuteReader();
                 if (Reader.HasRows)
                 {
-                    dt.Load(Reader);
+                    UsersList.Add(new User
+                       (
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetString(Reader.GetOrdinal("username")),
+                            Reader.GetString(Reader.GetOrdinal("password")),
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                       ));
                 }
                 Reader.Close();
             }
@@ -391,11 +398,11 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return dt;
+            return UsersList;
         }
-        public static DataTable NonActiveUsersList()
+        public static List<User> NonActiveUsersList()
         {
-            DataTable dt = new DataTable();
+            var UsersList = new List<User>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -406,7 +413,14 @@ namespace DVLD_Data
                 SqlDataReader Reader = command.ExecuteReader();
                 if (Reader.HasRows)
                 {
-                    dt.Load(Reader);
+                    UsersList.Add(new User
+                       (
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetString(Reader.GetOrdinal("username")),
+                            Reader.GetString(Reader.GetOrdinal("password")),
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                       ));
                 }
                 Reader.Close();
             }
@@ -418,7 +432,8 @@ namespace DVLD_Data
             {
                 Connection.Close();
             }
-            return dt;
+            return UsersList;
         }
+    
     }
 }
