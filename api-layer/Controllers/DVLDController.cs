@@ -2,11 +2,8 @@
 
 namespace api_layer.Controllers
 {
-    public class DVLDController : Controller
+    public class DVLDController : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
     }
 }
