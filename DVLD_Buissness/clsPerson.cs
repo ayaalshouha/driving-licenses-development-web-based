@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DTOs; 
 
 using DVLD_Data;
 
@@ -8,7 +9,6 @@ namespace DVLD_Buissness
 {
     public class clsPerson
     {
-        private enum enMode { Add, Update };
         private enMode _Mode { get; set; }
         public int ID { get; set; }
         public string FirstName { get; set; }
@@ -27,11 +27,20 @@ namespace DVLD_Buissness
         public DateTime CreationDate { get; set; }
         public int UpdateByUserID { get; set; }
         public DateTime UpdateDate { get; set; }
+        public Person personDTO
+        {
+            get
+            {
+                return new Person(this.ID, this.FirstName, this.SecondName, this.ThirdName, this.LastName,
+                this.NationalNumber, this.Address, this.Email, this.PhoneNumber,
+                this.BirthDate, this.PersonalPicture, this.Nationality, this.Gender,
+                this.CreatedByUserID, this.CreationDate, this.UpdateByUserID, this.UpdateDate);
+            }
+        }
         public string FullName()
         {
             return FirstName + " " + SecondName + " " + ThirdName + " " + LastName;
         }
-
         public clsPerson()
         {
             ID = -1;
@@ -43,20 +52,18 @@ namespace DVLD_Buissness
             Address = "";
             Email = "";
             PhoneNumber = "";
-            BirthDate =  DateTime.MinValue;
+            BirthDate = DateTime.MinValue;
             CreationDate = DateTime.MinValue;
             UpdateDate = DateTime.MinValue;
             PersonalPicture = "";
             Nationality = "";
             Gender = "";
             UpdateByUserID = -1;
-            CreatedByUserID = -1; 
+            CreatedByUserID = -1;
 
-
-            _Mode = enMode.Add; 
+            _Mode = enMode.add;
         }
-
-        private clsPerson(stPerson person)
+        private clsPerson(Person person)
         {
             ID = person.ID;
             FirstName = person.FirstName;
@@ -72,111 +79,67 @@ namespace DVLD_Buissness
             Nationality = person.Nationality;
             Gender = person.Gender;
             CreationDate = person.CreationDate;
-            UpdateByUserID = person.UpdatedByUserID; 
+            UpdateByUserID = person.UpdatedByUserID;
             CreatedByUserID = person.CreatedByUserID;
-            UpdateDate = person.UpdatedDate; 
-            _Mode = enMode.Update;
+            UpdateDate = person.UpdatedDate;
+            _Mode = enMode.update;
         }
-
         public static clsPerson Find(int ID)
         {
-            stPerson person = new stPerson();
-            if (PersonData.getPersonInfo(ID, ref person))
-                return new clsPerson(person); 
-            else return null;
-        }
-
-        public static clsPerson Find(string NationalNumber)
-        {
-            stPerson person = new stPerson();
-            if (PersonData.getPersonInfo(NationalNumber, ref person))
+            Person person = PersonData.getPersonInfo(ID);
+            if (person != null)
                 return new clsPerson(person);
             else return null;
         }
-
+        public static Person FindPersonDTO(int ID)
+        {
+            return Find(ID).personDTO;
+        }
+        public static clsPerson Find(string NationalNumber)
+        {
+            Person person = PersonData.getPersonInfo(NationalNumber);
+            if (person != null)
+                return new clsPerson(person);
+            else return null;
+        }
         private bool _AddNew()
         {
-            stPerson person = new stPerson
-            {
-                NationalNumber = this.NationalNumber,
-                Address = this.Address,
-                FirstName = this.FirstName,
-                LastName = this.LastName,
-                ThirdName = this.ThirdName,
-                SecondName = this.SecondName,
-                Email = this.Email,
-                PhoneNumber = this.PhoneNumber,
-                BirthDate = this.BirthDate,
-                PersonalPicture = this.PersonalPicture,
-                Nationality = this.Nationality,
-                Gender = this.Gender,
-                CreationDate = this.CreationDate,
-                UpdatedByUserID = this.UpdateByUserID,
-                CreatedByUserID = this.CreatedByUserID,
-                UpdatedDate = this.UpdateDate
-            };
-
-            this.ID = PersonData.Add(person); 
-            return this.ID != -1; 
+            this.ID = PersonData.Add(personDTO);
+            return this.ID != -1;
         }
-
         private bool _Update()
         {
-            stPerson person = new stPerson
-            {
-                ID = this.ID,
-                NationalNumber = this.NationalNumber,
-                Address = this.Address,
-                FirstName = this.FirstName,
-                LastName = this.LastName,
-                ThirdName = this.ThirdName,
-                SecondName = this.SecondName,
-                Email = this.Email,
-                PhoneNumber = this.PhoneNumber,
-                BirthDate = this.BirthDate,
-                PersonalPicture = this.PersonalPicture,
-                Nationality = this.Nationality,
-                Gender = this.Gender,
-                CreationDate = this.CreationDate,
-                UpdatedByUserID = this.UpdateByUserID,
-                CreatedByUserID = this.CreatedByUserID,
-                UpdatedDate = this.UpdateDate
-            };
-
-            return PersonData.Update(person); 
+            return PersonData.Update(personDTO);
         }
         public bool Save()
         {
             switch (_Mode)
             {
-                case enMode.Add:
+                case enMode.add:
                     if (_AddNew())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update(); 
+                case enMode.update:
+                    return _Update();
             }
 
-            return false ;
+            return false;
         }
-
         public static bool Delete(int ID)
         {
-            if(UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
+            if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
             {
-                return false; 
+                return false;
             }
             return PersonData.Delete(ID);
         }
-
         public static bool Delete(string NationalNumber)
         {
-            return PersonData.Delete(NationalNumber); 
+            return PersonData.Delete(NationalNumber);
         }
-
         public static bool isExist(int ID)
         {
             return PersonData.isExist(ID);
@@ -185,10 +148,10 @@ namespace DVLD_Buissness
         {
             return PersonData.isExist(NationalNumber);
         }
-
-        public static DataTable PeopleList()
+        public static List<Person> PeopleList()
         {
             return PersonData.List();
         }
+
     }
 }
