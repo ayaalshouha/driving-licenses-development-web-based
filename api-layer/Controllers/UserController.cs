@@ -2,8 +2,8 @@
 
 namespace api_layer.Controllers
 {
-    public class DVLDController : ControllerBase
+    public class UserController : ControllerBase
     {
-        
+       
     }
 }
