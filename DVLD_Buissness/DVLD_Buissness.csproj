@@ -61,13 +61,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
+      <Project>{1087f0bf-f274-4986-b18f-858660a6de09}</Project>
+      <Name>DataLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DTOs\DTOs.csproj">
       <Project>{fe639d5d-7f18-4971-bf55-a828aad90363}</Project>
       <Name>DTOs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DVLD_Data\DVLD_Data.csproj">
-      <Project>{62f7af0e-6835-48fe-94c4-a59de15da02d}</Project>
-      <Name>DVLD_Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

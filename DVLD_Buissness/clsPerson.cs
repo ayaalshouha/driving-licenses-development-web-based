@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DTOs; 
-using DVLD_Data;
+using DTOs;
+using DataLayer;
 
 namespace DVLD_Buissness
 {
