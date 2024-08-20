@@ -2,6 +2,7 @@
 using System.Threading.Tasks.Dataflow;
 using DTOsLayer;
 using BuisnessLayer;
+using System.Diagnostics;
 
 namespace api_layer.Controllers
 {
@@ -11,8 +12,32 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
     public class PersonController : ControllerBase
     {
+        private clsPerson assignDataToPerson(Person newPerson)
+        {
+            clsPerson person = new clsPerson();
+            person.FirstName = newPerson.FirstName;
+            person.SecondName = newPerson.SecondName;
+            person.ThirdName = newPerson.ThirdName;
+            person.LastName = newPerson.LastName;
+            person.NationalNumber = newPerson.NationalNumber;
+            person.Address = newPerson.Address;
+            person.Email = newPerson.Email;
+            person.PhoneNumber = newPerson.PhoneNumber;
+            person.BirthDate = newPerson.BirthDate;
+            person.PersonalPicture = newPerson.PersonalPicture;
+            person.Nationality = newPerson.Nationality;
+            person.Gender = newPerson.Gender;
+            person.CreatedByUserID = newPerson.CreatedByUserID;
+            person.CreationDate = newPerson.CreationDate;
+            person.UpdateByUserID = newPerson.UpdatedByUserID;
+            person.UpdateDate = newPerson.UpdatedDate;
+
+            return person;
+        }
+
         [HttpGet("All")]
         public ActionResult<IEnumerable<Person_View>> getAll()
         {
@@ -37,10 +62,20 @@ namespace api_layer.Controllers
             return Ok(person);
         }
 
-        [HttpPost("AddPerson")]
-        public ActionResult<Person> Add(Person newPerson)
+        [HttpPost("Create")]
+        public ActionResult<Person> Create(Person newPerson)
         {
-            if(newPerson.empty)
+            if (newPerson == null)
+                return BadRequest("invalid object data");
+
+            clsPerson person = assignDataToPerson(newPerson);
+
+            if (person.Save())
+                return CreatedAtRoute("getByID/{ID}", new { person.ID }, person);
+            else
+                return StatusCode(500, new { message = "Error Creating Person" });
         }
+
+
     }
 }

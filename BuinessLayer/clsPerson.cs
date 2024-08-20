@@ -143,21 +143,22 @@ namespace BuisnessLayer
         }
         public bool Save()
         {
-            switch (_Mode)
+            if (IsValid())
             {
-                case enMode.add:
-                    if (IsValid())
-                    {
+                switch (_Mode)
+                {
+                    case enMode.add:
                         if (_AddNew())
                         {
                             this._Mode = enMode.update;
                             return true;
                         }
-                    }
-                    break;
-                case enMode.update:
-                    return _Update();
+                        break;
+                    case enMode.update:
+                        return _Update();
+                }
             }
+            
             return false;
         }
         public static bool Delete(int ID)
