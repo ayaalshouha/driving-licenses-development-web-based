@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DTOs;
-using DVLD_Data;
+using DataLayer;
 
 namespace DVLD_Buissness
 {
@@ -41,7 +41,7 @@ namespace DVLD_Buissness
             {
                 return new Person_View(this.ID, this.FirstName, this.SecondName, this.ThirdName, this.LastName,
                 this.NationalNumber, this.Email, this.PhoneNumber,
-                this.BirthDate,this.Nationality, this.Gender);
+                this.BirthDate, this.Nationality, this.Gender);
             }
         }
         public string FullName()
@@ -135,14 +135,14 @@ namespace DVLD_Buissness
 
             return false;
         }
-        public static bool Delete(int ID)
-        {
-            if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
-            {
-                return false;
-            }
-            return PersonData.Delete(ID);
-        }
+        //public static bool Delete(int ID)
+        //{
+        //    if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
+        //    {
+        //        return false;
+        //    }
+        //    return PersonData.Delete(ID);
+        //}
         public static bool Delete(string NationalNumber)
         {
             return PersonData.Delete(NationalNumber);

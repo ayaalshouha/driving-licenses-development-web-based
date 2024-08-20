@@ -49,7 +49,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return null;
         }
@@ -95,7 +95,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return null;
         }
@@ -153,7 +153,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return newID;
         }
@@ -222,7 +222,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+               // DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -245,7 +245,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -268,7 +268,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+              //  DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return RowAffected > 0;
         }
@@ -291,7 +291,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
             return isFound;
@@ -315,7 +315,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return isFound;
         }
@@ -332,7 +332,7 @@ namespace DataLayer
                         Connection.Open();
                         using (SqlDataReader Reader = command.ExecuteReader())
                         {
-                            if (Reader.HasRows)
+                            while (Reader.Read())
                             {
                                 peopleList.Add(new Person_View
                                 (
@@ -346,8 +346,8 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
                                     Reader.GetDateTime(Reader.GetOrdinal("BirthDate")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
-                                    Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female")
-                                );
+                                    Reader.GetString(Reader.GetOrdinal("Gender"))
+                                    ));
                             }
                         }
                     }

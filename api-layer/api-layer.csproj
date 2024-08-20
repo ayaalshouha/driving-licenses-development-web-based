@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DTOs\DTOs.csproj" />
-    <ProjectReference Include="..\DVLD_Buissness\DVLD_Buissness.csproj" />
+    <ProjectReference Include="..\BuinessLayer\BuinessLayer.csproj" />
+    <ProjectReference Include="..\DTOsLayer\DTOsLayer.csproj" />
   </ItemGroup>
 
 </Project>
