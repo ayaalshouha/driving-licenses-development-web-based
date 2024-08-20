@@ -75,6 +75,19 @@ namespace api_layer.Controllers
             else
                 return StatusCode(500, new { message = "Error Creating Person" });
         }
+        [HttpPut("Update")]
+        public ActionResult<Person> Update(Person newPerson)
+        {
+            if (newPerson == null)
+                return BadRequest("invalid object data");
+
+            clsPerson person = assignDataToPerson(newPerson);
+
+            if (person.Save())
+                return Ok(person);
+            else
+                return StatusCode(500, new { message = "Error Creating Person" });
+        }
 
 
     }
