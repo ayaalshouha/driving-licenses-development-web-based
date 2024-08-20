@@ -36,5 +36,11 @@ namespace api_layer.Controllers
 
             return Ok(person);
         }
+
+        [HttpPost("AddPerson")]
+        public ActionResult<Person> Add(Person newPerson)
+        {
+            if(newPerson.empty)
+        }
     }
 }

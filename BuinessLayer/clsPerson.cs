@@ -118,21 +118,46 @@ namespace BuisnessLayer
         {
             return PersonData.Update(full_person);
         }
+
+        public bool IsValid()
+        {
+            if (string.IsNullOrEmpty(this.FirstName) ||
+                string.IsNullOrEmpty(this.SecondName) ||
+                string.IsNullOrEmpty(this.ThirdName) ||
+                string.IsNullOrEmpty(this.LastName) ||
+                string.IsNullOrEmpty(this.NationalNumber) ||
+                string.IsNullOrEmpty(this.Address) ||
+                string.IsNullOrEmpty(this.Email) ||
+                string.IsNullOrEmpty(this.PersonalPicture) ||
+                string.IsNullOrEmpty(this.Nationality) ||
+                string.IsNullOrEmpty(this.Gender))
+            {
+                return false;
+            }
+
+            if (this.BirthDate == default(DateOnly))
+                return false;
+
+
+            return true;
+        }
         public bool Save()
         {
             switch (_Mode)
             {
                 case enMode.add:
-                    if (_AddNew())
+                    if (IsValid())
                     {
-                        this._Mode = enMode.update;
-                        return true;
+                        if (_AddNew())
+                        {
+                            this._Mode = enMode.update;
+                            return true;
+                        }
                     }
                     break;
                 case enMode.update:
                     return _Update();
             }
-
             return false;
         }
         public static bool Delete(int ID)
