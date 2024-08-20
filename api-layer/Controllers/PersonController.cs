@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks.Dataflow;
-using DTOs;
-using DVLD_Buissness;
+using DTOsLayer;
+using BuisnessLayer;
 
 namespace api_layer.Controllers
 {

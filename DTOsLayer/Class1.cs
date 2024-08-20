@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTOs
+namespace DTOsLayer
 {
     public enum enMode { add, update }
     public enum enStatus : int { New = 1, cancelled, completed }

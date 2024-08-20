@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DTOs;
+using DTOsLayer;
 using DataLayer;
 
-namespace DVLD_Buissness
+namespace BuisnessLayer
 {
     public class clsPerson
     {

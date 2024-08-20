@@ -63,15 +63,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DTOs\DTOs.csproj">
-      <Project>{fe639d5d-7f18-4971-bf55-a828aad90363}</Project>
-      <Name>DTOs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DVLD_Data\DVLD_Data.csproj">
-      <Project>{62f7af0e-6835-48fe-94c4-a59de15da02d}</Project>
-      <Name>DVLD_Data</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

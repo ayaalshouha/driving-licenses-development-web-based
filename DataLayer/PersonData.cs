@@ -1,7 +1,7 @@
-﻿using DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient; 
+using DTOsLayer;
 
 namespace DataLayer
 {
