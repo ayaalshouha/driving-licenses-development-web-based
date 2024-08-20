@@ -32,7 +32,8 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("BirthDate")),
+                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? default(DateOnly) 
+                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -78,7 +79,8 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("BirthDate")),
+                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? default(DateOnly)
+                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -344,7 +346,8 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("NationalID")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("BirthDate")),
+                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? default(DateOnly)
+                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetString(Reader.GetOrdinal("Gender"))
                                     ));

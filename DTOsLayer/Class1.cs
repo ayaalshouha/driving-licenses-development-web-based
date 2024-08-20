@@ -24,7 +24,7 @@ namespace DTOsLayer
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public string PersonalPicture { get; set; }
         public string Nationality { get; set; }
         public string Gender { get; set; }
@@ -33,7 +33,7 @@ namespace DTOsLayer
         public int UpdatedByUserID { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public Person(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string address, string email, string phoneNumber, DateTime birthDate, string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate, int updatedByUserId, DateTime updatedDate)
+        public Person(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string address, string email, string phoneNumber, DateOnly birthDate, string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate, int updatedByUserId, DateTime updatedDate)
         {
             this.ID = id;
             this.FirstName = firstName;
@@ -64,11 +64,11 @@ namespace DTOsLayer
         public string NationalNumber { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public string Nationality { get; set; }
         public string Gender { get; set; }
 
-        public Person_View(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string email, string phoneNumber, DateTime birthDate, string nationality, string gender)
+        public Person_View(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string email, string phoneNumber, DateOnly birthDate, string nationality, string gender)
         {
             this.ID = id;
             this.FirstName = firstName;

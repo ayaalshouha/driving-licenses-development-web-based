@@ -17,7 +17,7 @@ namespace BuisnessLayer
         public string Address { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public string PersonalPicture { get; set; }
         public string Nationality { get; set; }
         public string Gender { get; set; }
@@ -59,7 +59,7 @@ namespace BuisnessLayer
             Address = "";
             Email = "";
             PhoneNumber = "";
-            BirthDate = DateTime.MinValue;
+            BirthDate = DateOnly.MinValue;
             CreationDate = DateTime.MinValue;
             UpdateDate = DateTime.MinValue;
             PersonalPicture = "";
