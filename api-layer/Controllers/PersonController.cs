@@ -11,7 +11,7 @@ namespace api_layer.Controllers
         public ActionResult<IEnumerable<Person_View>> getAll()
         {
             var peopleList = clsPerson.PeopleList();
-            if(peopleList.Count <= 0)
+            if (peopleList.Count <= 0)
                 return NotFound("No People Found");
 
             return Ok(peopleList);
