@@ -355,7 +355,8 @@ namespace DVLD_Data
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                Console.WriteLine("test" +ex.Message.ToString());
             }
 
             return peopleList;

@@ -8,7 +8,7 @@ namespace api_layer.Controllers
     public class PersonController : ControllerBase
     {
         [HttpGet("All")]
-        public ActionResult<IEnumerable<Person>> getAll()
+        public ActionResult<IEnumerable<Person_View>> getAll()
         {
             var peopleList = clsPerson.PeopleList();
             if(peopleList.Count <= 0)
