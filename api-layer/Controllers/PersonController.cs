@@ -3,6 +3,7 @@ using System.Threading.Tasks.Dataflow;
 using DTOsLayer;
 using BuisnessLayer;
 using System.Diagnostics;
+using System.Timers;
 
 namespace api_layer.Controllers
 {
@@ -15,9 +16,18 @@ namespace api_layer.Controllers
 
     public class PersonController : ControllerBase
     {
-        private clsPerson assignDataToPerson(Person newPerson)
+        private clsPerson assignDataToPerson(Person newPerson, int ID = -1)
         {
-            clsPerson person = new clsPerson();
+            clsPerson person; 
+
+            if(ID == -1)
+                 person = new clsPerson();
+            else
+            {
+                person = clsPerson.Find(ID);
+                if (person == null) return null; 
+            }
+
             person.FirstName = newPerson.FirstName;
             person.SecondName = newPerson.SecondName;
             person.ThirdName = newPerson.ThirdName;
@@ -75,15 +85,16 @@ namespace api_layer.Controllers
             else
                 return StatusCode(500, new { message = "Error Creating Person" });
         }
+
         [HttpPut("Update")]
-        public ActionResult<Person> Update(Person newPerson)
+        public ActionResult<Person> Update(int ID, Person newPerson)
         {
             if (newPerson == null)
                 return BadRequest("invalid object data");
 
-            clsPerson person = assignDataToPerson(newPerson);
+            clsPerson person = assignDataToPerson(newPerson, ID);
 
-            if (person.Save())
+            if (person != null && person.Save())
                 return Ok(person);
             else
                 return StatusCode(500, new { message = "Error Creating Person" });
