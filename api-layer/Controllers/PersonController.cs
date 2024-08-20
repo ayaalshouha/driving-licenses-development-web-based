@@ -100,6 +100,38 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Person" });
         }
 
+        [HttpDelete("Delete")]
+        public ActionResult Delete(int ID)
+        {
+            if (ID < 0)
+                return BadRequest("Invalid ID");
+
+            if (clsPerson.Find(ID) == null)
+                return NotFound($"Person with ID {ID} NOT Found");
+
+            if (clsPerson.Delete(ID))
+                return Ok("Person with ID {ID} Deletted Successfully");
+            else
+                return StatusCode(500, new { Message = "Error Deletting Person" }); 
+        }
+
+        [HttpGet("isExistByID")]
+        public ActionResult<bool> isExist(int ID)
+        {
+            if (ID < 0)
+                return BadRequest("Invalid ID");
+
+            return clsPerson.isExist(ID);
+        }
+
+        [HttpGet("isExistByNationalNo")]
+        public ActionResult<bool> isExist(string NationalNumber)
+        {
+            if (string.IsNullOrEmpty(NationalNumber))
+                return BadRequest("Invalid National Number");
+
+            return clsPerson.isExist(NationalNumber);
+        }
 
     }
 }
