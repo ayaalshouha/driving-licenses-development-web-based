@@ -38,9 +38,10 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
                                     Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
-                                    Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
+                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ? default(DateTime)
+                                    : Reader.GetDateTime(Reader.GetOrdinal("CreationDate")), Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
+                                     Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? default(DateTime)
+                                    : Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
                                 );
                             }
                         }
@@ -85,9 +86,11 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
                                     Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
+                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ? default(DateTime)
+                                    : Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
                                     Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
-                                    Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
+                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? default(DateTime)
+                                    : Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
                                 );
                             }
                         }

@@ -22,6 +22,7 @@ namespace api_layer.Controllers
 
             return Ok(peopleList);
         }
+
         [HttpGet("getByID/{ID}")]
         public ActionResult<Person>GetByID(int ID)
         {
