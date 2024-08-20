@@ -100,7 +100,7 @@ namespace BuisnessLayer
         }
         public static Person FindPersonDTO(int ID)
         {
-            return Find(ID).full_person;
+            return PersonData.getPersonInfo(ID);
         }
         public static clsPerson Find(string NationalNumber)
         {
@@ -135,14 +135,14 @@ namespace BuisnessLayer
 
             return false;
         }
-        //public static bool Delete(int ID)
-        //{
-        //    if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
-        //    {
-        //        return false;
-        //    }
-        //    return PersonData.Delete(ID);
-        //}
+        public static bool Delete(int ID)
+        {
+            if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
+            {
+                return false;
+            }
+            return PersonData.Delete(ID);
+        }
         public static bool Delete(string NationalNumber)
         {
             return PersonData.Delete(NationalNumber);

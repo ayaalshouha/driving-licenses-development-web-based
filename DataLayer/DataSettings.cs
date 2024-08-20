@@ -111,7 +111,7 @@ namespace DataLayer
     }
     public class DataSettings
     {
-        public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;";
+        public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;TrustServerCertificate=True;";
         //ConfigurationManager.AppSettings["ConnectionString"]; 
         public static void StoreUsingEventLogs(string message)
         {
