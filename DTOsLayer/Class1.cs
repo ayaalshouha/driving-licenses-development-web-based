@@ -13,114 +13,8 @@ namespace DTOsLayer
         NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
     }
-    public class Person
-    {
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string ThirdName { get; set; }
-        public string LastName { get; set; }
-        public string NationalNumber { get; set; }
-        public string Address { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateOnly BirthDate { get; set; }
-        public string PersonalPicture { get; set; }
-        public string Nationality { get; set; }
-        public string Gender { get; set; }
-        public int CreatedByUserID { get; set; }
-        public DateTime CreationDate { get; set; }
-        public int UpdatedByUserID { get; set; }
-        public DateTime UpdatedDate { get; set; }
-
-        public Person(int id, string firstName, string secondName, string thirdName, string lastName,
-            string nationalNumber, string address, string email, string phoneNumber, DateOnly birthDate, 
-            string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate,
-            int updatedByUserId, DateTime updatedDate)
-        {
-            this.ID = id;
-            this.FirstName = firstName;
-            this.SecondName = secondName;
-            this.ThirdName = thirdName;
-            this.LastName = lastName;
-            this.NationalNumber = nationalNumber;
-            this.Address = address;
-            this.Email = email;
-            this.PhoneNumber = phoneNumber;
-            this.BirthDate = birthDate;
-            this.PersonalPicture = personalPicture;
-            this.Nationality = nationality;
-            this.Gender = gender;
-            this.CreatedByUserID = createdByUserId;
-            this.CreationDate = creationDate;
-            this.UpdatedByUserID = updatedByUserId;
-            this.UpdatedDate = updatedDate;
-        }
-    }
-    public class Person_View
-    {
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string ThirdName { get; set; }
-        public string LastName { get; set; }
-        public string NationalNumber { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateOnly BirthDate { get; set; }
-        public string Nationality { get; set; }
-        public string Gender { get; set; }
-
-        public Person_View(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string email, string phoneNumber, DateOnly birthDate, string nationality, string gender)
-        {
-            this.ID = id;
-            this.FirstName = firstName;
-            this.SecondName = secondName;
-            this.ThirdName = thirdName;
-            this.LastName = lastName;
-            this.NationalNumber = nationalNumber;
-            this.Email = email;
-            this.PhoneNumber = phoneNumber;
-            this.BirthDate = birthDate;
-            this.Nationality = nationality;
-            this.Gender = gender;
-        }
-
-    }
-    public class User
-    {
-        public int ID { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public bool isActive { get; set; }
-        public int PersonID { get; set; }
-        public User(int id, string username, string password, bool isActive, int personId)
-        {
-            this.ID = id;
-            this.username = username;
-            this.password = password;
-            this.isActive = isActive;
-            this.PersonID = personId;
-        }
-    }
-    public class UserSummery
-    {
-        public int ID { get; set; }
-        public int PersonID { get; set; }
-        public string fullName { get; set; }
-        public string username { get; set; }
-
-        public bool isActive { get; set; }
-       
-        public UserSummery(int id, int personid, string fullname, string username, bool isactive)
-        {
-            this.ID = id;
-            this.PersonID = personid;
-            this.fullName = fullname;
-            this.username = username;
-            this.isActive = isactive;
-        }
-    }
+    
+   
     public class Driver
     {
         public int ID { get; set; }
@@ -166,30 +60,7 @@ namespace DTOsLayer
         }
 
     }
-    public class Application
-    {
-        public int ID { get; set; }
-        public int PersonID { get; set; }
-        public enStatus Status { get; set; }
-        public int Type { get; set; }
-        public DateTime Date { get; set; }
-        public decimal PaidFees { get; set; }
-        public DateTime lastStatusDate { get; set; }
-        public int CreatedByUserID { get; set; }
-
-        public Application(int id, int personId, enStatus status, int type, DateTime date, decimal paidFees, DateTime lastStatusDate, int createdByUserId)
-        {
-            this.ID = id;
-            this.PersonID = personId;
-            this.Status = status;
-            this.Type = type;
-            this.Date = date;
-            this.PaidFees = paidFees;
-            this.lastStatusDate = lastStatusDate;
-            this.CreatedByUserID = createdByUserId;
-        }
-
-    }
+    
     public class DetainedLicenses
     {
         public int ID { get; set; }
