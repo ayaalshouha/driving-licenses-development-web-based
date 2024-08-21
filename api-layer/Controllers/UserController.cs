@@ -36,9 +36,9 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("All")]
-        public ActionResult<IEnumerable<UserSummery>> getAll()
+        public async Task<ActionResult<IEnumerable<UserSummery>>> getAll()
         {
-            var usersList = clsUser.UsersList();
+            var usersList = await clsUser.UsersListAsync();
             if (usersList.Count <= 0)
                 return NotFound("No People Found");
 
@@ -46,12 +46,12 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("getByID/{ID}")]
-        public ActionResult<User> GetByID(int ID)
+        public async Task<ActionResult<User>> GetByID(int ID)
         {
             if (!int.TryParse(ID.ToString(), out int result) || ID < 0)
                 return BadRequest("Invalid ID Number");
 
-            User user = clsUser.FindUserDTO(ID);
+            User user = await clsUser.FindUserDTOAsync(ID);
 
             if (user == null)
                 return NotFound($"User With ID {ID} Not Found");
@@ -60,27 +60,22 @@ namespace api_layer.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<User>> Create(Person newperson, User newUser)
+        public async Task<ActionResult<User>> Create(User newUser)
         {
-            HttpClient httpClient = new HttpClient();
-            var personInfo = new StringContent(JsonSerializer.Serialize(newperson), Encoding.UTF8, "application/json");
+            if (newUser == null)
+                return BadRequest("invalid object data");
 
-            var response = await httpClient.PostAsync("http://localhost:5226/api/Person/Create", personInfo);
+            bool personFound = clsPerson.isExist(newUser.PersonID);
+            if (!personFound)
+                return BadRequest("Person with ID {newUser.PersonID} NOT found, You have to add person details first!");
 
-            if (response.IsSuccessStatusCode)
-            {
-                if (newUser == null)
-                    return BadRequest("invalid object data");
-
-                clsUser user = assignDataToUser(newUser);
-                user.PersonID = newperson.ID;
-                if (user.Save())
-                    return CreatedAtRoute("getByID/{ID}", new { user.ID }, user);
-            }
-
-            return StatusCode(500, new { message = "Error Creating User" });
+            clsUser user = assignDataToUser(newUser);
+            if (await user.SaveAsync())
+                return CreatedAtRoute("getByID/{ID}", new { user.ID }, user);
+            else
+                return StatusCode(500, new { message = "Error Creating User" });
         }
-
+            
         //[HttpPut("Update")]
         //public ActionResult<Person> Update(int ID, Person newPerson)
         //{

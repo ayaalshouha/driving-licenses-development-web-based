@@ -73,7 +73,7 @@ namespace api_layer.Controllers
         }
 
         [HttpPost("Create")]
-        public ActionResult<Person> Create(Person newPerson)
+        public ActionResult<Person> Create([FromBody]Person newPerson)
         {
             if (newPerson == null)
                 return BadRequest("invalid object data");

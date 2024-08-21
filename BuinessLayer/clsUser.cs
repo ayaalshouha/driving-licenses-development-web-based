@@ -49,92 +49,92 @@ namespace BuisnessLayer
             PersonInfo = clsPerson.Find(this.PersonID); 
             _Mode = enMode.update;
         }
-        public static clsUser Find_ByPersonID(int PersonID)
+        public static async Task<clsUser> Find_ByPersonID(int PersonID)
         {
-            User user = UserData.getUserInfo_ByPersonID(PersonID); 
+            User user = await UserData.getUserInfo_ByPersonIDAsync(PersonID); 
             if (user != null)
                 return new clsUser(user);
             else return null;
         }
-        public static string Username(int userID)
+        public static async Task<string> UsernameAsync(int userID)
         {
-            return UserData.getUsername(userID);
+            return await UserData.getUsernameAsync(userID);
         }
-        public static clsUser Find(int UserID)
+        public static async Task<clsUser> FindAsync(int UserID)
         {
-            User user = UserData.getUserInfo_ByID(UserID);
+            User user = await UserData.getUserInfo_ByIDAsync(UserID);
             if (user != null)
                 return new clsUser(user);
             else return null;
         }
-        public static User FindUserDTO(int UserID)
+        public static async Task<User> FindUserDTOAsync(int UserID)
         {
-            return UserData.getUserInfo_ByID(UserID);
+            return await UserData.getUserInfo_ByIDAsync(UserID);
         }
-        public static clsUser Find(string username)
+        public static async Task<clsUser> FindAsync(string username)
         {
-            User user = UserData.getUserInfo(username);
+            User user = await UserData.getUserInfoAsync(username);
             if (user != null)
                 return new clsUser(user);
             else return null;
         }
-        public bool _AddNew()
+        private async Task<bool> _AddNewAsync()
         {
-            this.ID = UserData.Add(UserDTO);
+            this.ID = await UserData.AddAsync(UserDTO);
             return this.ID != -1;
         }
-        public bool _Update()
+        private async Task<bool> _UpdateAsync()
         {
-            return UserData.Update(UserDTO);
+            return await UserData.UpdateAsync(UserDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
                 case enMode.add:
-                    if (_AddNew())
+                    if (await _AddNewAsync())
                     {
                         this._Mode = enMode.update;
                         return true;
                     }
                     break;
                 case enMode.update:
-                    return _Update();
+                    return await _UpdateAsync();
             }
 
             return false;
         }
-        public static bool Delete(int ID)
+        public static async Task<bool> DeleteAsync(int ID)
         {
-            return UserData.Delete(ID);
+            return await UserData.DeleteAsync(ID);
         }
-        public static bool isExist(int ID)
+        public static async Task<bool> isExistAsync(int ID)
         {
-            return UserData.isExist(ID);
+            return await UserData.isExistAsync(ID);
         }
-        public static bool isExist(string username)
+        public static async Task<bool> isExistAsync(string username)
         {
-            return UserData.isExist(username);
+            return await UserData.isExistAsync(username);
         }
-        public static bool isExist(string username,string password)
+        public static async Task<bool> isExistAsync(string username,string password)
         {
-            return UserData.isExist(username, password);
+            return await UserData.isExistAsync(username, password);
         }
-        public static bool isExist_ByPersonID(int personid)
+        public static async Task<bool> isExist_ByPersonIDAsync(int personid)
         {
-            return UserData.isExist_ByPersonID(personid);
+            return await UserData.isExist_ByPersonIDAsync(personid);
         }
-        public static List<UserSummery> UsersList()
+        public static async Task<List<UserSummery>> UsersListAsync()
         {
-            return UserData.List();
+            return await UserData.ListAsync();
         }
-        public static List<User> ActiveUsersList()
+        public static async Task<List<UserSummery>> ActiveUsersListAsync()
         {
-            return UserData.ActiveUsersList();
+            return await UserData.ActiveUsersListAsync();
         }
-        public static List<User> NonActiveUsersList()
+        public static async Task<List<UserSummery>> NonActiveUsersListAsync()
         {
-            return UserData.NonActiveUsersList();
+            return await UserData.NonActiveUsersListAsync();
         }
         public static bool Authintication(string username, string password)
         {

@@ -9,7 +9,7 @@ namespace DataLayer
 {
     public static class UserData
     {
-        public static User getUserInfo_ByPersonID(int PersonID)
+        public static async Task<User> getUserInfo_ByPersonIDAsync(int PersonID)
         {
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
@@ -20,7 +20,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = Command.ExecuteReader();
-                while (Reader.Read())
+                while (await Reader.ReadAsync())
                 {
                     return new User(
                         Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -42,7 +42,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static User getUserInfo_ByID(int UserID)
+        public static async Task<User> getUserInfo_ByIDAsync(int UserID)
         {
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
@@ -53,7 +53,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = Command.ExecuteReader();
-                while (Reader.Read())
+                while (await Reader.ReadAsync())
                 {
                     return new User(
                          Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -75,7 +75,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static User getUserInfo(string username)
+        public static async Task<User> getUserInfoAsync(string username)
         {
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
@@ -86,7 +86,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = Command.ExecuteReader();
-                while (Reader.Read())
+                while (await Reader.ReadAsync())
                 {
                     return new User(
                          Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -108,7 +108,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static string getUsername(int userID)
+        public static async Task<string> getUsernameAsync(int userID)
         {
             string username = "";
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -119,7 +119,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@userID", userID);
 
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
                 if (result != null)
                 {
                     username = (string)result;
@@ -135,7 +135,7 @@ namespace DataLayer
             }
             return username;
         }
-        public static int Add(User user)
+        public static async Task<int> AddAsync(User user)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -163,7 +163,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@PersonID", user.PersonID);
 
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -181,7 +181,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static bool Update(User user)
+        public static async Task<bool> UpdateAsync(User user)
         {
             int RowAffected = 0;
 
@@ -201,7 +201,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@isActive", user.isActive);
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -215,7 +215,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int UserID)
+        public static async Task<bool> DeleteAsync(int UserID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -225,7 +225,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@UserID", UserID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected = await  command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
@@ -237,7 +237,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int UserID)
+        public static async Task<bool> isExistAsync(int UserID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -248,7 +248,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@UserID", UserID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -261,7 +261,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static bool isExist(string username)
+        public static async Task<bool> isExistAsync(string username)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -272,7 +272,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@username", username);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -285,7 +285,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static bool isExist(string username, string password)
+        public static async Task<bool> isExistAsync(string username, string password)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -296,7 +296,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -309,7 +309,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static bool isExist_ByPersonID(int PersonID)
+        public static async Task<bool> isExist_ByPersonIDAsync(int PersonID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -319,7 +319,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@PersonID", PersonID);
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -332,7 +332,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static List<UserSummery> List()
+        public static async Task<List<UserSummery>> ListAsync()
         {
             var UsersList = new List<UserSummery>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -342,7 +342,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
 
                 Connection.Open();
-                SqlDataReader Reader = command.ExecuteReader();
+                SqlDataReader Reader = await command.ExecuteReaderAsync();
                 if (Reader.HasRows)
                 {
                     UsersList.Add(new UserSummery
@@ -366,73 +366,15 @@ namespace DataLayer
             }
             return UsersList;
         }
-        public static List<User> ActiveUsersList()
+        public static async Task<List<UserSummery>> ActiveUsersListAsync()
         {
-            var UsersList = new List<User>();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM AvtiveUsers_View;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-
-                Connection.Open();
-                SqlDataReader Reader = command.ExecuteReader();
-                if (Reader.HasRows)
-                {
-                    UsersList.Add(new User
-                       (
-                            Reader.GetInt32(Reader.GetOrdinal("ID")),
-                            Reader.GetString(Reader.GetOrdinal("username")),
-                            Reader.GetString(Reader.GetOrdinal("password")),
-                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
-                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
-                       ));
-                }
-                Reader.Close();
-            }
-            catch (Exception ex)
-            {
-                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return UsersList;
+            List<UserSummery> active = await ListAsync();
+            return active.Where(e => e.isActive).ToList();    
         }
-        public static List<User> NonActiveUsersList()
+        public static async Task<List<UserSummery>> NonActiveUsersListAsync()
         {
-            var UsersList = new List<User>();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM NonAvtiveUsers_View;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-
-                Connection.Open();
-                SqlDataReader Reader = command.ExecuteReader();
-                if (Reader.HasRows)
-                {
-                    UsersList.Add(new User
-                       (
-                            Reader.GetInt32(Reader.GetOrdinal("ID")),
-                            Reader.GetString(Reader.GetOrdinal("username")),
-                            Reader.GetString(Reader.GetOrdinal("password")),
-                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
-                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
-                       ));
-                }
-                Reader.Close();
-            }
-            catch (Exception ex)
-            {
-                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return UsersList;
+            List<UserSummery> active = await ListAsync();
+            return active.Where(e => !e.isActive).ToList();
         }
 
     }
