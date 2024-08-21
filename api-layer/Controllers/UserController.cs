@@ -49,7 +49,7 @@ namespace api_layer.Controllers
         [HttpGet("getByID", Name="getByID")]
         public async Task<ActionResult<User>> GetByID(int ID)
         {
-            if (!int.TryParse(ID.ToString(), out int result) || ID < 0)
+            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number");
 
             User user = await clsUser.FindUserDTOAsync(ID);
@@ -95,7 +95,7 @@ namespace api_layer.Controllers
         [HttpDelete("Delete")]
         public async Task<ActionResult> Delete(int ID)
         {
-            if (ID < 0)
+            if (!Int32.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID");
 
             bool isExist = await clsUser.isExistAsync(ID); 
