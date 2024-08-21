@@ -50,7 +50,7 @@ namespace BuisnessLayer
         }
         public clsPerson()
         {
-            ID = -1;
+            ID = 0;
             FirstName = "";
             SecondName = "";
             ThirdName = "";
@@ -65,8 +65,8 @@ namespace BuisnessLayer
             PersonalPicture = "";
             Nationality = "";
             Gender = "";
-            UpdateByUserID = -1;
-            CreatedByUserID = -1;
+            UpdateByUserID = 0;
+            CreatedByUserID = 0;
 
             _Mode = enMode.add;
         }
@@ -112,7 +112,7 @@ namespace BuisnessLayer
         private bool _AddNew()
         {
             this.ID = PersonData.Add(full_person);
-            return this.ID != -1;
+            return this.ID > 0;
         }
         private bool _Update()
         {

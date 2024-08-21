@@ -142,7 +142,7 @@ namespace DataLayer
                         else
                             Command.Parameters.AddWithValue("@UpdateDate", person.UpdatedDate);
 
-                        if (person.UpdatedByUserID == -1)
+                        if (person.UpdatedByUserID == 0)
                             Command.Parameters.AddWithValue("@UpdateByUserID", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@UpdateByUserID", person.UpdatedByUserID);
@@ -210,7 +210,7 @@ namespace DataLayer
                         else
                             Command.Parameters.AddWithValue("@Gender", 0);
 
-                        if (person.CreatedByUserID == -1)
+                        if (person.CreatedByUserID == 0)
                             Command.Parameters.AddWithValue("@CreatedByUserID", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@CreatedByUserID", person.CreatedByUserID);

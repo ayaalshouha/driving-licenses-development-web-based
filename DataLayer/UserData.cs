@@ -332,9 +332,9 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static List<User> List()
+        public static List<UserSummery> List()
         {
-            var UsersList = new List<User>();
+            var UsersList = new List<UserSummery>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -345,13 +345,13 @@ namespace DataLayer
                 SqlDataReader Reader = command.ExecuteReader();
                 if (Reader.HasRows)
                 {
-                    UsersList.Add(new User
+                    UsersList.Add(new UserSummery
                        (
                             Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID")),
+                            Reader.GetString(Reader.GetOrdinal("FullName")),
                             Reader.GetString(Reader.GetOrdinal("username")),
-                            Reader.GetString(Reader.GetOrdinal("password")),
-                            Reader.GetBoolean(Reader.GetOrdinal("isActive")),
-                            Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive"))
                        ));
                 }
                 Reader.Close();

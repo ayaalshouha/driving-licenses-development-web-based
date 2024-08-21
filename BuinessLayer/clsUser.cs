@@ -2,6 +2,7 @@
 using System.Data;
 using DTOsLayer;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace BuisnessLayer
 {
@@ -21,6 +22,13 @@ namespace BuisnessLayer
                 return new User(this.ID, this.username, this.password, this.isActive, this.PersonID);
             }
         }
+        public UserSummery User
+        {
+            get
+            {
+                return new UserSummery(this.ID, this.PersonID, this.PersonInfo.FullName(), this.username, this.isActive); 
+            }
+        }
         public clsUser()
         {
             ID = -1;
@@ -28,6 +36,7 @@ namespace BuisnessLayer
             username = "";
             password = "";
             isActive = false; 
+            PersonInfo = null;
             _Mode = enMode.add;
         }
         private clsUser(User User)
@@ -57,6 +66,10 @@ namespace BuisnessLayer
             if (user != null)
                 return new clsUser(user);
             else return null;
+        }
+        public static User FindUserDTO(int UserID)
+        {
+            return UserData.getUserInfo_ByID(UserID);
         }
         public static clsUser Find(string username)
         {
@@ -111,7 +124,7 @@ namespace BuisnessLayer
         {
             return UserData.isExist_ByPersonID(personid);
         }
-        public static List<User> UsersList()
+        public static List<UserSummery> UsersList()
         {
             return UserData.List();
         }
