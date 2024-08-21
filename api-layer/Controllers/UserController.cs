@@ -110,23 +110,23 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { Message = "Error Deletting Person" });
         }
 
-        //[HttpGet("isExistByID")]
-        //public ActionResult<bool> isExist(int ID)
-        //{
-        //    if (ID < 0)
-        //        return BadRequest("Invalid ID");
+        [HttpGet("isExistByID")]
+        public async Task<ActionResult<bool>> isExist(int ID)
+        {
+            if (ID < 0)
+                return BadRequest("Invalid ID");
 
-        //    return clsPerson.isExist(ID);
-        //}
+            return await clsUser.isExistAsync(ID);
+        }
 
-        //[HttpGet("isExistByNationalNo")]
-        //public ActionResult<bool> isExist(string NationalNumber)
-        //{
-        //    if (string.IsNullOrEmpty(NationalNumber))
-        //        return BadRequest("Invalid National Number");
+        [HttpGet("isExistByNationalNo")]
+        public async Task<ActionResult<bool>> isExist(string NationalNumber)
+        {
+            if (string.IsNullOrEmpty(NationalNumber))
+                return BadRequest("Invalid National Number");
 
-        //    return clsPerson.isExist(NationalNumber);
-        //}
+            return await clsUser.isExistAsync(NationalNumber);
+        }
     }
 }
 

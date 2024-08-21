@@ -58,10 +58,10 @@ namespace api_layer.Controllers
             return Ok(peopleList);
         }
 
-        [HttpGet("getByID/{ID}")]
+        [HttpGet("Read", Name = "Read")]
         public ActionResult<Person>GetByID(int ID)
         {
-            if (!int.TryParse(ID.ToString(), out int result) || ID < 0)
+            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number"); 
 
             Person person = clsPerson.FindPersonDTO(ID);
@@ -73,7 +73,7 @@ namespace api_layer.Controllers
         }
 
         [HttpPost("Create")]
-        public ActionResult<Person> Create([FromBody]Person newPerson)
+        public ActionResult<Person> Create(Person newPerson)
         {
             if (newPerson == null)
                 return BadRequest("invalid object data");
@@ -81,7 +81,10 @@ namespace api_layer.Controllers
             clsPerson person = assignDataToPerson(newPerson);
 
             if (person.Save())
-                return CreatedAtRoute("getByID/{ID}", new { person.ID }, person);
+            {
+                newPerson.ID = person.ID; 
+                return CreatedAtRoute("Read", new { person.ID }, newPerson);
+            }
             else
                 return StatusCode(500, new { message = "Error Creating Person" });
         }
@@ -103,8 +106,8 @@ namespace api_layer.Controllers
         [HttpDelete("Delete")]
         public ActionResult Delete(int ID)
         {
-            if (ID < 0)
-                return BadRequest("Invalid ID");
+            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
+                return BadRequest("Invalid ID Number");
 
             if (!clsPerson.isExist(ID))
                 return NotFound($"Person with ID {ID} NOT Found");
@@ -118,8 +121,8 @@ namespace api_layer.Controllers
         [HttpGet("isExistByID")]
         public ActionResult<bool> isExist(int ID)
         {
-            if (ID < 0)
-                return BadRequest("Invalid ID");
+            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
+                return BadRequest("Invalid ID Number");
 
             return clsPerson.isExist(ID);
         }
