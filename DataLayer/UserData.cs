@@ -258,7 +258,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@UserID", UserID);
                 Connection.Open();
-                RowAffected = await  command.ExecuteNonQueryAsync();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {

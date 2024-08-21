@@ -77,35 +77,38 @@ namespace api_layer.Controllers
             else
                 return StatusCode(500, new { message = "Error Creating User" });
         }
-            
-        //[HttpPut("Update")]
-        //public ActionResult<Person> Update(int ID, Person newPerson)
-        //{
-        //    if (newPerson == null)
-        //        return BadRequest("invalid object data");
 
-        //    clsPerson person = assignDataToPerson(newPerson, ID);
+        [HttpPut("Update")]
+        public async Task<ActionResult<Person>> Update(int ID, User newUser)
+        {
+            if (newUser == null)
+                return BadRequest("invalid object data");
 
-        //    if (person != null && person.Save())
-        //        return Ok(person);
-        //    else
-        //        return StatusCode(500, new { message = "Error Creating Person" });
-        //}
+            clsUser user = assignDataToUser(newUser, ID);
 
-        //[HttpDelete("Delete")]
-        //public ActionResult Delete(int ID)
-        //{
-        //    if (ID < 0)
-        //        return BadRequest("Invalid ID");
+            if (user != null && await user.SaveAsync())
+                return Ok(user.UserDTO);
+            else
+                return StatusCode(500, new { message = "Error Updating User" });
+        }
 
-        //    if (clsPerson.Find(ID) == null)
-        //        return NotFound($"Person with ID {ID} NOT Found");
+        [HttpDelete("Delete")]
+        public async Task<ActionResult> Delete(int ID)
+        {
+            if (ID < 0)
+                return BadRequest("Invalid ID");
 
-        //    if (clsPerson.Delete(ID))
-        //        return Ok("Person with ID {ID} Deletted Successfully");
-        //    else
-        //        return StatusCode(500, new { Message = "Error Deletting Person" });
-        //}
+            bool isExist = await clsUser.isExistAsync(ID); 
+
+            if (!isExist)
+                return NotFound($"User with ID {ID} NOT Found");
+
+            bool isDeleted = await clsUser.DeleteAsync(ID); 
+            if (isDeleted)
+                return Ok("User with ID {ID} Deletted Successfully");
+            else
+                return StatusCode(500, new { Message = "Error Deletting Person" });
+        }
 
         //[HttpGet("isExistByID")]
         //public ActionResult<bool> isExist(int ID)
