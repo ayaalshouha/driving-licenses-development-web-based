@@ -9,6 +9,7 @@ namespace api_layer.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -45,7 +46,7 @@ namespace api_layer.Controllers
             return Ok(usersList);
         }
 
-        [HttpGet("getByID/{ID}")]
+        [HttpGet("getByID", Name="getByID")]
         public async Task<ActionResult<User>> GetByID(int ID)
         {
             if (!int.TryParse(ID.ToString(), out int result) || ID < 0)
@@ -70,8 +71,9 @@ namespace api_layer.Controllers
                 return BadRequest("Person with ID {newUser.PersonID} NOT found, You have to add person details first!");
 
             clsUser user = assignDataToUser(newUser);
+
             if (await user.SaveAsync())
-                return CreatedAtRoute("getByID/{ID}", new { user.ID }, user);
+                return CreatedAtRoute("getByID", new { user.ID }, newUser);
             else
                 return StatusCode(500, new { message = "Error Creating User" });
         }

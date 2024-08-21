@@ -53,7 +53,10 @@ namespace BuisnessLayer
         {
             User user = await UserData.getUserInfo_ByPersonIDAsync(PersonID); 
             if (user != null)
+            {
+               // user.password = clsGeneral.Decrypt(user.password);
                 return new clsUser(user);
+            }
             else return null;
         }
         public static async Task<string> UsernameAsync(int userID)
@@ -64,34 +67,48 @@ namespace BuisnessLayer
         {
             User user = await UserData.getUserInfo_ByIDAsync(UserID);
             if (user != null)
+            {
+                //user.password = clsGeneral.Decrypt(user.password);
                 return new clsUser(user);
+
+            }
             else return null;
         }
         public static clsUser Find(int UserID)
         {
             User user =  UserData.getUserInfo_ByID(UserID);
             if (user != null)
+            {
+                //user.password = clsGeneral.Decrypt(user.password);
                 return new clsUser(user);
+            }
             else return null;
         }
         public static async Task<User> FindUserDTOAsync(int UserID)
         {
-            return await UserData.getUserInfo_ByIDAsync(UserID);
+            User user = await UserData.getUserInfo_ByIDAsync(UserID);
+            //user.password = clsGeneral.Decrypt(user.password);
+            return user; 
         }
         public static async Task<clsUser> FindAsync(string username)
         {
             User user = await UserData.getUserInfoAsync(username);
             if (user != null)
+            {
+                //user.password = clsGeneral.Decrypt(user.password);
                 return new clsUser(user);
+            }
             else return null;
         }
         private async Task<bool> _AddNewAsync()
         {
+            //UserDTO.password = clsGeneral.Encrypt(UserDTO.password);
             this.ID = await UserData.AddAsync(UserDTO);
             return this.ID != -1;
         }
         private async Task<bool> _UpdateAsync()
         {
+            //UserDTO.password = clsGeneral.Encrypt(UserDTO.password);
             return await UserData.UpdateAsync(UserDTO);
         }
         public async Task<bool> SaveAsync()
@@ -125,6 +142,7 @@ namespace BuisnessLayer
         }
         public static async Task<bool> isExistAsync(string username,string password)
         {
+            //password = clsGeneral.Encrypt(password);
             return await UserData.isExistAsync(username, password);
         }
         public static async Task<bool> isExist_ByPersonIDAsync(int personid)
