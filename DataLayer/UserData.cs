@@ -75,6 +75,39 @@ namespace DataLayer
             }
             return null;
         }
+        public static User getUserInfo_ByID(int UserID)
+        {
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"SELECT * from Users WHERE ID = @UserID;";
+                SqlCommand Command = new SqlCommand(Query, Connection);
+                Command.Parameters.AddWithValue("@UserID", UserID);
+
+                Connection.Open();
+                SqlDataReader Reader = Command.ExecuteReader();
+                while (Reader.Read())
+                {
+                    return new User(
+                         Reader.GetInt32(Reader.GetOrdinal("ID")),
+                         Reader.GetString(Reader.GetOrdinal("username")),
+                         Reader.GetString(Reader.GetOrdinal("password")),
+                         Reader.GetBoolean(Reader.GetOrdinal("isActive")),
+                         Reader.GetInt32(Reader.GetOrdinal("PersonID"))
+                         );
+                }
+                Reader.Close();
+            }
+            catch (Exception ex)
+            {
+                // DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return null;
+        }
         public static async Task<User> getUserInfoAsync(string username)
         {
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -320,6 +353,30 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@PersonID", PersonID);
                 Connection.Open();
                 object result = await command.ExecuteScalarAsync();
+                isFound = (result != null);
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return isFound;
+        }
+
+        public static bool isExist_ByPersonID(int PersonID)
+        {
+            bool isFound = false;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "SELECT ID FROM Users WHERE PersonID = @PersonID;";
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@PersonID", PersonID);
+                Connection.Open();
+                object result = command.ExecuteScalar();
                 isFound = (result != null);
             }
             catch (Exception ex)

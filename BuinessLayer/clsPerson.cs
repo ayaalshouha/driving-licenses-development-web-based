@@ -119,7 +119,7 @@ namespace BuisnessLayer
             return PersonData.Update(full_person);
         }
 
-        public bool IsValid()
+        private bool IsValid()
         {
             if (string.IsNullOrEmpty(this.FirstName) ||
                 string.IsNullOrEmpty(this.SecondName) ||
@@ -164,9 +164,8 @@ namespace BuisnessLayer
         public static bool Delete(int ID)
         {
             if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
-            {
                 return false;
-            }
+            
             return PersonData.Delete(ID);
         }
         public static bool Delete(string NationalNumber)

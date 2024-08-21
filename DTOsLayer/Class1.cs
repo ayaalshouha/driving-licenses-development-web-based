@@ -33,7 +33,10 @@ namespace DTOsLayer
         public int UpdatedByUserID { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public Person(int id, string firstName, string secondName, string thirdName, string lastName, string nationalNumber, string address, string email, string phoneNumber, DateOnly birthDate, string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate, int updatedByUserId, DateTime updatedDate)
+        public Person(int id, string firstName, string secondName, string thirdName, string lastName,
+            string nationalNumber, string address, string email, string phoneNumber, DateOnly birthDate, 
+            string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate,
+            int updatedByUserId, DateTime updatedDate)
         {
             this.ID = id;
             this.FirstName = firstName;

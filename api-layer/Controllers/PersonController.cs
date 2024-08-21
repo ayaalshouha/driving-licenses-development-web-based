@@ -92,12 +92,12 @@ namespace api_layer.Controllers
             if (newPerson == null)
                 return BadRequest("invalid object data");
 
-            clsPerson person = assignDataToPerson(newPerson, ID);
+            clsPerson person = assignDataToPerson(newPerson, ID); 
 
             if (person != null && person.Save())
                 return Ok(person);
             else
-                return StatusCode(500, new { message = "Error Creating Person" });
+                return StatusCode(500, new { message = "Error Updatting Person" });
         }
 
         [HttpDelete("Delete")]
@@ -106,7 +106,7 @@ namespace api_layer.Controllers
             if (ID < 0)
                 return BadRequest("Invalid ID");
 
-            if (clsPerson.Find(ID) == null)
+            if (!clsPerson.isExist(ID))
                 return NotFound($"Person with ID {ID} NOT Found");
 
             if (clsPerson.Delete(ID))

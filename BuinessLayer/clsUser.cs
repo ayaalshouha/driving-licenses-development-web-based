@@ -67,6 +67,13 @@ namespace BuisnessLayer
                 return new clsUser(user);
             else return null;
         }
+        public static clsUser Find(int UserID)
+        {
+            User user =  UserData.getUserInfo_ByID(UserID);
+            if (user != null)
+                return new clsUser(user);
+            else return null;
+        }
         public static async Task<User> FindUserDTOAsync(int UserID)
         {
             return await UserData.getUserInfo_ByIDAsync(UserID);
