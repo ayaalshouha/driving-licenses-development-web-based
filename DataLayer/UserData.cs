@@ -365,7 +365,6 @@ namespace DataLayer
             }
             return isFound;
         }
-
         public static bool isExist_ByPersonID(int PersonID)
         {
             bool isFound = false;
@@ -400,7 +399,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = await command.ExecuteReaderAsync();
-                if (Reader.HasRows)
+                while (await Reader.ReadAsync())
                 {
                     UsersList.Add(new UserSummery
                        (
