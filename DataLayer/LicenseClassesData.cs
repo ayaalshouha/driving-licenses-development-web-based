@@ -102,7 +102,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             return list;
         }

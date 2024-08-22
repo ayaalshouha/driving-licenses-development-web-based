@@ -1,4 +1,5 @@
 ﻿using DataLayer;
+using DTOsLayer;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,6 @@ namespace BuisnessLayer
 {
     public class clsLicenseClasses
     {
-        public enum enMode { AddNew = 0, Update = 1 };
         public enMode Mode = enMode.AddNew;
         public int LicenseClassID { set; get; }
         public string ClassName { set; get; }
@@ -15,6 +15,15 @@ namespace BuisnessLayer
         public byte DefaultValidityLength { set; get; }
         public decimal ClassFees { set; get; }
 
+        public LicenseClass licenseDTO
+        {
+            get
+            {
+                return new LicenseClass(this.LicenseClassID, this.ClassName,
+                    this.ClassDescription, this.ClassFees,
+                    this.MinimumAllowedAge, this.DefaultValidityLength);
+            }
+        }
         public clsLicenseClasses()
 
         {
@@ -25,7 +34,7 @@ namespace BuisnessLayer
             this.DefaultValidityLength = 10;
             this.ClassFees = 0;
 
-            Mode = enMode.AddNew;
+            Mode = enMode.add;
 
         }
 
@@ -38,7 +47,7 @@ namespace BuisnessLayer
             this.MinimumAllowedAge = licenseClass.MinAgeAllowed;
             this.DefaultValidityLength = licenseClass.ValidityYears;
             this.ClassFees = licenseClass.Fees;
-            Mode = enMode.Update;
+            Mode = enMode.update;
         }
 
 
