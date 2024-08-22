@@ -4,12 +4,7 @@ using System.Diagnostics;
 
 namespace DataLayer
 {
-    public enum enStatus : int { New = 1, cancelled, completed }
-    public enum enType : int
-    {
-        NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
-        DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
-    }
+   
     public struct stDriver
     {
         public int ID { get; set; }

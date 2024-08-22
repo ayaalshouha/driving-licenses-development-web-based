@@ -10,77 +10,81 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using static System.Net.Mime.MediaTypeNames;
 using DTOsLayer;
+using System.Reflection.PortableExecutable;
 
 namespace DataLayer
 {
     public class ApplicationData
     {
-        public static bool getApplicationInfo(int ApplicationID,ref stApplication application )
+        public static async Task<_Application> getApplicationInfoAsync(int ApplicationID)
         {
-            bool isFound = false;
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from Applications where ID = @ID"; 
-
-                SqlCommand command = new SqlCommand(Query, connection);
-                command.Parameters.AddWithValue("@ID", ApplicationID);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while(reader.Read())
+                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    isFound = true;
-                    application.ID = (int)reader["ID"];
-                    application.PersonID = (int)reader["PersonID"];
-                    application.Date = (DateTime)reader["Date"];
-                    application.lastStatusDate = (DateTime)reader["LastStatusDate"];
-                    application.PaidFees = (decimal)reader["PaidFees"];
-                    application.CreatedByUserID = (int)reader["CreatedByUserID"];
-                    application.Status = (enStatus)reader["Status"];
-                    application.Type = (int)reader["ApplicationTypeID"];
-                    
+                    string Query = "select * from Applications where ID = @ID";
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ID", ApplicationID);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                return new _Application
+                                    (
+                                    reader.GetInt32(reader.GetOrdinal("ID")), 
+                                    reader.GetInt32(reader.GetOrdinal("PersonID")),
+                                    Enum.IsDefined(typeof(enStatus), reader.GetInt32(reader.GetOrdinal("Status"))) ?
+                                    (enStatus)reader.GetInt32(reader.GetOrdinal("Status")) : 0,                                
+                                    reader.GetInt32(reader.GetOrdinal("ApplicationTypeID")),
+                                    reader.IsDBNull(reader.GetOrdinal("Date")) ? default(DateOnly)
+                                    : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                                    reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                                    reader.IsDBNull(reader.GetOrdinal("LastStatusDate")) ? default(DateOnly)
+                                    : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("LastStatusDate"))),
+                                    reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                                    );
+                            }
+                        }
+                    }
                 }
-                reader.Close();
             }
             catch(Exception e){
-
-                DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(e.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
-            finally
-            {
-                connection.Close();
-            }
-            return isFound; 
+            return null; 
         }
-        public static int Add(stApplication application)
+        public static async Task<int> Add(_Application application)
         {
             int newID = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"INSERT INTO Applications 
-                             VALUES (@Date, @PersonID,@Status,@PaidFees, @ApplicationTypeID, @CreatedByUserID, @LastStatusDate);
-                        SELECT SCOPE_IDENTITY();";
-
-
-                SqlCommand Command = new SqlCommand(Query, Connection);
-
-                Command.Parameters.AddWithValue("@Date", application.Date);
-                Command.Parameters.AddWithValue("@PersonID", application.PersonID); 
-                Command.Parameters.AddWithValue("@Status", application.Status);
-                Command.Parameters.AddWithValue("@PaidFees", application.PaidFees);
-                Command.Parameters.AddWithValue("@ApplicationTypeID", application.Type);
-                Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LastStatusDate", application.lastStatusDate);
-
-                Connection.Open();
-                object result = Command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int LastID))
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    newID = LastID;
+                        string Query = @"INSERT INTO Applications 
+                                 VALUES (@Date, @PersonID,@Status,@PaidFees, @ApplicationTypeID, @CreatedByUserID, @LastStatusDate);
+                            SELECT SCOPE_IDENTITY();";
+
+                       using (SqlCommand Command = new SqlCommand(Query, Connection))
+                       {
+                            Command.Parameters.AddWithValue("@PersonID", application.PersonID); 
+                            Command.Parameters.AddWithValue("@Date", application.Date);
+                            Command.Parameters.AddWithValue("@Status", application.Status);
+                            Command.Parameters.AddWithValue("@PaidFees", application.PaidFees);
+                            Command.Parameters.AddWithValue("@ApplicationTypeID", application.Type);
+                            Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
+                            Command.Parameters.AddWithValue("@LastStatusDate", application.lastStatusDate);
+                            Connection.Open();
+
+                            object result = await Command.ExecuteScalarAsync();
+
+                            if (result != null && int.TryParse(result.ToString(), out int LastID))
+                            {
+                                newID = LastID;
+                            }
+                       }
                 }
             }
             catch (Exception e)
@@ -88,159 +92,154 @@ namespace DataLayer
                 DataSettings.StoreUsingEventLogs(e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
 
             return newID;
         }
-        public static bool Update(stApplication application)
+        public static async Task<bool> Update(_Application application)
         {
             int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"Update Applications
-                SET PersonID = @PersonID,
-                        Date = @Date, 
-                        Status = @Status,
-                        ApplicationTypeID = @Type,
-                        PaidFees = @PaidFees,
-                        CreatedByUserID = @CreatedByUserID,
-                        LastStatusDate = @LastStatusDate
-                WHERE ID = @ApplicationID;";
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                        string Query = @"Update Applications
+                    SET PersonID = @PersonID,
+                            Date = @Date, 
+                            Status = @Status,
+                            ApplicationTypeID = @Type,
+                            PaidFees = @PaidFees,
+                            CreatedByUserID = @CreatedByUserID,
+                            LastStatusDate = @LastStatusDate
+                    WHERE ID = @ApplicationID;";
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@ApplicationID", application.ID);
+                        Command.Parameters.AddWithValue("@PersonID", application.PersonID);
+                        Command.Parameters.AddWithValue("@Date", application.Date);
+                        Command.Parameters.AddWithValue("@Status", application.Status);
+                        Command.Parameters.AddWithValue("@Type", application.Type);
+                        Command.Parameters.AddWithValue("@PaidFees", application.PaidFees);
+                        Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
+                        Command.Parameters.AddWithValue("@LastStatusDate", application.lastStatusDate);
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
-                Command.Parameters.AddWithValue("@ApplicationID", application.ID);
-                Command.Parameters.AddWithValue("@PersonID", application.PersonID);
-                Command.Parameters.AddWithValue("@Date", application.Date);
-                Command.Parameters.AddWithValue("@Status", application.Status);
-                Command.Parameters.AddWithValue("@Type", application.Type);
-                Command.Parameters.AddWithValue("@PaidFees", application.PaidFees);
-                Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LastStatusDate", application.lastStatusDate);
+                        Connection.Open();
+                        RowAffected = await Command.ExecuteNonQueryAsync();
 
-                Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                    }
+                }
             }
-
             catch (Exception e)
             {
                 DataSettings.StoreUsingEventLogs(e.Message.ToString());
                // Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
 
             return RowAffected > 0;
         }
-        public static bool Delete(int ApplicationID)
+        public static async Task<bool> Delete(int ApplicationID)
         {
             int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "DELETE  FROM Applications WHERE ID = @ApplicationID;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-                Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "DELETE  FROM Applications WHERE ID = @ApplicationID;";
+                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                        Connection.Open();
+                        RowAffected = await command.ExecuteNonQueryAsync();
+                    }
+                }
             }
             catch (Exception e)
             {
                 DataSettings.StoreUsingEventLogs(e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
+           
             return RowAffected > 0;
         }
-        public static bool isExist(int ApplicationID)
+        public static async Task<bool> isExist(int ApplicationID)
         {
             bool isFound = false;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT ID FROM Applications WHERE ID = @ApplicationID;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "SELECT ID FROM Applications WHERE ID = @ApplicationID;";
+                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                        Connection.Open();
+                        object result = await command.ExecuteScalarAsync();
+                        isFound = (result != null);
 
-                Connection.Open();
-                object result = command.ExecuteScalar();
-                isFound = (result != null);
+                    }
+                }
             }
             catch (Exception e)
             {
                 DataSettings.StoreUsingEventLogs(e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
+           
             return isFound;
         }
-
-
-        public static bool isClassExist(int personID, int ClassID)
+        public static async Task<bool> isClassExist(int personID, int ClassID)
         {
             bool isFound = false;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"SELECT Applications.ID 
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"SELECT Applications.ID 
                             FROM Applications INNER JOIN LocalDrivingLicensesApplications 
-                 ON Applications.ID = LocalDrivingLicensesApplications.ApplicationID
-                WHERE LocalDrivingLicensesApplications.LicenseClassID = @ClassID and Applications.PersonID = @personID 
+                     ON Applications.ID = LocalDrivingLicensesApplications.ApplicationID
+                    WHERE LocalDrivingLicensesApplications.LicenseClassID = @ClassID and Applications.PersonID = @personID 
                         and Applications.Status != 2;";
+
+                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@ClassID", ClassID);
+                        command.Parameters.AddWithValue("@personID", personID);
+                        Connection.Open();
+                        object result = await command.ExecuteScalarAsync();
+                        isFound = (result != null);
+
+                    }
+                }
                                 
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@ClassID", ClassID);
-                command.Parameters.AddWithValue("@personID", personID);
-                Connection.Open();
-                object result = command.ExecuteScalar();
-                isFound = (result != null);
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                 // Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
             return isFound;
         }
-
-
-        public static int GetFees(int ApplicationID)
+        public static async Task<int> GetFees(int ApplicationID)
         {
             int fees = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"SELECT Fees From ApplicationTypes 
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"SELECT Fees From ApplicationTypes 
                                 INNER JOIN Applications
                                 ON ApplicationTypes.ID = Applications.ApplicationTypeID 
-                        WHERE Applications.ID = @ApplicationID;"; 
+                        WHERE Applications.ID = @ApplicationID;";
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
 
-
-                SqlCommand Command = new SqlCommand(Query, Connection);
-
-                Command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-
-                Connection.Open();
-                object result = Command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int result_))
-                {
-                    fees = result_;
+                        Connection.Open();
+                        object result = await Command.ExecuteScalarAsync();
+                        if (result != null && int.TryParse(result.ToString(), out int result_))
+                        {
+                            fees = result_;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -249,100 +248,85 @@ namespace DataLayer
 
                 //Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
-
             return fees;
-
         }
-
-        public static bool Cancel(int ApplicationID)
+        public static async Task<bool> Cancel(int ApplicationID)
         {
             int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "UPDATE Applications SET Status = 2 where ((ID = @ApplicationID) and (Status != 3));";
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-                Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return RowAffected > 0;
+                try
+                {
+                    using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                    {
+                        string Query = "UPDATE Applications SET Status = 2 where ((ID = @ApplicationID) and (Status != 3));";
+                        using (SqlCommand command = new SqlCommand(Query, Connection))
+                        {
+                            command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                            Connection.Open();
+                            RowAffected = await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                 return RowAffected > 0;
         }
-
-        public static bool UpdateStatus(int ApplicationID, int StatusNumber)
+        public static async Task<bool> UpdateStatus(int ApplicationID, int StatusNumber)
         {
             int RowAffected = 0; 
-
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"Update Applications 
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"Update Applications 
                                 SET Status = @StatusNumber,
                                LastStatusDate = @LastStatusDate
-                WHERE ID = @ApplicationID;";
-
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@StatusNumber", StatusNumber);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-                command.Parameters.AddWithValue("@LastStatusDate", DateTime.Now); 
-                Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                    WHERE ID = @ApplicationID;";
+                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@StatusNumber", StatusNumber);
+                        command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                        command.Parameters.AddWithValue("@LastStatusDate", DateTime.Now); 
+                        Connection.Open();
+                        RowAffected = await command.ExecuteNonQueryAsync();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                 // Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
-
             return (RowAffected > 0);
         }
-        public static string GetFullNameOfApplicant(int personID)
+        public static async Task<string> GetFullNameOfApplicant(int personID)
         {
             string name = "";
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"SELECT Name From FullNames WHERE PersonID = @personID;";
-                                
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@personID", personID);
-                Connection.Open();
-
-                object result = command.ExecuteScalar();
-                if (result != null)
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    name=result.ToString();
+                    string Query = @"SELECT Name From FullNames WHERE PersonID = @personID;";
+                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@personID", personID);
+                        Connection.Open();
+                        object result = await command.ExecuteScalarAsync();
+                        if (result != null)
+                        {
+                            name = result.ToString();
+                        }
+                    }
                 }
-                
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
-            }
-            finally
-            {
-                Connection.Close();
             }
             return name; 
         }
-
 
     }
 }

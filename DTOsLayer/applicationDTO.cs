@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
-    public class Application
+    public class _Application
     {
         public int ID { get; set; }
         public int PersonID { get; set; }
         public enStatus Status { get; set; }
         public int Type { get; set; }
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public decimal PaidFees { get; set; }
-        public DateTime lastStatusDate { get; set; }
+        public DateOnly lastStatusDate { get; set; }
         public int CreatedByUserID { get; set; }
 
-        public Application(int id, int personId, enStatus status, int type, DateTime date, decimal paidFees, DateTime lastStatusDate, int createdByUserId)
+        public _Application(int id, int personId, enStatus status, int type, DateOnly date, decimal paidFees, DateOnly lastStatusDate, int createdByUserId)
         {
             this.ID = id;
             this.PersonID = personId;
