@@ -19,7 +19,7 @@ namespace DTOsLayer
         public int IssueReason { get; set; }
         public string Notes { get; set; }
         public int CreatedByUserID { get; set; }
-
+      
         public _License(int id, int applicationId, int driverId, int licenseClass,
             DateOnly issueDate, DateOnly expDate, bool isActive, decimal paidFees,
             int issueReason, string notes, int createdByUserId)
@@ -36,6 +36,5 @@ namespace DTOsLayer
             this.Notes = notes;
             this.CreatedByUserID = createdByUserId;
         }
-
     }
 }

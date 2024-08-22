@@ -6,29 +6,35 @@ namespace BuisnessLayer
 {
     public class clsLicenses
     {
-        public enum enMode { Add = 1, Update }
-        public enMode _Mode = enMode.Add; 
-        public enum enIssueReason { FirstTime = 1, Renew = 2, DamagedReplacement = 3, LostReplacement = 4 };
+        public enMode _Mode = enMode.add; 
+       
         public int ID { get; set; }
         public int ApplicationID { get; set; }
         public int DriverID { get; set; }
         public clsDrviers DriverInfo {  get; set; }
         public int LicenseClass { get; set; }
         public clsLicenseClasses ClassInfo {  get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
+        public DateOnly IssueDate { get; set; }
+        public DateOnly ExpDate { get; set; }
         public bool isActive { get; set; }
         public decimal PaidFees { get; set; }
         public enIssueReason IssueReason { get; set; }
-
         public string Notes { get; set; }
         public int CreatedByUserID { get; set; }
-
         public bool isDetained
         {
             get { return clsDetainedLicenses.isLicenseDetained(this.ID); }
         }
-
+        public _License licenseDTO
+        {
+            get
+            {
+                return new _License(this.ID, this.ApplicationID, this.DriverID,
+                    this.LicenseClass, this.IssueDate, this.ExpDate,
+                    this.isActive, this.PaidFees, (int)this.IssueReason,
+                    this.Notes, this.CreatedByUserID);
+            }
+        }
         public clsLicenses()
         {
             this.ID = -1;
@@ -37,15 +43,15 @@ namespace BuisnessLayer
             this.CreatedByUserID = -1;
             this.LicenseClass = -1;
             this.isActive = false;
-            this.IssueDate = DateTime.Now; 
-            this.ExpDate=DateTime.Now;
+            this.IssueDate = DateOnly.FromDateTime(DateTime.Now);
+            this.ExpDate = DateOnly.FromDateTime(DateTime.Now);
             this.Notes=string.Empty;
             this.PaidFees = -1;
             this.IssueReason = enIssueReason.FirstTime;
-            this._Mode = enMode.Add;
+            this._Mode = enMode.add;
         }
 
-        private clsLicenses(stLicenses license)
+        private clsLicenses(_License license)
         {
             this.ID = license.ID;
             this.ApplicationID = license.ApplicationID;
@@ -61,7 +67,7 @@ namespace BuisnessLayer
             this.ClassInfo = clsLicenseClasses.Find(this.LicenseClass);
             this.DriverInfo = clsDrviers.Find(this.DriverID);
 
-            this._Mode = enMode.Update;
+            this._Mode = enMode.update;
         }
         public string IssueReasonText
         {
@@ -82,84 +88,48 @@ namespace BuisnessLayer
                 }
             }
         }
-
-        public static clsLicenses Find(int licenseID)
+        public static async Task<clsLicenses> FindAsync(int licenseID)
         {
-            stLicenses license = new stLicenses();
-            if (LicensesData.getLicenseInfo(licenseID, ref license))
+            _License license = await LicensesData.getLicenseInfoAsync(licenseID);
+            if (license != null)
                 return new clsLicenses(license);
             else
                 return null;
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stLicenses license = new stLicenses
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                IssueDate = this.IssueDate,
-                ExpDate = this.ExpDate,
-                isActive = true,
-                Notes = this.Notes,
-                CreatedByUserID = this.CreatedByUserID,
-                PaidFees = this.PaidFees,
-                IssueReason = (int)this.IssueReason,
-                LicenseClass = this.LicenseClass,
-                DriverID = this.DriverID
-            };
-
-            this.ID = LicensesData.Add(license);
+            this.ID = await LicensesData.AddAsync(licenseDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stLicenses license = new stLicenses
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                IssueDate = this.IssueDate,
-                ExpDate = this.ExpDate,
-                isActive = this.isActive,
-                Notes = this.Notes,
-                CreatedByUserID = this.CreatedByUserID,
-                PaidFees = this.PaidFees,
-                IssueReason = (int)this.IssueReason,
-                LicenseClass = this.LicenseClass,
-                DriverID = this.DriverID
-            };
-
-            return LicensesData.Update(license);
+            return await LicensesData.UpdateAsync(licenseDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
-
             return false;
         }
-
-        public bool ActivateCurrentLicense()
+        public async Task<bool> ActivateCurrentLicenseAsync()
         {
-            return LicensesData.DeactivateLicense(this.ID);
+            return await LicensesData.DeactivateLicenseAsync(this.ID);
         }
-        public bool DeactivateCurrentLicense()
+        public async Task<bool> DeactivateCurrentLicenseAsync()
         {
-            return LicensesData.ActivateLicense(this.ID);
+            return await LicensesData.ActivateLicenseAsync(this.ID);
         }
-
-        public clsLicenses RenewLicense(string Notes, int CreatedByUserID)
+        public async Task<clsLicenses> RenewLicenseAsync(string Notes, int CreatedByUserID)
         {
             clsApplication NewApplication = new clsApplication();
             clsLicenses NewLicense = new clsLicenses();
@@ -172,72 +142,65 @@ namespace BuisnessLayer
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = CreatedByUserID;
 
-            if (NewApplication.SaveAsync())
+            if (await NewApplication.SaveAsync())
             {
                 NewLicense.ApplicationID = NewApplication.ID;
                 NewLicense.DriverID = this.DriverID;
                 NewLicense.LicenseClass = this.LicenseClass; 
-                NewLicense.IssueDate = DateTime.Now;
-                NewLicense.ExpDate = DateTime.Now.AddYears(this.ClassInfo.DefaultValidityLength);
+                NewLicense.IssueDate = DateOnly.FromDateTime(DateTime.Now);
+                NewLicense.ExpDate = DateOnly.FromDateTime(DateTime.Now.AddYears(this.ClassInfo.DefaultValidityLength));
                 NewLicense.isActive = true;
                 NewLicense.PaidFees = (decimal)this.ClassInfo.ClassFees;
                 NewLicense.IssueReason = enIssueReason.Renew;
                 NewLicense.Notes = Notes;
                 NewLicense.CreatedByUserID = CreatedByUserID;
 
-                if (NewLicense.Save())
+                if (await NewLicense.SaveAsync())
                 {
-                    NewApplication.setCompleted();
-                    DeactivateCurrentLicense();
+                    await NewApplication.setCompletedAsync();
+                    await DeactivateCurrentLicenseAsync();
                 }
-
             }
             return NewLicense;
         }
-
-        public clsLicenses Replace(enIssueReason reason, int CreatedByUserID)
+        public async Task<clsLicenses> ReplaceAsync(enIssueReason reason, int CreatedByUserID)
         {
             clsApplication NewApplication = new clsApplication();
             clsLicenses NewLicense = new clsLicenses();
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
-            NewApplication.Status = clsApplication.enApplicationSatatus.New;
+            NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (reason == enIssueReason.DamagedReplacement ?
-                (int)clsApplication.enApplicationTypes.DamagedReplacement :
-                (int)clsApplication.enApplicationTypes.LostReplacement);
-
-
+                (int)enType.DamagedReplacement :
+                (int)enType.LostReplacement);
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
-            NewApplication.Date = DateTime.Now;
-            NewApplication.lastStatusDate = DateTime.Now;
+            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
+            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = CreatedByUserID;
 
-            if (NewApplication.Save())
+            if (await NewApplication.SaveAsync())
             {
                 
                 NewLicense.ApplicationID = NewApplication.ID;
                 NewLicense.DriverID = this.DriverID;
                 NewLicense.LicenseClass = this.LicenseClass;
-                NewLicense.IssueDate = DateTime.Now;
-                NewLicense.ExpDate = DateTime.Now.AddYears(this.ClassInfo.DefaultValidityLength);
+                NewLicense.IssueDate = DateOnly.FromDateTime(DateTime.Now);
+                NewLicense.ExpDate = DateOnly.FromDateTime(DateTime.Now.AddYears(this.ClassInfo.DefaultValidityLength));
                 NewLicense.isActive = true;
                 NewLicense.PaidFees = (decimal)this.ClassInfo.ClassFees;
                 NewLicense.IssueReason = reason; 
                 NewLicense.Notes = Notes;
                 NewLicense.CreatedByUserID = CreatedByUserID;
 
-                if (NewLicense.Save())
+                if (await NewLicense.SaveAsync())
                 {
-                    NewApplication.setCompleted();
-                    DeactivateCurrentLicense();
+                    await NewApplication.setCompletedAsync();
+                    await DeactivateCurrentLicenseAsync();
                 }
             }
-
             return NewLicense; 
         }
-
-
-        public int Detain(decimal finefee, int CreatedByUserID)
+        public async Task<int> DetainAsync(decimal finefee, int CreatedByUserID)
         {
             int DetainID = -1;
             clsDetainedLicenses DetainInfo = new clsDetainedLicenses();
@@ -247,16 +210,16 @@ namespace BuisnessLayer
             DetainInfo.CreatedByUserID = CreatedByUserID;
             DetainInfo.LicenseID = this.ID;
 
+            //TODO : update to SaveAsync
             if (DetainInfo.Save())
             {
-                this.DeactivateCurrentLicense();
+               await this.DeactivateCurrentLicenseAsync();
                 DetainID = DetainInfo.ID; 
             }
 
             return DetainID; 
         }
-
-        public bool ReleaseLicense(int ReleasedByUserID)
+        public async Task<bool> ReleaseLicenseAsync(int ReleasedByUserID)
         {
             if (!this.isDetained)
                 return false;
@@ -266,14 +229,14 @@ namespace BuisnessLayer
             clsApplication NewApplication = new clsApplication();
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
-            NewApplication.Status = clsApplication.enApplicationSatatus.New;
-            NewApplication.TypeID = (int)clsApplication.enApplicationTypes.ReleaseDetainedDL;
-            NewApplication.Date = DateTime.Now;
+            NewApplication.Status = enStatus.New;
+            NewApplication.TypeID = (int)enType.ReleaseDetainedDL;
+            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID); 
-            NewApplication.lastStatusDate = DateTime.Now;
+            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = ReleasedByUserID;
 
-            if (NewApplication.Save())
+            if (await NewApplication.SaveAsync())
             {
                 if (detainInfo != null)
                 {
@@ -284,14 +247,14 @@ namespace BuisnessLayer
 
                     if (detainInfo.Save())
                     {
-                        this.ActivateCurrentLicense();
-                        NewApplication.setCompleted();
+                        await this.ActivateCurrentLicenseAsync();
+                        await NewApplication.setCompletedAsync();
                         return true; 
                     }
                 }
             }
-
             return false; 
         }
+    
     }
 }
