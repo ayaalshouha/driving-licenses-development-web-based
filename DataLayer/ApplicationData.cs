@@ -56,7 +56,7 @@ namespace DataLayer
             }
             return null; 
         }
-        public static async Task<int> Add(_Application application)
+        public static async Task<int> AddAsync(_Application application)
         {
             int newID = 0;
             try
@@ -95,7 +95,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static async Task<bool> Update(_Application application)
+        public static async Task<bool> UpdateAsync(_Application application)
         {
             int RowAffected = 0;
             try
@@ -136,7 +136,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static async Task<bool> Delete(int ApplicationID)
+        public static async Task<bool> DeleteAsync(int ApplicationID)
         {
             int RowAffected = 0;
             try
@@ -160,7 +160,7 @@ namespace DataLayer
            
             return RowAffected > 0;
         }
-        public static async Task<bool> isExist(int ApplicationID)
+        public static async Task<bool> isExistAsync(int ApplicationID)
         {
             bool isFound = false;
             try
@@ -186,7 +186,7 @@ namespace DataLayer
            
             return isFound;
         }
-        public static async Task<bool> isClassExist(int personID, int ClassID)
+        public static async Task<bool> isClassExistAsync(int personID, int ClassID)
         {
             bool isFound = false;
             try
@@ -218,7 +218,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<int> GetFees(int ApplicationID)
+        public static async Task<int> GetFeesAsync(int ApplicationID)
         {
             int fees = 0;
             try
@@ -250,7 +250,7 @@ namespace DataLayer
             }
             return fees;
         }
-        public static async Task<bool> Cancel(int ApplicationID)
+        public static async Task<bool> CancelAsync(int ApplicationID)
         {
             int RowAffected = 0;
                 try
@@ -272,7 +272,7 @@ namespace DataLayer
                 }
                  return RowAffected > 0;
         }
-        public static async Task<bool> UpdateStatus(int ApplicationID, int StatusNumber)
+        public static async Task<bool> UpdateStatusAsync(int ApplicationID, int StatusNumber)
         {
             int RowAffected = 0; 
             try
@@ -300,7 +300,7 @@ namespace DataLayer
             }
             return (RowAffected > 0);
         }
-        public static async Task<string> GetFullNameOfApplicant(int personID)
+        public static async Task<string> GetFullNameOfApplicantAsync(int personID)
         {
             string name = "";
             try

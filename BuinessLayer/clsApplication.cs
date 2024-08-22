@@ -1,70 +1,68 @@
 ﻿using System;
 using static BuisnessLayer.clsApplication;
 using DataLayer;
+using DTOsLayer;
 
 namespace BuisnessLayer
 {
     public class clsApplication
     {
-        private enum enMode { Add, Update };
-        private enMode _Mode = enMode.Add;
-        public enum enApplicationTypes
-        {
-            NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
-            DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
-        }
-
-        public enum enApplicationSatatus { New = 1, Cancelled = 2, Completed = 3 }
-
-
+        private enMode _Mode = enMode.add;
         public int ID { get; set; }
         public int PersonID { get; set; }
         public clsPerson PersonInfo { get; set; } 
-        public enApplicationSatatus Status { get; set; }
+        public enStatus Status { get; set; }
         public int TypeID { get; set; }
         public clsApplicationTypes TypeInfo { get; set; }
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public decimal PaidFees { get; set; }
-        public DateTime lastStatusDate { get; set; }
-        public int CreatedByUserID { get; set; }
-        
-
-
+        public DateOnly lastStatusDate { get; set; }
+        public int CreatedByUserID { get; set; }   
         public string StatusText
         {
             get
             {
                 switch (Status)
                 {
-                    case enApplicationSatatus.New:
+                    case enStatus.New:
                         return "New";
-                    case enApplicationSatatus.Cancelled:
+                    case enStatus.cancelled:
                         return "Cancelled";
-                    case enApplicationSatatus.Completed:
+                    case enStatus.completed:
                         return "Completed";
                     default:
                         return "Unknown";
                 }
             }
         }
+        public _Application applicationDTO
+        {
+            get
+            {
+                return new _Application
+                    (   
+                        this.ID, PersonID,this.Status, this.TypeID, this.Date, this.PaidFees, this.lastStatusDate, this.CreatedByUserID
+                    );
+            }
+        }
        public clsApplication()
        {
-            _Mode = enMode.Add;
+            _Mode = enMode.add;
             this.ID = -1; 
             this.PersonID = -1;
-            this.Status = enApplicationSatatus.New;
+            this.Status = enStatus.New;
             this.TypeID = -1;
-            this.Date = DateTime.Now;
+            this.Date = DateOnly.FromDateTime(DateTime.Now);
             this.PaidFees = -1;
             this.CreatedByUserID = -1;
-            this.lastStatusDate = DateTime.Now; 
+            this.lastStatusDate = DateOnly.FromDateTime(DateTime.Now); 
        }
 
-        private clsApplication(stApplication application)
+        private clsApplication(_Application application)
         {
             this.ID = application.ID;
             this.PersonID = application.PersonID;
-            this.Status = (enApplicationSatatus)application.Status;
+            this.Status = (enStatus)application.Status;
             this.TypeID = application.Type;
             this.TypeInfo = clsApplicationTypes.Find(TypeID); 
             this.Date = application.Date;
@@ -72,21 +70,29 @@ namespace BuisnessLayer
             this.CreatedByUserID = application.CreatedByUserID;
             this.PaidFees = application.PaidFees;
             this.PersonInfo = clsPerson.Find(this.PersonID);
-            _Mode = enMode.Update; 
+            _Mode = enMode.update; 
         }
 
-        public static clsApplication Find(int ApplicationID)
+        //TODO : convert methods into async 
+        public static async Task<clsApplication> FindAsync(int ApplicationID)
         {
-            stApplication application = new stApplication();
-            if (ApplicationData.getApplicationInfo(ApplicationID, ref application))
+            _Application application = await ApplicationData.getApplicationInfoAsync(ApplicationID);
+            if (application != null)
                 return new clsApplication(application);
             else
                 return null; 
         }
-
-        public string ApplicantFullName()
+        public static async Task<_Application> FindDTOAsync(int ApplicationID)
         {
-            return ApplicationData.GetFullNameOfApplicant(this.PersonID); 
+            _Application application = await ApplicationData.getApplicationInfoAsync(ApplicationID);
+            if (application != null)
+                return application;
+            else
+                return null;
+        }
+        public async Task<string> ApplicantFullNameAsync()
+        {
+            return await ApplicationData.GetFullNameOfApplicant(this.PersonID); 
         }
         private bool _AddNew()
         {

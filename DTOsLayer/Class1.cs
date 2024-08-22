@@ -13,8 +13,6 @@ namespace DTOsLayer
         NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
     }
-    
-   
     public class Driver
     {
         public int ID { get; set; }
@@ -60,7 +58,6 @@ namespace DTOsLayer
         }
 
     }
-    
     public class DetainedLicenses
     {
         public int ID { get; set; }
