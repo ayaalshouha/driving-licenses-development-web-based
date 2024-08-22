@@ -73,7 +73,6 @@ namespace BuisnessLayer
             _Mode = enMode.update; 
         }
 
-        //TODO : convert methods into async 
         public static async Task<clsApplication> FindAsync(int ApplicationID)
         {
             _Application application = await ApplicationData.getApplicationInfoAsync(ApplicationID);
@@ -92,85 +91,57 @@ namespace BuisnessLayer
         }
         public async Task<string> ApplicantFullNameAsync()
         {
-            return await ApplicationData.GetFullNameOfApplicant(this.PersonID); 
+            return await ApplicationData.GetFullNameOfApplicantAsync(this.PersonID); 
         }
-        private bool _AddNew()
+        private async Task<bool> _AddNewAsync()
         {
-            stApplication application = new stApplication
-            {
-                ID = this.ID,
-                PersonID = this.PersonID,
-                Date = this.Date,
-                lastStatusDate = this.lastStatusDate,
-                Status = (enStatus)this.Status,
-                Type = this.TypeID,
-                CreatedByUserID = this.CreatedByUserID,
-                PaidFees = this.PaidFees,
-            };
-
-            this.ID = ApplicationData.Add(application);
+            this.ID = await ApplicationData.AddAsync(applicationDTO);
             return this.ID != -1;
         }
 
-        private bool _Update()
+        private async Task<bool> _UpdateAsync()
         {
-            stApplication application = new stApplication
-            {
-                ID = this.ID,
-                PersonID = this.PersonID,
-                Date = this.Date,
-                lastStatusDate = this.lastStatusDate,
-                Status = (enStatus)this.Status,
-                Type = this.TypeID,
-                CreatedByUserID = this.CreatedByUserID,
-                PaidFees = this.PaidFees,
-            };
-
-            return ApplicationData.Update(application);
+            return await ApplicationData.UpdateAsync(applicationDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
 
             return false;
         }
 
-        public int Fees()
+        public async Task<int> FeesAsync()
         {
-            return ApplicationData.GetFees(this.ID);
+            return await ApplicationData.GetFeesAsync(this.ID);
         }
 
-        public static bool Delete(int AppID)
+        public static async Task<bool> DeleteAsync(int AppID)
         {
-            return ApplicationData.Delete(AppID);
+            return await ApplicationData.DeleteAsync(AppID);
 
         }
-
-        public static bool Cancel(int ApplicationID)
+        public static async Task<bool> CancelAsync(int ApplicationID)
         {
-            return ApplicationData.Cancel(ApplicationID);
+            return await ApplicationData.CancelAsync(ApplicationID);
         }
-
-
-        public bool setCompleted()
+        public async Task<bool> setCompletedAsync()
         {
-            return ApplicationData.UpdateStatus(this.ID,3);
+            return await ApplicationData.UpdateStatusAsync(this.ID,3);
         }
-
-        public static bool isClassExist(int PersonID, int ClassID)
+        public static async Task<bool> isClassExistAsync(int PersonID, int ClassID)
         {
-            return ApplicationData.isClassExist(PersonID, ClassID); 
+            return await ApplicationData.isClassExistAsync(PersonID, ClassID); 
         }
 
        
