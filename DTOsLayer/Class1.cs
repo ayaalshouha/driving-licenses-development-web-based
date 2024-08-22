@@ -70,20 +70,7 @@ namespace DTOsLayer
             this.TypeTitle = typetitle;
         }
     }
-    public class LocalDrivingLicensesApplication
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int LicenseClassID { get; set; }
-
-        public LocalDrivingLicensesApplication(int id, int appid, int licenseclassid)
-        {
-            this.ID = id;
-            this.ApplicationID = appid;
-            this.LicenseClassID = licenseclassid;
-        }
-
-    }
+    
     public class InternationalLicenses
     {
         public int ID { get; set; }

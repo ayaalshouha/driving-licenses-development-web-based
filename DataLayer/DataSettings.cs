@@ -11,20 +11,7 @@ namespace DataLayer
         public DateTime CreationDate { get; set; }
         public int CreatedByUserID { get; set; }
     }
-    public struct stLicenses
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int DriverID { get; set; }
-        public int LicenseClass { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
-        public bool isActive { get; set; }
-        public decimal PaidFees { get; set; }
-        public int IssueReason { get; set; }
-        public string Notes { get; set; }
-        public int CreatedByUserID { get; set; }
-    }
+   
     public struct stDetainedLicenses
     {
         public int ID { get; set; }
@@ -83,15 +70,7 @@ namespace DataLayer
         public int CreatedByUserID { get; set; }
 
     }
-    public struct stLicenseClass
-    {
-        public int ID { get; set; }
-        public string ClassName { get; set; }
-        public string Description { get; set; }
-        public decimal Fees { get; set; }
-        public byte MinAgeAllowed { get; set; }
-        public byte ValidityYears { get; set; }
-    }
+   
     public class DataSettings
     {
         public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;TrustServerCertificate=True;";

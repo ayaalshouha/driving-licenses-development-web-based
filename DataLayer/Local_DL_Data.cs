@@ -2,323 +2,260 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
+using DTOsLayer;
+using System.Runtime.CompilerServices;
 
 namespace DataLayer
 {
     public class Local_DL_Data
     {
-        public static bool getLocalLicenseInfo_ByApplicationID(int ApplicationID, ref stLocalDrivingLicensesApplication application)
+        public static async Task<LocalDLApp> getLocalLicenseInfo_ByApplicationIDAsync(int ApplicationID)
         {
-            bool isFound = false;
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from LocalDrivingLicensesApplications where ApplicationID = @ApplicationID;";
-
-                SqlCommand command = new SqlCommand(Query, connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    isFound = true;
-                    application.ID = (int)reader["ID"];
-                    application.ApplicationID = (int)reader["ApplicationID"];
-                    application.LicenseClassID = (int)reader["LicenseClassID"];
+                    string Query = "select * from LocalDrivingLicensesApplications where ApplicationID = @ApplicationID;";
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                return new LocalDLApp
+                                    (
+                                        reader.GetInt32(reader.GetOrdinal("ID")),
+                                        reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                                        reader.GetInt32(reader.GetOrdinal("LicenseClassID"))
+
+                                    );
+                            }
+                        }
+                    }
+
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                // Console.WriteLine("Error: " + e.Message);
             }
-            finally
-            {
-                connection.Close();
-            }
-            return isFound;
+          
+            return null;
         }
-        public static bool getLocalLicenseInfo(int localApplicationID, ref stLocalDrivingLicensesApplication application)
+        public static async Task<LocalDLApp> getLocalLicenseInfoAsync(int localApplicationID)
         {
-            bool isFound = false;
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"SELECT * FROM LocalDrivingLicensesApplications
+                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"SELECT * FROM LocalDrivingLicensesApplications
                      WHERE ID = @localApplicationID;";
 
-                SqlCommand command = new SqlCommand(Query, connection);
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        command.Parameters.AddWithValue("@localApplicationID", localApplicationID);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                return new LocalDLApp
+                                   (
+                                       reader.GetInt32(reader.GetOrdinal("ID")),
+                                       reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                                       reader.GetInt32(reader.GetOrdinal("LicenseClassID"))
 
-                command.Parameters.AddWithValue("@localApplicationID", localApplicationID);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    isFound = true;
-                    application.ID = (int)reader["ID"];
-                    application.ApplicationID = (int)reader["ApplicationID"];
-                    application.LicenseClassID = (int)reader["LicenseClassID"];
+                                   );
+                            }
+                        }
+                           
+                    }
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
-            finally
-            {
-                connection.Close();
-            }
-            return isFound;
+            
+            return null;
         }
-        public static int Add(stLocalDrivingLicensesApplication application)
+        public static async Task<int> AddAsync(LocalDLApp application)
         {
             int newID = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"INSERT INTO LocalDrivingLicensesApplications 
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+
+                    string Query = @"INSERT INTO LocalDrivingLicensesApplications 
                              VALUES (@ApplicationID,@LicenseClassID);
                         SELECT SCOPE_IDENTITY();";
 
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
+                        Command.Parameters.AddWithValue("@LicenseClassID", application.LicenseClassID);
+                        Connection.Open();
+                        object result = await Command.ExecuteScalarAsync();
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
-
-                Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
-                Command.Parameters.AddWithValue("@LicenseClassID", application.LicenseClassID);
-                Connection.Open();
-                object result = Command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int LastID))
-                {
-                    newID = LastID;
+                        if (result != null && int.TryParse(result.ToString(), out int LastID))
+                        {
+                            newID = LastID;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
             }
 
             return newID;
         }
-
-        public static bool Update(stLocalDrivingLicensesApplication application)
+        public static async Task<bool> UpdateAsync(LocalDLApp application)
         {
             int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"Update LocalDrivingLicensesApplications
-                SET ApplicationID = @ApplicationID,
-                        LicenseClassID = @LicenseClassID
-                WHERE ID = @LocalLicenseID;";
-
-                SqlCommand Command = new SqlCommand(Query, Connection);
-                Command.Parameters.AddWithValue("@LocalLicenseID", application.ID);
-                Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
-                Command.Parameters.AddWithValue("@LicenseClassID", application.LicenseClassID);
-               
-                Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
-            }
-
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-
-            return RowAffected > 0;
-        }
-        public static bool Delete(int ApplicationID)
-        {
-            int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "DELETE  FROM LocalDrivingLicensesApplications WHERE ID = @LocalLicenseID;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@LocalLicenseID", ApplicationID);
-                Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return RowAffected > 0;
-        }
-
-        public static DataTable LocalApplicationsView()
-        {
-            DataTable table = new DataTable();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM LocalDrivingLicensesApplications_Views;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-               
-                Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.HasRows)
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    table.Load(reader); 
+                    string Query = @"Update LocalDrivingLicensesApplications
+                    SET ApplicationID = @ApplicationID,
+                        LicenseClassID = @LicenseClassID
+                    WHERE ID = @LocalLicenseID;";
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@LocalLicenseID", application.ID);
+                        Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
+                        Command.Parameters.AddWithValue("@LicenseClassID", application.LicenseClassID);
+
+                        Connection.Open();
+                        RowAffected = await Command.ExecuteNonQueryAsync();
+                    }
                 }
-                reader.Close();
+            }
+
+            catch (Exception ex)
+            {
+                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+            }
+
+            return RowAffected > 0;
+        }
+        public static async Task<bool> DeleteAsync(int ApplicationID)
+        {
+            int RowAffected = 0;
+            try
+            {
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "DELETE  FROM LocalDrivingLicensesApplications WHERE ID = @LocalLicenseID;";
+                    using(SqlCommand command = new SqlCommand(Query, Connection)){
+                        command.Parameters.AddWithValue("@LocalLicenseID", ApplicationID);
+                        Connection.Open();
+                        RowAffected = await command.ExecuteNonQueryAsync();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
-            finally
+            
+            return RowAffected > 0;
+        }
+        public static async Task<IEnumerable<LocalDLApp_View>> LocalApplicationsViewAsync()
+        {
+            var table = new List<LocalDLApp_View>();
+            try
             {
-                Connection.Close();
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "SELECT * FROM LocalDrivingLicensesApplications_Views;";
+                    using(SqlCommand command = new SqlCommand(Query, Connection))
+                    {
+                        Connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        while (await reader.ReadAsync())
+                        {
+                            table.Add
+                                (
+                                    new LocalDLApp_View(
+                                        reader.GetInt32(reader.GetOrdinal("ID")),
+                                        reader.GetString(reader.GetOrdinal("NationalID")),
+                                        reader.GetString(reader.GetOrdinal("Class")),
+                                        reader.GetString(reader.GetOrdinal("FullName")),
+                                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                                        reader.GetInt32(reader.GetOrdinal("PassedTestCount")),
+                                        reader.GetString(reader.GetOrdinal("Status"))
+                                    )
+                                ); 
+                        }
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+            }
+           
             return table; 
         }
-
-        public static bool isRepeatedClass(int PersonID, int LicenseClassID)
+        public static async Task<bool> isRepeatedClassAsync(int PersonID, int LicenseClassID)
         {
             bool isRepeated = false;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-
             try
             {
-                string Query = @"SELECT LicenseClassID FFROM LocalDrivingLicensesApplications 
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"SELECT LicenseClassID FFROM LocalDrivingLicensesApplications 
                         INNER JOIN Applications
                         ON LocalDrivingLicensesApplications.ID = ApplicationID
                         WHERE Applications.PersonID = @PersonID 
                         AND LocalDrivingLicensesApplications.LicenseClassID = @LicenseClassID;";
-                            
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@PersonID", PersonID);
+                        Command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
+                        Connection.Open();
+                        object result = await Command.ExecuteScalarAsync();
 
-                Command.Parameters.AddWithValue("@PersonID", PersonID);
-                Command.Parameters.AddWithValue("@LicenseClassID", LicenseClassID);
-                Connection.Open();
-                object result = Command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int result_))
-                {
-                    isRepeated=true;
+                        if (result != null && int.TryParse(result.ToString(), out int result_))
+                        {
+                            isRepeated = true;
+                        }
+                    }
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: " + e.Message);
             }
-            finally
-            {
-                Connection.Close();
-            }
 
             return isRepeated;
-        }
-
-        public static DataTable New_LocalApplicationsView()
+        }       
+        public static async Task<IEnumerable<LocalDLApp_View>> New_LocalApplicationsViewAsync()
         {
-            DataTable table = new DataTable();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM New_LocalDrivingLicensesApplications_Views;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-
-                Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    table.Load(reader);
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return table;
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            return list.Where(E=>E.Status == "New");
         }
-        public static DataTable Cancelled_LocalApplicationsView()
+        public static async Task<IEnumerable<LocalDLApp_View>> Cancelled_LocalApplicationsViewAsync()
         {
-            DataTable table = new DataTable();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM Cancelled_LocalDrivingLicensesApplications_Views;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-
-                Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    table.Load(reader);
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return table;
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            return list.Where(E => E.Status == "Cancelled");
         }
-
-        public static DataTable Completed_LocalApplicationsView()
+        public static async Task<IEnumerable<LocalDLApp_View>> Completed_LocalApplicationsViewAsync()
         {
-            DataTable table = new DataTable();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = "SELECT * FROM Completed_LocalDrivingLicensesApplications_Views;";
-                SqlCommand command = new SqlCommand(Query, Connection);
-
-                Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    table.Load(reader);
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return table;
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            return list.Where(E => E.Status == "Completed");
         }
-
-        public static int getPassedTestCount(int localAppID)
+        public static async Task<int> getPassedTestCountAsync(int localAppID)
         {
             int Count = 0;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -332,7 +269,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@localAppID", localAppID);
 
                 connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if(result!= null && int.TryParse(result.ToString(), out int result2))
                 {
@@ -351,7 +288,7 @@ namespace DataLayer
             return Count; 
         }
 
-        public static bool DoesItCancelled(int LocalID)
+        public static async Task<bool> DoesItCancelledAsync(int LocalID)
         {
             string StatusText = "";
             bool Cancelled = false;
@@ -367,7 +304,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@LocalID", LocalID);
 
                 connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null)
                 {
@@ -391,7 +328,7 @@ namespace DataLayer
             return Cancelled;
         }
 
-        public static bool DoesItCompleted(int LocalID)
+        public static async Task<bool> DoesItCompletedAsync(int LocalID)
         {
             string StatusText = "";
             bool Completed = false;
@@ -407,7 +344,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@LocalID", LocalID);
 
                 connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null)
                 {
@@ -431,7 +368,7 @@ namespace DataLayer
             return Completed;
         }
 
-        public static bool isTestPassed(int localAppID, int TestType)
+        public static async Task<bool> isTestPassedAsync(int localAppID, int TestType)
         {
             bool testResult = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -453,7 +390,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@TestType", TestType);
                 connection.Open();
 
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
 
                 if (result != null && bool.TryParse(result.ToString(), out bool returnedResult))
                 {
@@ -471,7 +408,7 @@ namespace DataLayer
             return testResult;
         }
 
-        public static bool DoesAttendTestType(int LocalAppID, int TestTypeID)
+        public static async Task<bool> DoesAttendTestTypeAsync(int LocalAppID, int TestTypeID)
         {
             bool IsFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -493,7 +430,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@TestTypeID", TestTypeID);
 
                 connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
 
                 if (result != null)
                     IsFound = true;
