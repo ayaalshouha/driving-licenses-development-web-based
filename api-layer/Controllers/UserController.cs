@@ -79,7 +79,7 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<ActionResult<Person>> Update(int ID, User newUser)
+        public async Task<ActionResult<User>> Update(int ID, User newUser)
         {
             if (newUser == null)
                 return BadRequest("invalid object data");

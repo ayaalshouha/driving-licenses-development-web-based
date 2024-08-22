@@ -139,6 +139,10 @@ namespace BuisnessLayer
         {
             return await ApplicationData.UpdateStatusAsync(this.ID,3);
         }
+        public static async Task<bool> isExistAsync(int AppID)
+        {
+            return await ApplicationData.isExistAsync(AppID); 
+        }
         public static async Task<bool> isClassExistAsync(int PersonID, int ClassID)
         {
             return await ApplicationData.isClassExistAsync(PersonID, ClassID); 
