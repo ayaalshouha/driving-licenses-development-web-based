@@ -7,7 +7,7 @@ namespace BuisnessLayer
 {
     public class clsLicenseClasses
     {
-        public enMode Mode = enMode.AddNew;
+        public enMode Mode = enMode.add;
         public int LicenseClassID { set; get; }
         public string ClassName { set; get; }
         public string ClassDescription { set; get; }
@@ -38,7 +38,7 @@ namespace BuisnessLayer
 
         }
 
-        public clsLicenseClasses(stLicenseClass licenseClass)
+        public clsLicenseClasses(LicenseClass licenseClass)
 
         {
             this.LicenseClassID = licenseClass.ID;
@@ -51,18 +51,18 @@ namespace BuisnessLayer
         }
 
 
-        public static clsLicenseClasses Find(int ClassID)
+        public static async Task<clsLicenseClasses> FindAsync(int ClassID)
         {
-            stLicenseClass stClass = new stLicenseClass();
-             if(LicenseClassesData.getClassInfo(ClassID, ref stClass))
-                return new clsLicenseClasses(stClass);
+            LicenseClass Class = await LicenseClassesData.getClassInfoAsync(ClassID);
+             if(Class != null)
+                return new clsLicenseClasses(Class);
             else
                 return null;
         }
 
-        public static List<string> ClassesNames()
+        public static async Task<List<string>> ClassesNames()
         {
-            return LicenseClassesData.getAllClassesName();
+            return await LicenseClassesData.getAllClassesNameAsync();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DataLayer
 {
     public class LicenseClassesData
     {
-        public static async Task<LicenseClass> getClassInfo(int ClassID) 
+        public static async Task<LicenseClass> getClassInfoAsync(int ClassID) 
         {
             try
             {
@@ -48,9 +48,7 @@ namespace DataLayer
             }
             return null;
         }
-
-
-        public static async Task<bool> Update(LicenseClass Class_)
+        public static async Task<bool> UpdateAsync(LicenseClass Class_)
         {
             int RowAffected = 0;
             try
@@ -78,8 +76,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-
-        public static async Task<List<string>> getAllClassesName()
+        public static async Task<List<string>> getAllClassesNameAsync()
         {
             List<string> list = new List<string>();
             try
@@ -106,6 +103,5 @@ namespace DataLayer
             }
             return list;
         }
-
     }
 }
