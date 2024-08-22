@@ -3,8 +3,7 @@ using System.Data.Common;
 using System.Diagnostics;
 
 namespace DataLayer
-{
-   
+{ 
     public struct stDriver
     {
         public int ID { get; set; }
@@ -24,17 +23,6 @@ namespace DataLayer
         public decimal PaidFees { get; set; }
         public int IssueReason { get; set; }
         public string Notes { get; set; }
-        public int CreatedByUserID { get; set; }
-    }
-    public struct stApplication
-    {
-        public int ID { get; set; }
-        public int PersonID { get; set; }
-        public enStatus Status { get; set; }
-        public int Type { get; set; }
-        public DateTime Date { get; set; }
-        public decimal PaidFees { get; set; }
-        public DateTime lastStatusDate { get; set; }
         public int CreatedByUserID { get; set; }
     }
     public struct stDetainedLicenses

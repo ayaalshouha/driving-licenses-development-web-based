@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DTOsLayer;
 using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -8,35 +9,46 @@ namespace DataLayer
 {
     public class LicensesData
     {
-        public static bool getLicenseInfo(int licenseID, ref stLicenses license)
+        public static async Task<_License> getLicenseInfo(int licenseID)
         {
-            bool isFound = false;
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from Licenses where ID = @licenseID";
-
-                SqlCommand command = new SqlCommand(Query, connection);
-                command.Parameters.AddWithValue("@licenseID", licenseID);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    isFound = true;
-                    license.ID = (int)reader["ID"];
-                    license.isActive = (bool)reader["isActive"];
-                    license.ApplicationID = (int)reader["ApplicationID"];
-                    license.DriverID = (int)reader["DriverID"];
-                    license.LicenseClass = (int)reader["LicenseClass"];
-                    license.CreatedByUserID = (int)reader["CreateByUserID"];
-                    license.ExpDate = (DateTime)reader["ExpirationDate"];
-                    license.PaidFees = (decimal)reader["PaidFees"];
-                    license.IssueReason = (int)reader["IssueReason"];
-                    license.IssueDate = (DateTime)reader["IssueDate"];
-                    license.Notes = reader["Notes"] == DBNull.Value ? "" : (string)reader["Notes"];
-
+                    string Query = "select * from Licenses where ID = @licenseID"; 
+                    using(SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        command.Parameters.AddWithValue("@licenseID", licenseID);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                return new _License
+                                    (
+                                        reader.GetInt32(reader.GetOrdinal("ID")),
+                                        reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                                        reader.GetInt32(reader.GetOrdinal("DriverID")),
+                                        reader.GetInt32(reader.GetOrdinal("LicenseClass")),
+                                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
+                                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
+                                        reader.GetBoolean(reader.GetOrdinal("isActive")),
+                                        reader.GetInt32(reader.GetOrdinal("PaidFees")),
+                                        reader.GetInt32(reader.GetOrdinal("IssueReason")),
+                                        reader.GetString(reader.GetOrdinal("Notes")),
+                                        reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
+                                    ); 
+                                
+                            }
+                        }
+                    }
+                    
                 }
+                    
+
+                
+
+                
                 reader.Close();
             }
             catch (Exception ex)

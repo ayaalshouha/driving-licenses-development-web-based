@@ -1,5 +1,6 @@
-﻿using DataLayer;
-using System;
+﻿using System;
+using DataLayer;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
@@ -164,14 +165,14 @@ namespace BuisnessLayer
             clsLicenses NewLicense = new clsLicenses();
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
-            NewApplication.Status = clsApplication.enApplicationSatatus.New;
-            NewApplication.TypeID = (int)clsApplication.enApplicationTypes.RenewDL;
+            NewApplication.Status = enStatus.New;
+            NewApplication.TypeID = (int)enType.RenewDL;
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
-            NewApplication.Date = DateTime.Now;
-            NewApplication.lastStatusDate = DateTime.Now;
+            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
+            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = CreatedByUserID;
 
-            if (NewApplication.Save())
+            if (NewApplication.SaveAsync())
             {
                 NewLicense.ApplicationID = NewApplication.ID;
                 NewLicense.DriverID = this.DriverID;

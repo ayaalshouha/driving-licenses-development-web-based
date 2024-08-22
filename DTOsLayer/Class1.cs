@@ -28,36 +28,7 @@ namespace DTOsLayer
             this.CreatedByUserID = createdByUserId;
         }
     }
-    public class Licenses
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int DriverID { get; set; }
-        public int LicenseClass { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
-        public bool isActive { get; set; }
-        public decimal PaidFees { get; set; }
-        public int IssueReason { get; set; }
-        public string Notes { get; set; }
-        public int CreatedByUserID { get; set; }
-
-        public Licenses(int id, int applicationId, int driverId, int licenseClass, DateTime issueDate, DateTime expDate, bool isActive, decimal paidFees, int issueReason, string notes, int createdByUserId)
-        {
-            this.ID = id;
-            this.ApplicationID = applicationId;
-            this.DriverID = driverId;
-            this.LicenseClass = licenseClass;
-            this.IssueDate = issueDate;
-            this.ExpDate = expDate;
-            this.isActive = isActive;
-            this.PaidFees = paidFees;
-            this.IssueReason = issueReason;
-            this.Notes = notes;
-            this.CreatedByUserID = createdByUserId;
-        }
-
-    }
+   
     public class DetainedLicenses
     {
         public int ID { get; set; }
@@ -177,25 +148,7 @@ namespace DTOsLayer
         }
 
     }
-    public class LicenseClass
-    {
-        public int ID { get; set; }
-        public string ClassName { get; set; }
-        public string Description { get; set; }
-        public decimal Fees { get; set; }
-        public byte MinAgeAllowed { get; set; }
-        public byte ValidityYears { get; set; }
-
-        public LicenseClass(int id, string classname, string desc, decimal fee, byte minageallow, byte validityyears)
-        {
-            this.ClassName = classname;
-            this.Description = desc;
-            this.ID = id;
-            this.Fees = fee;
-            this.MinAgeAllowed = minageallow;
-            this.ValidityYears = validityyears;
-        }
-    }
+    
 
 }
 
