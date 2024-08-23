@@ -2,52 +2,53 @@
 using System;
 using System.Data;
 using System.Runtime.CompilerServices;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
-    public class clsLocalDrivingLicenses 
+    //TODO Start Here
+    public class clsLocalDrivingLicenses
     {
+        public enMode _Mode { get; set; }
         public int ID { get; set; }
         public int ApplicationID { get; set; }
-
-        public clsApplication MainApplicationInfo {  get; set; }
         public int LicenseClassID { get; set; }
-
+        public clsApplication MainApplicationInfo { get; set; }
         public clsLicenseClasses LicenseClassesInfo { get; set; }
 
-        public enum enMode { Add, Update };
-        public enMode _Mode { get; set; }
-
+        public LocalDLApp LocalDLAppDTO
+        {
+            get{
+                return new LocalDLApp(this.ID, this.ApplicationID, this.LicenseClassID);
+            }
+        }
         public clsLocalDrivingLicenses()
         {
             this.ID = -1;
             this.ApplicationID = -1;
             this.LicenseClassID = -1;
-            this._Mode = enMode.Add; 
+            this._Mode = enMode.add; 
 
         }
-
-        private clsLocalDrivingLicenses(stLocalDrivingLicensesApplication License)
+        private clsLocalDrivingLicenses(LocalDLApp License)
         {
             this.ID = License.ID;
             this.ApplicationID = License.ApplicationID;
             this.LicenseClassID= License.LicenseClassID;
-            MainApplicationInfo = clsApplication.Find(ApplicationID);
+            MainApplicationInfo =  clsApplication.Find(ApplicationID);
              LicenseClassesInfo = clsLicenseClasses.Find(this.LicenseClassID); 
-            this._Mode = enMode.Update; 
+            this._Mode = enMode.update; 
         }
 
-        public string FullName
+        public async Task<string> FullNameAsync()
         {
-            get
-            {
-                return clsApplication.Find(ApplicationID).ApplicantFullName(); 
-            } 
+            clsApplication applicant = await clsApplication.FindAsync(ApplicationID); 
+             return await applicant.ApplicantFullNameAsync(); 
         }
-        public static clsLocalDrivingLicenses Find(int Local_LicenseID)
+        public static async Task<clsLocalDrivingLicenses> FindAsync(int Local_LicenseID)
         {
-            stLocalDrivingLicensesApplication localLicense = new stLocalDrivingLicensesApplication();
-            if (Local_DL_Data.getLocalLicenseInfo(Local_LicenseID, ref localLicense))
+            LocalDLApp localLicense = await Local_DL_Data.getLocalLicenseInfoAsync(Local_LicenseID);
+            if (localLicense != null)
                 return new clsLocalDrivingLicenses(localLicense);
             else
                 return null;

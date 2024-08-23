@@ -12,6 +12,10 @@ namespace DataLayer
 {
     public class LicenseClassesData
     {
+        public static LicenseClass getClassInfo(int ClassID)
+        {
+            return getClassInfoAsync(ClassID).GetAwaiter().GetResult(); 
+        }
         public static async Task<LicenseClass> getClassInfoAsync(int ClassID) 
         {
             try
@@ -103,5 +107,6 @@ namespace DataLayer
             }
             return list;
         }
+   
     }
 }

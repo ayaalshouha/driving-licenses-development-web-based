@@ -57,7 +57,6 @@ namespace BuisnessLayer
             this.CreatedByUserID = -1;
             this.lastStatusDate = DateOnly.FromDateTime(DateTime.Now); 
        }
-
         private clsApplication(_Application application)
         {
             this.ID = application.ID;
@@ -72,7 +71,14 @@ namespace BuisnessLayer
             this.PersonInfo = clsPerson.Find(this.PersonID);
             _Mode = enMode.update; 
         }
-
+        public static clsApplication Find(int ApplicationID)
+        {
+            _Application application = ApplicationData.getApplicationInfo(ApplicationID);
+            if (application != null)
+                return new clsApplication(application);
+            else
+                return null;
+        }
         public static async Task<clsApplication> FindAsync(int ApplicationID)
         {
             _Application application = await ApplicationData.getApplicationInfoAsync(ApplicationID);
@@ -89,10 +95,18 @@ namespace BuisnessLayer
             else
                 return null;
         }
-        public async Task<string> ApplicantFullNameAsync()
+        
+        public  async Task<string> ApplicantFullNameAsync()
         {
             return await ApplicationData.GetFullNameOfApplicantAsync(this.PersonID); 
         }
+
+        //Create sync version of async method
+        public string ApplicantFullName
+        {
+            get { return ApplicantFullNameAsync().GetAwaiter().GetResult(); }
+        }
+
         private async Task<bool> _AddNewAsync()
         {
             this.ID = await ApplicationData.AddAsync(applicationDTO);

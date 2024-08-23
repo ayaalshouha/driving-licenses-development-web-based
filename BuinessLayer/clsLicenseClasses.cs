@@ -59,6 +59,14 @@ namespace BuisnessLayer
             else
                 return null;
         }
+        public static clsLicenseClasses Find(int ClassID)
+        {
+            LicenseClass Class =  LicenseClassesData.getClassInfo(ClassID);
+            if (Class != null)
+                return new clsLicenseClasses(Class);
+            else
+                return null;
+        }
 
         public static async Task<List<string>> ClassesNames()
         {

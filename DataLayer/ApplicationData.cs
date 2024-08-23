@@ -16,6 +16,10 @@ namespace DataLayer
 {
     public class ApplicationData
     {
+        public static _Application getApplicationInfo(int ApplicationID)
+        {
+            return getApplicationInfoAsync(ApplicationID).GetAwaiter().GetResult();
+        }
         public static async Task<_Application> getApplicationInfoAsync(int ApplicationID)
         {
             try
