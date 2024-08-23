@@ -73,11 +73,7 @@ namespace BuisnessLayer
         }
         public static clsApplication Find(int ApplicationID)
         {
-            _Application application = ApplicationData.getApplicationInfo(ApplicationID);
-            if (application != null)
-                return new clsApplication(application);
-            else
-                return null;
+            return FindAsync(ApplicationID).GetAwaiter().GetResult();
         }
         public static async Task<clsApplication> FindAsync(int ApplicationID)
         {
@@ -94,8 +90,7 @@ namespace BuisnessLayer
                 return application;
             else
                 return null;
-        }
-        
+        }     
         public  async Task<string> ApplicantFullNameAsync()
         {
             return await ApplicationData.GetFullNameOfApplicantAsync(this.PersonID); 
@@ -106,13 +101,11 @@ namespace BuisnessLayer
         {
             get { return ApplicantFullNameAsync().GetAwaiter().GetResult(); }
         }
-
         private async Task<bool> _AddNewAsync()
         {
             this.ID = await ApplicationData.AddAsync(applicationDTO);
             return this.ID != -1;
         }
-
         private async Task<bool> _UpdateAsync()
         {
             return await ApplicationData.UpdateAsync(applicationDTO);
@@ -134,12 +127,10 @@ namespace BuisnessLayer
 
             return false;
         }
-
         public async Task<int> FeesAsync()
         {
             return await ApplicationData.GetFeesAsync(this.ID);
         }
-
         public static async Task<bool> DeleteAsync(int AppID)
         {
             return await ApplicationData.DeleteAsync(AppID);
