@@ -5,14 +5,15 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTOsLayer;
+using System.Runtime.CompilerServices;
 
 namespace DataLayer
 {
     public class TestTypesData
     {
-        public static bool getTestTypeInfo(int TypeID, ref Types type)
+        public static async Task<TestType> getTestTypeInfoAsync(int TypeID)
         {
-            bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -23,13 +24,14 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    type.ID = (int)reader["ID"];
-                    type.TypeTitle = (string)reader["Type"];
-                    type.Fees = (decimal)reader["Fees"];
-                    type.Description = (string)reader["Description"]; 
+                    return new TestType(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetString(reader.GetOrdinal("Type")),
+                            reader.GetDecimal(reader.GetOrdinal("Fees")),
+                            reader.GetString(reader.GetOrdinal("Description"))
+                        ); 
                 }
                 reader.Close();
             }
@@ -42,10 +44,10 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+           
+            return null;
         }
-
-        public static bool Update(Types type)
+        public static async Task<bool> UpdateAsync(Types type)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -62,7 +64,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@Description", type.Description);
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -76,9 +78,9 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static DataTable getAllTestTypes()
+        public static async Task<IEnumerable<TestType>> getAllTestTypes()
         {
-            DataTable table = new DataTable();
+            var table = new List<TestType>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -88,9 +90,15 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.HasRows)
+                while (await reader.ReadAsync())
                 {
-                    table.Load(reader);
+                    table.Add(
+                            new TestType(
+                                reader.GetInt32(reader.GetOrdinal("ID")),
+                                reader.GetString(reader.GetOrdinal("Type")),
+                                reader.GetDecimal(reader.GetOrdinal("Fees")),
+                                reader.GetString(reader.GetOrdinal("Description")))
+                        );
                 }
                 reader.Close();
             }

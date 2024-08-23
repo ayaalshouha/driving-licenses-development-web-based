@@ -24,20 +24,8 @@ namespace DataLayer
         public int ReleasedByUserID { get; set; }
         public int CreatedByUserID { get; set; }
     }
-    public struct Types
-    {
-        public int ID { get; set; }
-        public string TypeTitle { get; set; }
-        public decimal Fees { get; set; }
-        public string Description { get; set; }
-    }
-    public struct stLocalDrivingLicensesApplication
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int LicenseClassID { get; set; }
-
-    }
+  
+   
     public struct stInternationalLicenses
     {
         public int ID { get; set; }
@@ -61,15 +49,7 @@ namespace DataLayer
         public int RetakeTestID { get; set; }
 
     }
-    public struct stTests
-    {
-        public int ID { get; set; }
-        public int AppointmentID { get; set; }
-        public bool Result { get; set; }
-        public string Notes { get; set; }
-        public int CreatedByUserID { get; set; }
-
-    }
+    
    
     public class DataSettings
     {

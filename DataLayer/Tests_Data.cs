@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using static System.Net.Mime.MediaTypeNames;
+using System.Runtime.CompilerServices;
 
 namespace DataLayer
 {
     public class Tests_Data
     {
-        public static bool getTestInfo(int TestID, ref stTests test)
+        //TODO Make Async
+        public static async Task<bool> getTestInfoAsync(int TestID, ref stTests test)
         {
             bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -43,8 +45,7 @@ namespace DataLayer
             }
             return isFound;
         }
-
-        public static bool GetLastTestPerTestType(int PersonID, int ClassID, int TestType, ref stTests test)
+        public static async Task<bool> GetLastTestPerTestTypeAsync(int PersonID, int ClassID, int TestType, ref stTests test)
         {
             bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -93,7 +94,7 @@ namespace DataLayer
             return isFound;
 
         }
-        public static int Add(stTests test)
+        public static async Task<int> AddAsync(stTests test)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -133,8 +134,7 @@ namespace DataLayer
 
             return newID;
         }
-
-        public static bool Update(stTests test)
+        public static async Task<bool> UpdateAsync(stTests test)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -170,7 +170,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int testID)
+        public static async Task<bool> DeleteAsync(int testID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -192,7 +192,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int testID)
+        public static async Task<bool> isExistAsync(int testID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -216,8 +216,7 @@ namespace DataLayer
             }
             return isFound;
         }
-
-        public static DataTable getTestsTable()
+        public static async Task<IEnumerable<>> getTestsTableAsync()
         {
             DataTable table = new DataTable();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -244,16 +243,7 @@ namespace DataLayer
                 Connection.Close();
             }
             return table;
-        }
-
-        //public static bool PassedFailedResult()
-        //{
-        //    bool Result = false;
-
-
-        //    select Result from Tests
-        //    where AppointmentID = @AppointmentID;
-        //}
+        }     
     
     }
 }

@@ -1,12 +1,13 @@
 ﻿using DataLayer;
 using System.Data;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
     public class clsTestTypes
     {
        
-        public clsTestTypes.enTestType ID { get; set; }
+        public enTestType ID { get; set; }
         public string TypeTitle { get; set; }
         public string Description { get; set; }
         public decimal Fees { get; set; }

@@ -30,7 +30,6 @@ namespace DTOsLayer
             this.CreatedByUserID = createdByUserId;
         }
     }
-   
     public class DetainedLicenses
     {
         public int ID { get; set; }
@@ -56,22 +55,7 @@ namespace DTOsLayer
             this.isReleased = isreleased;
         }
 
-    }
-    public class Types
-    {
-        public int ID { get; set; }
-        public string TypeTitle { get; set; }
-        public decimal Fees { get; set; }
-        public string Description { get; set; }
-        public Types(int id, string typetitle, decimal fee, string desc)
-        {
-            this.Description = desc;
-            this.ID = id;
-            this.Fees = fee;
-            this.TypeTitle = typetitle;
-        }
-    }
-    
+    }  
     public class InternationalLicenses
     {
         public int ID { get; set; }
@@ -116,24 +100,6 @@ namespace DTOsLayer
             this.CreatedByUserID = createdby;
             this.PaidFees = paidfees;
             this.LocalLicenseApplicationID = locallicenseid;
-        }
-
-    }
-    public class Tests
-    {
-        public int ID { get; set; }
-        public int AppointmentID { get; set; }
-        public bool Result { get; set; }
-        public string Notes { get; set; }
-        public int CreatedByUserID { get; set; }
-
-        public Tests(int id, int appointmentID, bool result, string notes, int createdby)
-        {
-            this.ID = id;
-            this.AppointmentID = appointmentID;
-            this.Result = result;
-            this.Notes = notes;
-            this.CreatedByUserID = createdby;
         }
 
     }

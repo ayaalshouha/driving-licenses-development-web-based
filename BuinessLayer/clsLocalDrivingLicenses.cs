@@ -5,8 +5,7 @@ using System.Runtime.CompilerServices;
 using DTOsLayer; 
 
 namespace BuisnessLayer
-{
-    //TODO Start Here
+{  
     public class clsLocalDrivingLicenses
     {
         public enMode _Mode { get; set; }
