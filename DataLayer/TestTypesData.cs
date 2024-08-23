@@ -47,7 +47,7 @@ namespace DataLayer
            
             return null;
         }
-        public static async Task<bool> UpdateAsync(Types type)
+        public static async Task<bool> UpdateAsync(TestType type)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);

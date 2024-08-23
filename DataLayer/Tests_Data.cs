@@ -4,15 +4,14 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using static System.Net.Mime.MediaTypeNames;
 using System.Runtime.CompilerServices;
+using DTOsLayer; 
 
 namespace DataLayer
 {
     public class Tests_Data
     {
-        //TODO Make Async
-        public static async Task<bool> getTestInfoAsync(int TestID, ref stTests test)
+        public static async Task<Test> getTestInfoAsync(int TestID)
         {
-            bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -23,15 +22,16 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    test.ID = (int)reader["ID"];
-                    test.AppointmentID = (int)reader["AppointmentID"];
-                    test.Notes = (string)reader["Notes"];
-                    test.CreatedByUserID = (int)reader["CreatedByUserID"];
-                    test.Result = (bool)reader["Result"];
-                }
+                    return new Test(
+                             reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                            reader.GetBoolean(reader.GetOrdinal("Result")),
+                            reader.GetString(reader.GetOrdinal("Notes")),
+                            reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        );
+                }  
                 reader.Close();
             }
             catch (Exception ex)
@@ -43,11 +43,11 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
-        public static async Task<bool> GetLastTestPerTestTypeAsync(int PersonID, int ClassID, int TestType, ref stTests test)
+        public static async Task<Test> GetLastTestPerTestTypeAsync(int PersonID, int ClassID, int TestType)
         {
-            bool isFound = false;
+            
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -71,14 +71,15 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    test.ID = (int)reader["ID"];
-                    test.AppointmentID = (int)reader["AppointmentID"];
-                    test.Notes = (string)reader["Notes"];
-                    test.CreatedByUserID = (int)reader["CreateByUserID"];
-                    test.Result = (bool)reader["Result"];
+                    return new Test(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                           reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                           reader.GetBoolean(reader.GetOrdinal("Result")),
+                           reader.GetString(reader.GetOrdinal("Notes")),
+                           reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                       );
                 }
                 reader.Close();
             }
@@ -91,10 +92,10 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
 
         }
-        public static async Task<int> AddAsync(stTests test)
+        public static async Task<int> AddAsync(Test test)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -116,7 +117,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", test.CreatedByUserID);
             
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -134,7 +135,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static async Task<bool> UpdateAsync(stTests test)
+        public static async Task<bool> UpdateAsync(Test test)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -156,7 +157,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@Notes", test.Notes);
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -180,11 +181,11 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@testID", testID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
@@ -203,12 +204,12 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@testID", testID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
@@ -216,9 +217,9 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<IEnumerable<>> getTestsTableAsync()
+        public static async Task<IEnumerable<Test>> getTestsTableAsync() 
         {
-            DataTable table = new DataTable();
+            var table = new List<Test>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -228,15 +229,22 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.HasRows)
+                while (await reader.ReadAsync())
                 {
-                    table.Load(reader);
+                    table.Add(
+                        new Test(
+                             reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                            reader.GetBoolean(reader.GetOrdinal("Result")),
+                            reader.GetString(reader.GetOrdinal("Notes")),
+                            reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        ));
                 }
                 reader.Close();
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
