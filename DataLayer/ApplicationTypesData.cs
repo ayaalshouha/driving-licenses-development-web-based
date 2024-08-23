@@ -2,14 +2,14 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
+using DTOsLayer; 
 
 namespace DataLayer
 {
     public class ApplicationTypesData
     {
-        public static bool getApplicationTypeInfo(int TypeID, ref Types type)
+        public static async Task<ApplicationType> getApplicationTypeInfoAsync(int TypeID)
         {
-            bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -20,12 +20,13 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    type.ID = (int)reader["ID"];
-                    type.TypeTitle = (string)reader["Type"];
-                    type.Fees = (decimal)reader["Fees"];
+                    return new ApplicationType(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                             reader.GetString(reader.GetOrdinal("Type")),
+                              reader.GetDecimal(reader.GetOrdinal("Fees"))
+                        );
                 }
                 reader.Close();
             }
@@ -38,10 +39,10 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
 
-        public static bool Update(Types type)
+        public static async Task<bool> UpdateAsync(ApplicationType type)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -53,12 +54,12 @@ namespace DataLayer
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
                 Command.Parameters.AddWithValue("@TypeID", type.ID);
-                Command.Parameters.AddWithValue("@Fees", type.Fees);
+                Command.Parameters.AddWithValue("@Fees", type.TypeFee);
                 Command.Parameters.AddWithValue("@Title", type.TypeTitle);
                 
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -73,9 +74,9 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static DataTable getAllApplicationTypes()
+        public static async Task<IEnumerable<ApplicationType>> getAllApplicationTypesAsync()
         {
-            DataTable table = new DataTable();
+            var table = new List<ApplicationType>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -85,9 +86,15 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.HasRows)
+                while (await reader.ReadAsync())
                 {
-                    table.Load(reader);
+                    table.Add(
+                        new ApplicationType(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetString(reader.GetOrdinal("Type")),
+                            reader.GetDecimal(reader.GetOrdinal("Fees"))
+                              )
+                        );
                 }
                 reader.Close();
             }
@@ -103,7 +110,7 @@ namespace DataLayer
             return table;
         }
 
-        public static decimal GetFee(int TypeID)
+        public static async Task<decimal> GetFeeAsync(int TypeID)
         { 
             decimal fee = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -118,7 +125,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@TypeID", TypeID);
 
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && decimal.TryParse(result.ToString(), out decimal result_))
                 {
