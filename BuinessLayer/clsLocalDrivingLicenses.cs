@@ -53,130 +53,110 @@ namespace BuisnessLayer
             else
                 return null;
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stLocalDrivingLicensesApplication application = new stLocalDrivingLicensesApplication
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                LicenseClassID = this.LicenseClassID
-            };
-
-            this.ID = Local_DL_Data.Add(application);
+            this.ID = await Local_DL_Data.AddAsync(LocalDLAppDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stLocalDrivingLicensesApplication application = new stLocalDrivingLicensesApplication
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                LicenseClassID = this.LicenseClassID
-            };
-
-            return Local_DL_Data.Update(application);
+            return await Local_DL_Data.UpdateAsync(LocalDLAppDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
 
             return false;
         }
-
-        public static bool Delete(int localAppID)
+        public static async Task<bool> DeleteAsync(int localAppID)
         {
-            return Local_DL_Data.Delete(localAppID);
+            return await Local_DL_Data.DeleteAsync(localAppID);
         }
-        public bool isRepeatedClass(int personID)
+        public async Task<bool> isRepeatedClassAsync(int personID)
         {
-            return Local_DL_Data.isRepeatedClass(personID, this.LicenseClassID); 
+            return await Local_DL_Data.isRepeatedClassAsync(personID, this.LicenseClassID); 
         }
-        public static DataTable List()
+        public static async Task<IEnumerable<LocalDLApp_View>> ListAsync()
         {
-            return Local_DL_Data.LocalApplicationsView();
+            return await Local_DL_Data.LocalApplicationsViewAsync();
         }
-
-        public bool isTestPassed(clsTestTypes.enTestType TestType)
+        public async Task<bool> isTestPassedAsync(enTestType TestType)
         {
             //decide if person passed specific test type or not 
-            return Local_DL_Data.isTestPassed(this.ID, (int)TestType); 
+            return await Local_DL_Data.isTestPassedAsync(this.ID, (int)TestType); 
         }
-        public static DataTable NewStatus_List()
+        public static async Task<IEnumerable<LocalDLApp_View>> NewStatus_List()
         {
-            return Local_DL_Data.New_LocalApplicationsView();
+            return await Local_DL_Data.New_LocalApplicationsViewAsync();
         }
-        public static DataTable CancelledStatus_List()
+        public static async Task<IEnumerable<LocalDLApp_View>> CancelledStatus_List()
         {
-            return Local_DL_Data.Cancelled_LocalApplicationsView();
+            return await Local_DL_Data.Cancelled_LocalApplicationsViewAsync();
         }
-        public static DataTable CompletedStatus_List()
+        public static async Task<IEnumerable<LocalDLApp_View>> CompletedStatus_List()
         {
-            return Local_DL_Data.Completed_LocalApplicationsView();
+            return await Local_DL_Data.Completed_LocalApplicationsViewAsync();
         }
-        public static int PassedTest(int LocalAppID)
+        public static async Task<int> PassedTestAsync(int LocalAppID)
         {
             //total passed test for the applicant
-            return Local_DL_Data.getPassedTestCount(LocalAppID); 
+            return await Local_DL_Data.getPassedTestCountAsync(LocalAppID); 
         }
-
-        public bool DoesPassedAllTest()
+        public async Task<bool> DoesPassedAllTestAsync()
         {
-            return (PassedTest(this.ID) == 3); 
+            return (await PassedTestAsync(this.ID) == 3); 
         }
-
-        public static bool DoesItCancelled(int MainApplicationID)
+        public static async Task<bool> DoesItCancelledAsync(int MainApplicationID)
         {
-            return Local_DL_Data.DoesItCancelled(MainApplicationID);
+            return await Local_DL_Data.DoesItCancelledAsync(MainApplicationID);
         }
-
-        public static bool DoesItCompleted(int MainApplicationID)
+        public static async Task<bool> DoesItCompletedAsync(int MainApplicationID)
         {
-            return Local_DL_Data.DoesItCompleted(MainApplicationID);
+            return await Local_DL_Data.DoesItCompletedAsync(MainApplicationID);
         }
-        public bool isLicenseIssued()
+        public async Task<bool> isLicenseIssuedAsync()
         {
-            return (getLicenseID() != -1); 
+            int id = await getLicenseIDAsync();
+            return (id != -1); 
         }
-
-        public int getLicenseID()
+        public async Task<int> getLicenseIDAsync()
         {
            //get ID if person has an active license of specific Class and -1 if he does NOT have one
-            return LicensesData.GetActiveLicenseIDByPersonID(MainApplicationInfo.PersonID, this.LicenseClassID);
+            return await LicensesData.GetActiveLicenseIDByPersonIDAsync(MainApplicationInfo.PersonID, this.LicenseClassID);
         }
 
-        public clsTests GetLastTestPerTestType(clsTestTypes.enTestType Type)
+        //TODO : Make Tests class async dataa and buisness
+        public async Task<clsTests> GetLastTestPerTestTypeAsync(enTestType Type)
         {
             //decide if there is a test record for the person , regardless the result 
-            return clsTests.FindTestByPersonIDAndLicenseClass(MainApplicationInfo.PersonID, LicenseClassID, Type);
+            return await clsTests.FindTestByPersonIDAndLicenseClassAsync(MainApplicationInfo.PersonID, LicenseClassID, Type);
         }
-        public bool DoesAttendTestType(clsTestTypes.enTestType Type)
+        public async Task<bool> DoesAttendTestTypeAsync(enTestType Type)
         {
             //decide if the creation mode of appointment is a first time mode or a retake test mode 
-            return Local_DL_Data.DoesAttendTestType(this.ID, (int)Type);
+            return await Local_DL_Data.DoesAttendTestTypeAsync(this.ID, (int)Type);
+        }
+        public async Task<bool> setCancelledAsync()
+        {
+            return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 2);
+        }
+        public async Task<bool> setCompletedAsync()
+        {
+            return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 3); 
         }
 
-        public bool setCancelled()
-        {
-            return ApplicationData.UpdateStatus(this.ApplicationID, 2);
-        }
-
-        public bool setCompleted()
-        {
-            return ApplicationData.UpdateStatus(this.ApplicationID, 3); 
-        }
+        //TODO Make Drivers layers async
         public int IssueLicenseForTheFirstTime(int CreatedByUserID, string Notes)
         {
             int DriverID = -1; 

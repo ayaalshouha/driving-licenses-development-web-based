@@ -49,7 +49,7 @@ namespace BuisnessLayer
             PersonInfo = clsPerson.Find(this.PersonID); 
             _Mode = enMode.update;
         }
-        public static async Task<clsUser> Find_ByPersonID(int PersonID)
+        public static async Task<clsUser> Find_ByPersonIDAsync(int PersonID)
         {
             User user = await UserData.getUserInfo_ByPersonIDAsync(PersonID); 
             if (user != null)
@@ -74,17 +74,9 @@ namespace BuisnessLayer
             }
             else return null;
         }
-
-        //TODO : Make this async 
         public static clsUser Find(int UserID)
         {
-            User user =  UserData.getUserInfo_ByID(UserID);
-            if (user != null)
-            {
-                //user.password = clsGeneral.Decrypt(user.password);
-                return new clsUser(user);
-            }
-            else return null;
+            return FindAsync(UserID).GetAwaiter().GetResult();
         }
         public static async Task<User> FindUserDTOAsync(int UserID)
         {

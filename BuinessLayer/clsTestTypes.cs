@@ -5,7 +5,7 @@ namespace BuisnessLayer
 {
     public class clsTestTypes
     {
-        public enum enTestType { VisionTest = 1, WrittenTest = 2, StreetTest = 3 };
+       
         public clsTestTypes.enTestType ID { get; set; }
         public string TypeTitle { get; set; }
         public string Description { get; set; }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
+    public enum enTestType { VisionTest = 1, WrittenTest = 2, StreetTest = 3 };
     public enum enIssueReason { FirstTime = 1, Renew = 2, DamagedReplacement = 3, LostReplacement = 4 };
     public enum enMode { add, update }
     public enum enStatus : int { New = 1, cancelled, completed }
