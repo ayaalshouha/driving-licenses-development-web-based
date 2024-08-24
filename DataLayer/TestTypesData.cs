@@ -47,6 +47,32 @@ namespace DataLayer
            
             return null;
         }
+
+        public static async Task<int> AddAsync(TestType type)
+        {
+            int newID = 0;
+            using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+            {
+                string Query = @"INSERT INTO ApplicationTypes 
+                             VALUES (@TypeTitle,@Fee, @Desc);
+                        SELECT SCOPE_IDENTITY();";
+
+                using (SqlCommand Command = new SqlCommand(Query, Connection))
+                {
+                    Command.Parameters.AddWithValue("@TypeTitle", type.TypeTitle);
+                    Command.Parameters.AddWithValue("@Fee", type.Fees);
+                    Command.Parameters.AddWithValue("@Desc", type.Description);
+                    Connection.Open();
+                    object result = await Command.ExecuteScalarAsync();
+
+                    if (result != null && int.TryParse(result.ToString(), out int LastID))
+                    {
+                        newID = LastID;
+                    }
+                }
+            }
+            return newID;
+        }
         public static async Task<bool> UpdateAsync(TestType type)
         {
             int RowAffected = 0;
@@ -78,7 +104,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static async Task<IEnumerable<TestType>> getAllTestTypes()
+        public static async Task<IEnumerable<TestType>> getAllTestTypesAsync()
         {
             var table = new List<TestType>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
