@@ -6,14 +6,15 @@ using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection.PortableExecutable;
+using DTOsLayer;
 
 namespace DataLayer
 {
     public class DetainedLicenses_Data
     {
-        public static bool getDetainedLicenseInfo(int DetainID, ref stDetainedLicenses license)
+        public static async Task<DetainedLicense> getDetainedLicenseInfoAsync(int DetainID)
         {
-            bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -24,21 +25,20 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    license.ID = (int)reader["ID"];
-                    license.LicenseID = (int)reader["LicenseID"];
-                    license.DetainDate = (DateTime)reader["DetainDate"];
-                    license.FineFees = (decimal)reader["FineFees"];
-                    license.CreatedByUserID = (int)reader["CreatedByUserID"];
-
-                    license.isReleased = (bool)reader["isReleased"];
-
-                    license.ReleaseDate = reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"];
-                    license.ReleasedByUserID = reader["ReleasedByUserID"] == DBNull.Value ? 0 : (int)reader["ReleasedByUserID"];
-                    license.ReleaseApplicationID = reader["ReleaseApplicationID"] == DBNull.Value ? 0 : (int)reader["ReleaseApplicationID"]; ;
-                  
+                    return new DetainedLicense(
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("LicenseID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue) 
+                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
+                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.GetBoolean(reader.GetOrdinal("isReleased")),
+                        reader.GetDecimal(reader.GetOrdinal("FineFees")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
+                        reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        );
                 }
                 reader.Close();
             }
@@ -51,10 +51,9 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static bool getDetainedInfoByLicenseID(int licenseID, ref stDetainedLicenses license)
+        public static async Task<DetainedLicense> getDetainedInfoByLicenseIDAsync(int licenseID)
         {
             bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
@@ -67,21 +66,20 @@ namespace DataLayer
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    license.ID = (int)reader["ID"];
-                    license.LicenseID = (int)reader["LicenseID"];
-                    license.DetainDate = (DateTime)reader["DetainDate"];
-                    license.FineFees = (decimal)reader["FineFees"];
-                    license.CreatedByUserID = (int)reader["CreatedByUserID"];
-
-                    license.isReleased = (bool)reader["isReleased"];
-
-                    license.ReleaseDate = reader["ReleaseDate"] == DBNull.Value ? DateTime.MinValue : (DateTime)reader["ReleaseDate"];
-                    license.ReleasedByUserID = reader["ReleasedByUserID"] == DBNull.Value ? 0 : (int)reader["ReleasedByUserID"];
-                    license.ReleaseApplicationID = reader["ReleaseApplicationID"] == DBNull.Value ? 0 : (int)reader["ReleaseApplicationID"]; ;
-
+                    return new DetainedLicense(
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("LicenseID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue)
+                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
+                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.GetBoolean(reader.GetOrdinal("isReleased")),
+                        reader.GetDecimal(reader.GetOrdinal("FineFees")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
+                        reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        );
                 }
                 reader.Close();
             }
@@ -96,7 +94,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static int Add(stDetainedLicenses license)
+        public static async Task<int> AddAsync(DetainedLicense license)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -116,7 +114,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@isReleased", license.isReleased);
 
 
-                if (license.ReleaseDate == DateTime.MinValue)
+                if (license.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
                     Command.Parameters.AddWithValue("@ReleaseDate", license.ReleaseDate);
@@ -135,7 +133,7 @@ namespace DataLayer
 
 
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -154,12 +152,10 @@ namespace DataLayer
 
             return newID;
         }
-        public static bool Update(stDetainedLicenses license)
+        public static async Task<bool> UpdateAsync(stDetainedLicenses license)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-
-
             try
             {
                 string Query = @"Update DetainedLicenses
@@ -178,12 +174,10 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", license.CreatedByUserID);
                 Command.Parameters.AddWithValue("@isReleased", license.isReleased);
 
-
                 if (license.ReleaseDate == DateTime.MinValue)
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
                     Command.Parameters.AddWithValue("@ReleaseDate", license.ReleaseDate);
-
 
                 if (license.ReleasedByUserID == -1)
                     Command.Parameters.AddWithValue("@ReleasedByUserID", DBNull.Value);
@@ -196,11 +190,9 @@ namespace DataLayer
                 else
                     Command.Parameters.AddWithValue("@ReleaseApplicationID", license.ReleaseApplicationID);
 
-
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
-
             catch (Exception ex)
             {
                 DataSettings.StoreUsingEventLogs(ex.Message.ToString());
@@ -213,7 +205,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int licenseID)
+        public static async Task<bool> DeleteAsync(int licenseID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -223,7 +215,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@licenseID", licenseID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
@@ -236,7 +228,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int licenseID)
+        public static async Task<bool> isExistAsync(int licenseID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -247,7 +239,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@licenseID", licenseID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -261,8 +253,7 @@ namespace DataLayer
             }
             return isFound;
         }
-
-        public static bool isLicenseDetained(int LicenseID)
+        public static async Task<bool> isLicenseDetainedAsync(int LicenseID)
         {
             bool Detained = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -276,7 +267,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@LicenseID", LicenseID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 if (result != null)
                 {
                     Detained = Convert.ToBoolean(result); 
@@ -293,10 +284,9 @@ namespace DataLayer
             }
             return Detained;
         }
-
-        public static DataTable DetainedLicesesList()
+        public static async Task<IEnumerable<DetainedLicense>> DetainedLicesesList()
         {
-            DataTable dt = new DataTable();
+            var dt = new List<DetainedLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -308,9 +298,20 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (reader.HasRows)
+                while (await reader.ReadAsync())
                 {
-                    dt.Load(reader); 
+                    dt.Add(new DetainedLicense(
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("LicenseID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue)
+                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
+                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.GetBoolean(reader.GetOrdinal("isReleased")),
+                        reader.GetDecimal(reader.GetOrdinal("FineFees")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
+                        reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        ));
                 }
             }
             catch (Exception ex)

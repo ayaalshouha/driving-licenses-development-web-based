@@ -4,14 +4,6 @@ using System.Diagnostics;
 
 namespace DataLayer
 { 
-    public struct stDriver
-    {
-        public int ID { get; set; }
-        public int PersonID { get; set; }
-        public DateOnly CreationDate { get; set; }
-        public int CreatedByUserID { get; set; }
-    }
-   
     public struct stDetainedLicenses
     {
         public int ID { get; set; }
@@ -24,8 +16,6 @@ namespace DataLayer
         public int ReleasedByUserID { get; set; }
         public int CreatedByUserID { get; set; }
     }
-  
-   
     public struct stInternationalLicenses
     {
         public int ID { get; set; }
@@ -49,8 +39,6 @@ namespace DataLayer
         public int RetakeTestID { get; set; }
 
     }
-    
-   
     public class DataSettings
     {
         public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;TrustServerCertificate=True;";
@@ -65,7 +53,6 @@ namespace DataLayer
             //EventLog.WriteEntry(sourceName, message, EventLogEntryType.Error);
 
         }
-
 
         //select if user isActive or NOT.
         public static bool Authintication(string username, string password)
@@ -97,8 +84,6 @@ namespace DataLayer
             }
             return isActive;
         }
-
-
         public static bool SaveLoginRecord(int UserID)
         {
             int RowAffected = 0;
@@ -128,7 +113,6 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-
         public static List<string> GetAllCountries()
         {
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
