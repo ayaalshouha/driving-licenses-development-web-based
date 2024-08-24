@@ -53,7 +53,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = Command.ExecuteReader();
-                while (Reader.Read())
+                while (await Reader.ReadAsync())
                 {
                     return new Driver(
                             Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -247,7 +247,7 @@ namespace DataLayer
         }
         
         //get all active licenses that driver issued before
-        public static Task<IEnumerable<ActiveLicense>> getActiveLicenses(int DriverID)
+        public static async Task<IEnumerable<ActiveLicense>> getActiveLicenses(int DriverID)
         {
             var dt = new List<ActiveLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -266,7 +266,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (Reader.HasRows)
+                if (await Reader.ReadAsync())
                 {
                     dt.Add(new ActiveLicense(
                             Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -289,10 +289,9 @@ namespace DataLayer
             }
             return dt;
         }
-
-        public static DataTable getInternationalLicenses(int DriverID)
+        public static async Task<IEnumerable<DriverInterNationalLicense>> getInternationalLicenses(int DriverID)
         {
-            DataTable dt = new DataTable();
+            var dt = new List<DriverInterNationalLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -307,9 +306,16 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@DriverID", DriverID); 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (Reader.HasRows)
+                if (await Reader.ReadAsync())
                 {
-                    dt.Load(Reader);
+                    dt.Add(new DriverInterNationalLicense(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("ApplicationID")),
+                            Reader.GetInt32(Reader.GetOrdinal("IssuedUsingLocalLicenseID")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("IssueDate"))),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("ExpirationDate"))),
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive"))
+                        ));
                 }
                 Reader.Close();
             }
@@ -323,5 +329,6 @@ namespace DataLayer
             }
             return dt;
         }
+    
     }
 }

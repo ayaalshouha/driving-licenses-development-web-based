@@ -26,6 +26,4 @@ namespace DTOsLayer
             this.ValidityYears = validityyears;
         }
     }
-
-    
 }
