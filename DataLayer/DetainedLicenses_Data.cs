@@ -152,7 +152,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static async Task<bool> UpdateAsync(stDetainedLicenses license)
+        public static async Task<bool> UpdateAsync(DetainedLicense license)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -174,7 +174,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", license.CreatedByUserID);
                 Command.Parameters.AddWithValue("@isReleased", license.isReleased);
 
-                if (license.ReleaseDate == DateTime.MinValue)
+                if (license.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
                     Command.Parameters.AddWithValue("@ReleaseDate", license.ReleaseDate);
@@ -284,7 +284,7 @@ namespace DataLayer
             }
             return Detained;
         }
-        public static async Task<IEnumerable<DetainedLicense>> DetainedLicesesList()
+        public static async Task<IEnumerable<DetainedLicense>> DetainedLicesesListAsync()
         {
             var dt = new List<DetainedLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);

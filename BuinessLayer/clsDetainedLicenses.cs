@@ -1,43 +1,47 @@
 ﻿using DataLayer;
 using System;
 using System.Data;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
     public class clsDetainedLicenses
     {
-        private enum enMode { Add = 1, Update }
-        private enMode _Mode = enMode.Add;
-
+        private enMode _Mode = enMode.add;
         public int ID { get; set; }
         public int ReleaseApplicationID { get; set; }
         public int LicenseID { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public DateTime DetainDate { get; set; }
+        public DateOnly ReleaseDate { get; set; }
+        public DateOnly DetainDate { get; set; }
         public bool isReleased { get; set; }
         public decimal FineFees { get; set; }
         public int ReleasedByUserID { get; set; }
         public clsUser ReleasedByUserInfo {  get; set; }
         public int CreatedByUserID { get; set; }
         public clsUser CreatedByUserInfo { get; set; }
-
-
+        public DetainedLicense DetainedLicenseDTO
+        {
+            get
+            {
+                return new DetainedLicense(this.ID, this.ReleaseApplicationID, this.LicenseID, this.ReleaseDate, this.DetainedLicenseDTO, this.isReleased,
+                    this.FineFees, this.ReleasedByUserID, this.CreatedByUserID); 
+            }
+        }
         public clsDetainedLicenses()
         {
             this.ID = -1;
             this.LicenseID = -1;
             this.CreatedByUserID = -1;
             this.isReleased =false;
-            this.DetainDate = DateTime.MinValue;
-            this.ReleaseDate = DateTime.MinValue;
+            this.DetainDate = DateOnly.FromDateTime(DateTime.MinValue);
+            this.ReleaseDate = DateOnly.FromDateTime(DateTime.MinValue);
             this.ReleasedByUserID = -1;
             this.FineFees = -1;
             this.ReleaseApplicationID = -1;
            
-            this._Mode = enMode.Add;
+            this._Mode = enMode.add;
         }
-
-        private clsDetainedLicenses(stDetainedLicenses license)
+        private clsDetainedLicenses(DetainedLicense license)
         {
             this.ID = license.ID;
             this.LicenseID = license.LicenseID;
@@ -50,87 +54,56 @@ namespace BuisnessLayer
             this.FineFees = license.FineFees;
             this.ReleasedByUserInfo = clsUser.Find(ReleasedByUserID);
             this.CreatedByUserInfo = clsUser.Find(CreatedByUserID);
-            this._Mode = enMode.Update;
+            this._Mode = enMode.update;
         }
-        public static clsDetainedLicenses Find(int DetainID)
+        public static async Task<clsDetainedLicenses> FindAsync(int DetainID)
         {
-            stDetainedLicenses license = new stDetainedLicenses();
-            if (DetainedLicenses_Data.getDetainedLicenseInfo(DetainID, ref license))
+            var license = await DetainedLicenses_Data.getDetainedLicenseInfoAsync(DetainID);
+            if (license != null)
                 return new clsDetainedLicenses(license);
             else
                 return null;
         }
-
-        public static clsDetainedLicenses FindByLicenseID(int licenseID)
+        public static async Task<clsDetainedLicenses> FindByLicenseIDAsync(int licenseID)
         {
-            stDetainedLicenses license = new stDetainedLicenses();
-            if (DetainedLicenses_Data.getDetainedInfoByLicenseID(licenseID, ref license))
+            var license = await DetainedLicenses_Data.getDetainedInfoByLicenseIDAsync(licenseID);
+            if (license != null)
                 return new clsDetainedLicenses(license);
             else
                 return null;
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stDetainedLicenses license = new stDetainedLicenses
-            {
-                ID = this.ID,
-                LicenseID = this.LicenseID,
-                DetainDate = this.DetainDate,
-                isReleased = this.isReleased,
-                ReleaseApplicationID = this.ReleaseApplicationID,
-                ReleasedByUserID = this.ReleasedByUserID,
-                CreatedByUserID = this.CreatedByUserID,
-                FineFees = this.FineFees,
-                ReleaseDate = this.ReleaseDate
-            };
-
-            this.ID = DetainedLicenses_Data.Add(license);
+            this.ID = await DetainedLicenses_Data.AddAsync(DetainedLicenseDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stDetainedLicenses license = new stDetainedLicenses
-            {
-                ID = this.ID,
-                LicenseID = this.LicenseID,
-                DetainDate = this.DetainDate,
-                isReleased = this.isReleased,
-                ReleaseApplicationID = this.ReleaseApplicationID,
-                ReleasedByUserID = this.ReleasedByUserID,
-                CreatedByUserID = this.CreatedByUserID,
-                FineFees = this.FineFees,
-                ReleaseDate = this.ReleaseDate
-            };
-
-            return DetainedLicenses_Data.Update(license);
+            return await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
-
             return false;
         }
-
-        public static bool isLicenseDetained(int LicenseID)
+        public static async Task<bool> isLicenseDetainedAsync(int LicenseID)
         {
-            return DetainedLicenses_Data.isLicenseDetained(LicenseID);
+            return await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
         }
-        public static DataTable List()
+        public static async Task<IEnumerable<DetainedLicense>> ListAsync()
         {
-            return DetainedLicenses_Data.DetainedLicesesList();
+            return await DetainedLicenses_Data.DetainedLicesesListAsync();
         }
     }
 }
