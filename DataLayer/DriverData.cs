@@ -1,14 +1,15 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using DTOsLayer; 
 
 namespace DataLayer
 {
     public class DriverData
     {
-        public static bool getDriverInfo_ByPersonID(int PersonID, ref stDriver driver)
+        public static async Task<Driver> getDriverInfo_ByPersonIDAsync(int PersonID)
         {
-            bool isFound = false;
+           
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -18,13 +19,15 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = Command.ExecuteReader();
-                while (Reader.Read())
+                while (await Reader.ReadAsync())
                 {
-                    isFound = true;
-                    driver.ID = (int)Reader["ID"];
-                    driver.PersonID = (int)Reader["PersonID"];
-                    driver.CreatedByUserID = (int)Reader["CreatedByUserID"];
-                    driver.CreationDate = (DateTime)Reader["CreationDate"];
+                    return new Driver(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))),
+                            Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID"))
+                        );
+                   
                 }
                 Reader.Close();
             }
@@ -37,12 +40,10 @@ namespace DataLayer
             {
                 Connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static bool getDriverInfo_ByID(int DriverID, ref stDriver driver)
+        public static async Task<Driver> getDriverInfo_ByIDAsync(int DriverID)
         {
-            bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -54,26 +55,26 @@ namespace DataLayer
                 SqlDataReader Reader = Command.ExecuteReader();
                 while (Reader.Read())
                 {
-                    isFound = true;
-                    driver.ID = (int)Reader["ID"];
-                    driver.PersonID = (int)Reader["PersonID"];
-                    driver.CreatedByUserID = (int)Reader["CreatedByUserID"];
-                    driver.CreationDate = (DateTime)Reader["CreationDate"];
+                    return new Driver(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))),
+                            Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID"))
+                        );
                 }
                 Reader.Close();
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
                 Connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static int Add(stDriver Driver)
+        public static async Task<int> AddAsync(Driver Driver)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -92,7 +93,7 @@ namespace DataLayer
              
 
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -110,11 +111,9 @@ namespace DataLayer
 
             return newID;
         }
-
-        public static bool Update(stDriver driver)
+        public static async Task<bool> UpdateAsync(Driver driver)
         {
             int RowAffected = 0;
-
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -131,22 +130,20 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", driver.CreatedByUserID);
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
                 Connection.Close();
             }
-
             return RowAffected > 0;
         }
-
-        public static bool Delete(int DrvierID)
+        public static async Task<bool> DeleteAsync(int DrvierID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -156,11 +153,11 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@DrvierID", DrvierID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
             }
             finally
             {
@@ -168,9 +165,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-
-
-        public static bool isExist(int DriverID)
+        public static async Task<bool> isExistAsync(int DriverID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -181,7 +176,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@DriverID", DriverID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -194,9 +189,7 @@ namespace DataLayer
             }
             return isFound;
         }
-
-
-        public static bool isExist_ByPersonID(int PersonID)
+        public static async Task<bool> isExist_ByPersonIDAsync(int PersonID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -206,7 +199,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@PersonID", PersonID);
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -219,11 +212,9 @@ namespace DataLayer
             }
             return isFound;
         }
-
-
-        public static DataTable List()
+        public static async Task<IEnumerable<Driver>> ListAsync()
         {
-            DataTable dt = new DataTable();
+            var dt = new List<Driver>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -232,9 +223,15 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (Reader.HasRows)
+                if (await Reader.ReadAsync())
                 {
-                    dt.Load(Reader);
+                    dt.Add(
+                        new Driver(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))),
+                            Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID"))
+                        ));
                 }
                 Reader.Close();
             }
@@ -248,10 +245,11 @@ namespace DataLayer
             }
             return dt;
         }
-
-        public static DataTable getActiveLicenses(int DriverID)
+        
+        //get all active licenses that driver issued before
+        public static Task<IEnumerable<ActiveLicense>> getActiveLicenses(int DriverID)
         {
-            DataTable dt = new DataTable();
+            var dt = new List<ActiveLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -270,7 +268,14 @@ namespace DataLayer
                 SqlDataReader Reader = command.ExecuteReader();
                 if (Reader.HasRows)
                 {
-                    dt.Load(Reader);
+                    dt.Add(new ActiveLicense(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("ApplicationID")),
+                            Reader.GetString(Reader.GetOrdinal("Class")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("IssueDate"))),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("ExpirationDate"))),
+                            Reader.GetBoolean(Reader.GetOrdinal("isActive"))
+                        ));
                 }
                 Reader.Close();
             }

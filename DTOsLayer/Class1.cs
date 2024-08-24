@@ -15,21 +15,7 @@ namespace DTOsLayer
         NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
     }
-    public class Driver
-    {
-        public int ID { get; set; }
-        public int PersonID { get; set; }
-        public DateTime CreationDate { get; set; }
-        public int CreatedByUserID { get; set; }
-
-        public Driver(int id, int personId, DateTime creationDate, int createdByUserId)
-        {
-            this.ID = id;
-            this.PersonID = personId;
-            this.CreationDate = creationDate;
-            this.CreatedByUserID = createdByUserId;
-        }
-    }
+   
     public class DetainedLicenses
     {
         public int ID { get; set; }
