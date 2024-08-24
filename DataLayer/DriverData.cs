@@ -247,7 +247,7 @@ namespace DataLayer
         }
         
         //get all active licenses that driver issued before
-        public static async Task<IEnumerable<ActiveLicense>> getActiveLicenses(int DriverID)
+        public static async Task<IEnumerable<ActiveLicense>> getActiveLicensesAsync(int DriverID)
         {
             var dt = new List<ActiveLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -289,7 +289,7 @@ namespace DataLayer
             }
             return dt;
         }
-        public static async Task<IEnumerable<DriverInterNationalLicense>> getInternationalLicenses(int DriverID)
+        public static async Task<IEnumerable<DriverInterNationalLicense>> getInternationalLicensesAsync(int DriverID)
         {
             var dt = new List<DriverInterNationalLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);

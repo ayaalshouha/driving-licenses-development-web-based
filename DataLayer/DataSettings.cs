@@ -8,7 +8,7 @@ namespace DataLayer
     {
         public int ID { get; set; }
         public int PersonID { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateOnly CreationDate { get; set; }
         public int CreatedByUserID { get; set; }
     }
    

@@ -1,117 +1,96 @@
 ﻿using DataLayer;
 using System;
 using System.Data;
+using DTOsLayer;
 
 namespace BuisnessLayer
 {
     public class clsDrviers
     {
-
+        private enMode _Mode = enMode.add;
         public int ID { get; set; }
         public int PersonID { get; set; }
-
         public clsPerson PersonInfo;
-        public DateTime CreationDate { get; set; }
+        public DateOnly CreationDate { get; set; }
         public int CreatedByUserID { get; set; }
-        private enum enMode { Add, Update };
-        private enMode _Mode = enMode.Add;
-
-       public clsDrviers()
+        public Driver DriverDTO{
+            get
+            {
+                return new Driver(this.ID, this.PersonID, this.CreationDate, this.CreatedByUserID);
+            }
+        }
+        public clsDrviers()
         {
             this.ID = -1; 
             this.PersonID = -1;
-            this.CreationDate = DateTime.Now;
+            this.CreationDate = DateOnly.FromDateTime(DateTime.Now);
             this.CreatedByUserID = -1;
-            _Mode = enMode.Add; 
+            _Mode = enMode.add; 
         }
-
-        private clsDrviers(stDriver driver)
+        private clsDrviers(Driver driver)
         {
             this.ID = driver.ID;
             this.PersonID = driver.PersonID;
             this.CreationDate = driver.CreationDate;
             this.CreatedByUserID = driver.CreatedByUserID;
             this.PersonInfo = clsPerson.Find(PersonID);
-            _Mode = enMode.Update;
+            _Mode = enMode.update;
         }
-
-        public static clsDrviers Find_ByPersonID(int PersonID)
+        public static async Task<clsDrviers> Find_ByPersonIDAsync(int PersonID)
         {
-            stDriver driver = new stDriver();
-            if (DriverData.getDriverInfo_ByPersonID(PersonID, ref driver))
+            Driver driver = await DriverData.getDriverInfo_ByPersonIDAsync(PersonID);
+            if (driver != null)
                 return new clsDrviers(driver);
             else return null;
         }
-
-        public static clsDrviers Find(int DriverID)
+        public static async Task<clsDrviers> FindAsync(int DriverID)
         {
-            stDriver driver = new stDriver();
-            if (DriverData.getDriverInfo_ByID(DriverID, ref driver))
+            Driver driver = await DriverData.getDriverInfo_ByIDAsync(PersonID);
+            if (driver != null)
                 return new clsDrviers(driver);
             else return null;
         }
-
-        private bool _AddNew()
+        private async Task<bool> _AddNewAsync()
         {
-            stDriver driver = new stDriver
-            {
-                PersonID = this.PersonID,
-                CreatedByUserID = this.CreatedByUserID,
-                CreationDate = this.CreationDate,
-            };
-
-            this.ID = DriverData.Add(driver);   
+            this.ID = await DriverData.AddAsync(DriverDTO);   
             return this.ID != -1;
         }
-
-        private bool _Update()
+        private async Task<bool> _UpdateAsync()
         {
-            stDriver driver = new stDriver
-            {
-                ID = this.ID,
-                PersonID = this.PersonID,
-                CreatedByUserID = this.CreatedByUserID,
-                CreationDate = this.CreationDate
-            };
-
-            return DriverData.Update(driver);
+            return await DriverData.UpdateAsync(DriverDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
-
             return false;
         }
-
-        public static bool Delete(int ID)
+        public static async Task<bool> DeleteAsync(int ID)
         {
-            return DriverData.Delete(ID);
+            return await DriverData.DeleteAsync(ID);
         }
-
-        public static DataTable DriversList()
+        public static async Task<IEnumerable<Driver>> ListAsync()
         {
-            return DriverData.List();
+            return await DriverData.ListAsync();
         }
-
-        public static DataTable getLocalLicenses(int DriverID)
+        public static async Task<IEnumerable<ActiveLicense>> getLocalLicensesAsync(int DriverID)
         {
-            return DriverData.getActiveLicenses(DriverID);
+            return await DriverData.getActiveLicensesAsync(DriverID);
         }
-
-        public static DataTable getInternationalLicenses(int DriverID)
+        public static async Task<IEnumerable<DriverInterNationalLicense>> getInternationalLicenses(int DriverID)
         {
-            return DriverData.getInternationalLicenses(DriverID);
+            return await DriverData.getInternationalLicensesAsync(DriverID);
         }
+    
     }
 }
