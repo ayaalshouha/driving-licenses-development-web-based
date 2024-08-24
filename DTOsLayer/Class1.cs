@@ -10,7 +10,7 @@ namespace DTOsLayer
     public enum enIssueReason { FirstTime = 1, Renew = 2, DamagedReplacement = 3, LostReplacement = 4 };
     public enum enMode { add, update }
     public enum enStatus : int { New = 1, cancelled, completed }
-    public enum enType : int
+    public enum enApplicationType : int
     {
         NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7

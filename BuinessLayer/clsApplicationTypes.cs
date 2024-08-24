@@ -1,11 +1,11 @@
 ﻿using DataLayer;
 using System.Data;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
     public class clsApplicationTypes
     {
-        private enum enMode { add = 1, update };
         private enMode _Mode = enMode.add;
         public int ID { get; set; }
         public string TypeTitle { get; set; }
@@ -19,55 +19,50 @@ namespace BuisnessLayer
             _Mode = enMode.add;
         }
 
-        private clsApplicationTypes(Types type)
+        public ApplicationType AppTypeDTO
+        {
+            get
+            {
+                return new ApplicationType(this.ID, this.TypeTitle, this.Fees); 
+            }
+        }
+        private clsApplicationTypes(ApplicationType type)
         {
             this.ID = type.ID;
             this.TypeTitle = type.TypeTitle; 
-            this.Fees = type.Fees;
+            this.Fees = type.TypeFee;
             _Mode = enMode.update;
         }
 
-        public static clsApplicationTypes Find(int TypeID)
+        public static async Task<clsApplicationTypes> Find(int TypeID)
         {
-            Types type = new Types();
+            ApplicationType type = await ApplicationTypesData.getApplicationTypeInfoAsync(TypeID);
 
-            if(ApplicationTypesData.getApplicationTypeInfo(TypeID, ref type))
-            {
+            if(type != null)
                 return new clsApplicationTypes(type);
-            }
             else
-            {
                 return null;
-            }
         }
-        public static DataTable getAllTypes()
+        public static async Task<IEnumerable<ApplicationType>> getAllTypesAsync()
         {
-            return ApplicationTypesData.getAllApplicationTypes();
+            return await ApplicationTypesData.getAllApplicationTypesAsync();
         }
-        private bool _Update()
+        private async Task<bool> _UpdateAsync()
         {
-            Types type = new Types
-            {
-                ID = this.ID,
-                TypeTitle = this.TypeTitle,
-                Fees = this.Fees
-            };
-
-            return ApplicationTypesData.Update(type);
+            return await ApplicationTypesData.UpdateAsync(AppTypeDTO);
         }
 
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             if(this._Mode == enMode.update)
-            {
-                return _Update();
-            }
+                return await _UpdateAsync();
+            
             return false; 
         }
 
-        public static decimal Fee(int TypeID)
+        public static async Task<decimal> FeeAsync(int TypeID)
         {
-            return ApplicationTypesData.GetFee(TypeID);
+            return await ApplicationTypesData.GetFeeAsync(TypeID);
         }
 
     }

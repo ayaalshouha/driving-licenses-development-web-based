@@ -136,7 +136,7 @@ namespace BuisnessLayer
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
-            NewApplication.TypeID = (int)enType.RenewDL;
+            NewApplication.TypeID = (int)enApplicationType.RenewDL;
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
@@ -171,8 +171,8 @@ namespace BuisnessLayer
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (reason == enIssueReason.DamagedReplacement ?
-                (int)enType.DamagedReplacement :
-                (int)enType.LostReplacement);
+                (int)enApplicationType.DamagedReplacement :
+                (int)enApplicationType.LostReplacement);
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
@@ -230,7 +230,7 @@ namespace BuisnessLayer
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
-            NewApplication.TypeID = (int)enType.ReleaseDetainedDL;
+            NewApplication.TypeID = (int)enApplicationType.ReleaseDetainedDL;
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID); 
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
