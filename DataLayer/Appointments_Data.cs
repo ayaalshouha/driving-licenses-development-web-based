@@ -1,13 +1,15 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using DTOsLayer;
+using System.Runtime.CompilerServices;
 namespace DataLayer
 {
     public class Appointments_Data
     {
-        public static bool getAppointmentInfo(int AppointmentID, ref stAppointment appointment)
+        public static async Task<Appointment> getAppointmentInfoAsync(int AppointmentID)
         {
-            bool isFound = false;
+            
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -17,24 +19,20 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@ID", AppointmentID);
 
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    appointment.ID = (int)reader["ID"];
-                    appointment.Date = (DateTime)reader["Date"];
-                    appointment.PaidFees = (decimal)reader["PaidFees"];
-                    appointment.LocalLicenseApplicationID = (int)reader["LocalDrvingLicenseApplicationID"];
-                    appointment.isLocked = (bool)reader["isLocked"];
-                    appointment.TestType = (int)reader["TestTypeID"];
-                    appointment.CreatedByUserID = (int)reader["CreateByUserID"];
-
-
-                    if (reader["RetakeTestApplicationID"] == DBNull.Value)
-                        appointment.RetakeTestID = -1;
-                    else
-                        appointment.RetakeTestID = (int)reader["RetakeTestApplicationID"];
-
+                    return new Appointment(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                            reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                            reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                            reader.GetBoolean(reader.GetOrdinal("isLocked")),
+                            reader.GetInt32(reader.GetOrdinal("CreateByUserID")),
+                            reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
+                            reader.IsDBNull(reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"))) ? 0 :
+                            reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"))
+                        );
                 }
                 reader.Close();
             }
@@ -47,10 +45,9 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static int Add(stAppointment appointment)
+        public static async Task<int> AddAsync(Appointment appointment)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -77,7 +74,7 @@ namespace DataLayer
                     Command.Parameters.AddWithValue("@RetakeTestApplicationID", appointment.RetakeTestID);
                 }
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -96,8 +93,7 @@ namespace DataLayer
 
             return newID;
         }
-
-        public static bool Update(stAppointment appointment)
+        public static async Task<bool> UpdateAsync(Appointment appointment)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -132,7 +128,7 @@ namespace DataLayer
                     Command.Parameters.AddWithValue("@RetakeTestID", appointment.RetakeTestID);
                 }
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -147,7 +143,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int AppointmentID)
+        public static async Task<bool> DeleteAsync(int AppointmentID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -157,7 +153,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected =await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
@@ -170,7 +166,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int AppointmentID)
+        public static async Task<bool> isExist(int AppointmentID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -181,7 +177,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -195,10 +191,9 @@ namespace DataLayer
             }
             return isFound;
         }
-
-        public static DataTable getAppointmentsTablePerTestType(int LocalApplicationID,int TestType)
+        public static async Task<IEnumerable<Appointment_Veiw>> getAppointmentsTablePerTestTypeAsync(int LocalApplicationID,int TestType)
         {
-            DataTable table = new DataTable();
+            var table = new List<Appointment_Veiw>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -214,9 +209,16 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (reader.HasRows)
+                if (await reader.ReadAsync())
                 {
-                    table.Load(reader);
+                    table.Add(new Appointment_Veiw(
+                         reader.GetInt32(reader.GetOrdinal("ID")),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                            reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                            reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                            reader.GetBoolean(reader.GetOrdinal("isLocked")),
+                            reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID"))
+                        ));
                 }
                 reader.Close();
             }
@@ -231,9 +233,7 @@ namespace DataLayer
             }
             return table;
         }
-
-
-        public static int getTestID(int AppointmentID)
+        public static async Task<int> getTestIDAsync(int AppointmentID)
         {
             int TestID = -1;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -246,7 +246,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar(); 
+                object result = await command.ExecuteScalarAsync(); 
 
                 if(result!=null && int.TryParse(result.ToString(), out int InsertedID))
                 {
@@ -266,8 +266,7 @@ namespace DataLayer
             }
             return TestID;
         }
-
-        public static bool isThereAnyActiveAppointments(int LocalID, int TestType)
+        public static async Task<bool> isThereAnyActiveAppointmentsAsync(int LocalID, int TestType)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -286,7 +285,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@TestType", TestType);
 
                 Connection.Open(); 
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
 
                 if(result!= null)
                 {

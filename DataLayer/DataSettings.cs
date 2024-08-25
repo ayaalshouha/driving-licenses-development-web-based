@@ -4,29 +4,6 @@ using System.Diagnostics;
 
 namespace DataLayer
 { 
-    public struct stDetainedLicenses
-    {
-        public int ID { get; set; }
-        public int ReleaseApplicationID { get; set; }
-        public int LicenseID { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public DateTime DetainDate { get; set; }
-        public bool isReleased { get; set; }
-        public decimal FineFees { get; set; }
-        public int ReleasedByUserID { get; set; }
-        public int CreatedByUserID { get; set; }
-    }
-    public struct stInternationalLicenses
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int DriverID { get; set; }
-        public int IssuedByLocalLicenseID { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
-        public bool isActive { get; set; }
-        public int CreatedByUserID { get; set; }
-    }
     public struct stAppointment
     {
         public int ID { get; set; }

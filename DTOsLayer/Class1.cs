@@ -16,30 +16,7 @@ namespace DTOsLayer
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
     }    
     
-    public class Appointment
-    {
-        public int ID { get; set; }
-        public DateTime Date { get; set; }
-        public int TestType { get; set; }
-        public decimal PaidFees { get; set; }
-        public bool isLocked { get; set; }
-        public int CreatedByUserID { get; set; }
-        public int LocalLicenseApplicationID { get; set; }
-        public int RetakeTestID { get; set; }
-
-        public Appointment(int id, DateTime date, int testtype, decimal paidfees, bool islocked, int createdby, int locallicenseid, int retaketestid)
-        {
-            this.isLocked = islocked;
-            this.ID = id;
-            this.Date = date;
-            this.TestType = testtype;
-            this.RetakeTestID = retaketestid;
-            this.CreatedByUserID = createdby;
-            this.PaidFees = paidfees;
-            this.LocalLicenseApplicationID = locallicenseid;
-        }
-
-    }
+    
     
 
 }
