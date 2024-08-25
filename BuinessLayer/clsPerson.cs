@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DTOsLayer;
 using DataLayer;
+using System.Text.RegularExpressions;
 
 namespace BuisnessLayer
 {
@@ -22,9 +23,9 @@ namespace BuisnessLayer
         public string Nationality { get; set; }
         public string Gender { get; set; }
         public int CreatedByUserID { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateOnly CreationDate { get; set; }
         public int UpdateByUserID { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public DateOnly UpdateDate { get; set; }
         public Person full_person
         {
             get
@@ -60,8 +61,8 @@ namespace BuisnessLayer
             Email = "";
             PhoneNumber = "";
             BirthDate = DateOnly.MinValue;
-            CreationDate = DateTime.MinValue;
-            UpdateDate = DateTime.MinValue;
+            CreationDate = DateOnly.MinValue;
+            UpdateDate = DateOnly.MinValue;
             PersonalPicture = "";
             Nationality = "";
             Gender = "";
@@ -91,35 +92,41 @@ namespace BuisnessLayer
             UpdateDate = person.UpdatedDate;
             _Mode = enMode.update;
         }
-        public static clsPerson Find(int ID)
+        public static async Task<clsPerson> FindAsync(int ID)
         {
-            Person person = PersonData.getPersonInfo(ID);
+            Person person = await PersonData.getPersonInfoAsync(ID);
             if (person != null)
                 return new clsPerson(person);
             else return null;
         }
-        public static Person FindPersonDTO(int ID)
+        public static async Task<Person> FindPersonDTOAsync(int ID)
         {
-            return PersonData.getPersonInfo(ID);
+            return await PersonData.getPersonInfoAsync(ID);
         }
-        public static clsPerson Find(string NationalNumber)
+        public static async Task<clsPerson> FindAsync(string NationalNumber)
         {
-            Person person = PersonData.getPersonInfo(NationalNumber);
+            Person person = await PersonData.getPersonInfoAsync(NationalNumber);
             if (person != null)
                 return new clsPerson(person);
             else return null;
         }
-        private bool _AddNew()
+        private async Task<bool> _AddNewAsync()
         {
-            this.ID = PersonData.Add(full_person);
+            this.ID = await PersonData.AddAsync(full_person);
             return this.ID > 0;
         }
-        private bool _Update()
+        private async Task<bool> _UpdateAsync()
         {
-            return PersonData.Update(full_person);
+            return await PersonData.UpdateAsync(full_person);
         }
 
-        private bool IsValid()
+        public bool ValidateEmail(string email)
+        {
+            var pattern = @"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$";
+            var regex = new Regex(pattern);
+            return regex.IsMatch(email);
+        }
+        private bool IsValidAsync()
         {
             if (string.IsNullOrEmpty(this.FirstName) ||
                 string.IsNullOrEmpty(this.SecondName) ||
@@ -127,7 +134,6 @@ namespace BuisnessLayer
                 string.IsNullOrEmpty(this.LastName) ||
                 string.IsNullOrEmpty(this.NationalNumber) ||
                 string.IsNullOrEmpty(this.Address) ||
-                string.IsNullOrEmpty(this.Email) ||
                 string.IsNullOrEmpty(this.PersonalPicture) ||
                 string.IsNullOrEmpty(this.Nationality) ||
                 string.IsNullOrEmpty(this.Gender))
@@ -135,27 +141,29 @@ namespace BuisnessLayer
                 return false;
             }
 
-            if (this.BirthDate == default(DateOnly))
+            if (this.BirthDate == DateOnly.MinValue)
                 return false;
 
+            if (!ValidateEmail(this.Email))
+                return false;
 
             return true;
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
-            if (IsValid())
+            if (IsValidAsync())
             {
                 switch (_Mode)
                 {
                     case enMode.add:
-                        if (_AddNew())
+                        if (await _AddNewAsync())
                         {
                             this._Mode = enMode.update;
                             return true;
                         }
                         break;
                     case enMode.update:
-                        return _Update();
+                        return await _UpdateAsync();
                 }
             }
             
@@ -166,23 +174,23 @@ namespace BuisnessLayer
             if (await UserData.isExist_ByPersonIDAsync(ID) || await DriverData.isExist_ByPersonIDAsync(ID))
                 return false;
             
-            return PersonData.Delete(ID);
+            return await PersonData.DeleteAsync(ID);
         }
-        public static bool Delete(string NationalNumber)
+        public static async Task<bool> DeleteAsync(string NationalNumber)
         {
-            return PersonData.Delete(NationalNumber);
+            return await PersonData.DeleteAsync(NationalNumber);
         }
-        public static bool isExist(int ID)
+        public static async Task<bool> isExistAsync(int ID)
         {
-            return PersonData.isExist(ID);
+            return await PersonData.isExistAsync(ID);
         }
-        public static bool isExist(string NationalNumber)
+        public static async Task<bool> isExistAsync(string NationalNumber)
         {
-            return PersonData.isExist(NationalNumber);
+            return await PersonData.isExistAsync(NationalNumber);
         }
-        public static List<Person_View> PeopleList()
+        public static async Task<IEnumerable<Person_View>> ListAsync()
         {
-            return PersonData.List();
+            return await PersonData.ListAsync();
         }
 
     }

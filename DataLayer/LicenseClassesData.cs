@@ -20,14 +20,14 @@ namespace DataLayer
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "select * from LicenseClasses where ID = @ClassID";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    using (var command = new SqlCommand(Query, connection))
                     {
                         command.Parameters.AddWithValue("@ClassID", ClassID);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (var reader = command.ExecuteReader())
                         {
                             while (await reader.ReadAsync())
                             {
@@ -47,7 +47,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
             return null;
@@ -57,7 +57,7 @@ namespace DataLayer
             int RowAffected = 0;
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
 
                     string Query = @"Update LicenseClasses
@@ -75,7 +75,7 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -85,10 +85,10 @@ namespace DataLayer
             List<string> list = new List<string>();
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "select Class from LicenseClasses;";
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         Connection.Open();
                         using(SqlDataReader reader = command.ExecuteReader())
@@ -103,7 +103,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                //DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             return list;
         }

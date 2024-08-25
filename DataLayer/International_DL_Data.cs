@@ -40,7 +40,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
             finally
@@ -84,7 +84,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
             finally
@@ -123,7 +123,7 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -146,7 +146,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -170,7 +170,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -207,7 +207,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {

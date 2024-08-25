@@ -40,7 +40,7 @@ namespace api_layer.Controllers
         [HttpGet("getByID", Name = "getByID")]
         public async Task<ActionResult<_Application>> GetByID(int ApplicationID)
         {
-            if (!int.TryParse(ApplicationID.ToString(), out int result) || Int32.IsNegative(ApplicationID)
+            if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid Application ID Number");
 
             _Application app = await clsApplication.FindDTOAsync(ApplicationID);
@@ -57,7 +57,7 @@ namespace api_layer.Controllers
             if (newApp == null)
                 return BadRequest("invalid object data");
 
-            bool personFound = clsPerson.isExist(newApp.PersonID);
+            bool personFound = await clsPerson.isExistAsync(newApp.PersonID);
             if (!personFound)
                 return BadRequest("Person with ID {newApp.PersonID} NOT found, You have to add person details first!");
 
@@ -75,7 +75,7 @@ namespace api_layer.Controllers
             if (newApp == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(ApplicationID.ToString(), out int result) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
             bool isExist = await clsApplication.isExistAsync(ApplicationID);
@@ -94,7 +94,7 @@ namespace api_layer.Controllers
         [HttpDelete("Delete")]
         public async Task<ActionResult> Delete(int ApplicationID)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out int result) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
             bool isExist = await clsApplication.isExistAsync(ApplicationID);
@@ -114,13 +114,13 @@ namespace api_layer.Controllers
         [HttpGet("isClassExist")]
         public async Task<ActionResult<bool>> isClassExist(int PersonID, int ClassID)
         {
-            if (!Int32.TryParse(PersonID.ToString(), out int result) || Int32.IsNegative(PersonID))
+            if (!Int32.TryParse(PersonID.ToString(), out _) || Int32.IsNegative(PersonID))
                 return BadRequest("Invalid Person ID");
 
-            if (!Int32.TryParse(ClassID.ToString(), out int result1) || Int32.IsNegative(ClassID))
+            if (!Int32.TryParse(ClassID.ToString(), out _) || Int32.IsNegative(ClassID))
                 return BadRequest("Invalid License Class ID");
 
-            return Ok(clsApplication.isClassExistAsync(PersonID, ClassID));
+            return Ok(await clsApplication.isClassExistAsync(PersonID, ClassID));
         }
 
         [HttpGet("SetCompleted")]

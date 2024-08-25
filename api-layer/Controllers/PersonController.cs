@@ -24,7 +24,7 @@ namespace api_layer.Controllers
                  person = new clsPerson();
             else
             {
-                person = clsPerson.Find(ID);
+                person = clsPerson.FindAsync(ID).GetAwaiter().GetResult();
                 if (person == null) return null; 
             }
 
@@ -49,22 +49,22 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("All")]
-        public ActionResult<IEnumerable<Person_View>> getAll()
+        public async Task<ActionResult<IEnumerable<Person_View>>> getAll()
         {
-            var peopleList = clsPerson.PeopleList();
-            if (peopleList.Count <= 0)
+            var peopleList = await clsPerson.ListAsync();
+            if (peopleList.Count() <= 0)
                 return NotFound("No People Found");
 
             return Ok(peopleList);
         }
 
         [HttpGet("Read", Name = "Read")]
-        public ActionResult<Person>GetByID(int ID)
+        public async Task<ActionResult<Person>>GetByID(int ID)
         {
-            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
+            if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number"); 
 
-            Person person = clsPerson.FindPersonDTO(ID);
+            Person person = await clsPerson.FindPersonDTOAsync(ID);
 
             if (person == null)
                 return NotFound($"Person With ID {ID} Not Found"); 
@@ -73,14 +73,14 @@ namespace api_layer.Controllers
         }
 
         [HttpPost("Create")]
-        public ActionResult<Person> Create(Person newPerson)
+        public async Task<ActionResult<Person>> Create(Person newPerson)
         {
             if (newPerson == null)
                 return BadRequest("invalid object data");
 
             clsPerson person = assignDataToPerson(newPerson);
 
-            if (person.Save())
+            if (await person.SaveAsync())
             {
                 newPerson.ID = person.ID; 
                 return CreatedAtRoute("Read", new { person.ID }, newPerson);
@@ -90,50 +90,50 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("Update")]
-        public ActionResult<Person> Update(int ID, Person newPerson)
+        public async Task<ActionResult<Person>> Update(int ID, Person newPerson)
         {
             if (newPerson == null)
                 return BadRequest("invalid object data");
 
             clsPerson person = assignDataToPerson(newPerson, ID); 
 
-            if (person != null && person.Save())
+            if (person != null && await person.SaveAsync())
                 return Ok(person);
             else
                 return StatusCode(500, new { message = "Error Updatting Person" });
         }
 
         [HttpDelete("Delete")]
-        public ActionResult Delete(int ID)
+        public async Task<ActionResult> Delete(int ID)
         {
-            if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
+            if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number");
 
-            if (!clsPerson.isExist(ID))
+            if (!clsPerson.isExistAsync(ID).GetAwaiter().GetResult())
                 return NotFound($"Person with ID {ID} NOT Found");
 
-            if (clsPerson.Delete(ID))
+            if (await clsPerson.DeleteAsync(ID))
                 return Ok("Person with ID {ID} Deletted Successfully");
             else
                 return StatusCode(500, new { Message = "Error Deletting Person" }); 
         }
 
         [HttpGet("isExistByID")]
-        public ActionResult<bool> isExist(int ID)
+        public async Task<ActionResult<bool>> isExist(int ID)
         {
             if (!int.TryParse(ID.ToString(), out int result) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number");
 
-            return clsPerson.isExist(ID);
+            return await clsPerson.isExistAsync(ID);
         }
 
         [HttpGet("isExistByNationalNo")]
-        public ActionResult<bool> isExist(string NationalNumber)
+        public async Task<ActionResult<bool>> isExist(string NationalNumber)
         {
             if (string.IsNullOrEmpty(NationalNumber))
                 return BadRequest("Invalid National Number");
 
-            return clsPerson.isExist(NationalNumber);
+            return await clsPerson.isExistAsync(NationalNumber);
         }
 
     }

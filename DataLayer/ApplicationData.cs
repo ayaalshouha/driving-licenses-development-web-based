@@ -24,14 +24,14 @@ namespace DataLayer
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "select * from Applications where ID = @ID";
-                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    using (var command = new SqlCommand(Query, connection))
                     {
                         command.Parameters.AddWithValue("@ID", ApplicationID);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (var reader = command.ExecuteReader())
                         {
                             while (await reader.ReadAsync())
                             {
@@ -42,10 +42,10 @@ namespace DataLayer
                                     Enum.IsDefined(typeof(enStatus), reader.GetInt32(reader.GetOrdinal("Status"))) ?
                                     (enStatus)reader.GetInt32(reader.GetOrdinal("Status")) : 0,                                
                                     reader.GetInt32(reader.GetOrdinal("ApplicationTypeID")),
-                                    reader.IsDBNull(reader.GetOrdinal("Date")) ? default(DateOnly)
+                                    reader.IsDBNull(reader.GetOrdinal("Date")) ? DateOnly.MinValue
                                     : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
                                     reader.GetDecimal(reader.GetOrdinal("PaidFees")),
-                                    reader.IsDBNull(reader.GetOrdinal("LastStatusDate")) ? default(DateOnly)
+                                    reader.IsDBNull(reader.GetOrdinal("LastStatusDate")) ? DateOnly.MinValue
                                     : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("LastStatusDate"))),
                                     reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
                                     );
@@ -55,7 +55,7 @@ namespace DataLayer
                 }
             }
             catch(Exception e){
-                //DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                //DataSettings.LogError(e.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
             return null; 
@@ -65,13 +65,13 @@ namespace DataLayer
             int newID = 0;
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                         string Query = @"INSERT INTO Applications 
                                  VALUES (@Date, @PersonID,@Status,@PaidFees, @ApplicationTypeID, @CreatedByUserID, @LastStatusDate);
                             SELECT SCOPE_IDENTITY();";
 
-                       using (SqlCommand Command = new SqlCommand(Query, Connection))
+                       using (var Command = new SqlCommand(Query, Connection))
                        {
                             Command.Parameters.AddWithValue("@PersonID", application.PersonID); 
                             Command.Parameters.AddWithValue("@Date", application.Date);
@@ -93,7 +93,7 @@ namespace DataLayer
             }
             catch (Exception e)
             {
-                DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                DataSettings.LogError (e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
 
@@ -134,7 +134,7 @@ namespace DataLayer
             }
             catch (Exception e)
             {
-                DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                DataSettings.LogError(e.Message.ToString());
                // Console.WriteLine("Error: " + ex.Message);
             }
 
@@ -158,7 +158,7 @@ namespace DataLayer
             }
             catch (Exception e)
             {
-                DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                DataSettings.LogError(e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
            
@@ -169,10 +169,10 @@ namespace DataLayer
             bool isFound = false;
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "SELECT ID FROM Applications WHERE ID = @ApplicationID;";
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
                         Connection.Open();
@@ -184,7 +184,7 @@ namespace DataLayer
             }
             catch (Exception e)
             {
-                DataSettings.StoreUsingEventLogs(e.Message.ToString());
+                DataSettings.LogError(e.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
            
@@ -195,7 +195,7 @@ namespace DataLayer
             bool isFound = false;
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = @"SELECT Applications.ID 
                             FROM Applications INNER JOIN LocalDrivingLicensesApplications 
@@ -203,7 +203,7 @@ namespace DataLayer
                     WHERE LocalDrivingLicensesApplications.LicenseClassID = @ClassID and Applications.PersonID = @personID 
                         and Applications.Status != 2;";
 
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         command.Parameters.AddWithValue("@ClassID", ClassID);
                         command.Parameters.AddWithValue("@personID", personID);
@@ -217,7 +217,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 // Console.WriteLine("Error: " + ex.Message);
             }
             return isFound;
@@ -248,7 +248,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
 
                 //Console.WriteLine("Error: " + ex.Message);
             }
@@ -259,10 +259,10 @@ namespace DataLayer
             int RowAffected = 0;
                 try
                 {
-                    using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                    using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                     {
                         string Query = "UPDATE Applications SET Status = 2 where ((ID = @ApplicationID) and (Status != 3));";
-                        using (SqlCommand command = new SqlCommand(Query, Connection))
+                        using (var command = new SqlCommand(Query, Connection))
                         {
                             command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
                             Connection.Open();
@@ -281,13 +281,13 @@ namespace DataLayer
             int RowAffected = 0; 
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = @"Update Applications 
                                 SET Status = @StatusNumber,
                                LastStatusDate = @LastStatusDate
                     WHERE ID = @ApplicationID;";
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         command.Parameters.AddWithValue("@StatusNumber", StatusNumber);
                         command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
@@ -299,7 +299,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 // Console.WriteLine("Error: " + ex.Message);
             }
             return (RowAffected > 0);
@@ -326,7 +326,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 //Console.WriteLine("Error: " + ex.Message);
             }
             return name; 

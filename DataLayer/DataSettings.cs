@@ -1,25 +1,32 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+
 
 namespace DataLayer
 { 
     public class DataSettings
     {
+       
         public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;TrustServerCertificate=True;";
-        //ConfigurationManager.AppSettings["ConnectionString"]; 
-        public static void StoreUsingEventLogs(string message)
+
+        private static ILogger<DataSettings> _logger;
+        // Static method to initialize the logger
+        public static void ConfigureLogger(ILogger<DataSettings> logger)
         {
-            string sourceName = "DVLD_API_App";
+            _logger = logger;
+        }
+        public static void LogError(string message)
+        {
+            if (_logger == null)
+            {
+                throw new InvalidOperationException("Logger is not initialized. Call ConfigureLogger first.");
+            }
 
-            //if (!EventLog.SourceExists(sourceName))
-            //    EventLog.CreateEventSource(sourceName, "Application");
-
-            //EventLog.WriteEntry(sourceName, message, EventLogEntryType.Error);
-
+            _logger.LogError(message);
         }
 
-        //select if user isActive or NOT.
+    //select if user isActive or NOT.
         public static bool Authintication(string username, string password)
         {
             bool isActive = false;

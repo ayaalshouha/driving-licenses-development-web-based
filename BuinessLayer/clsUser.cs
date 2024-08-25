@@ -46,7 +46,7 @@ namespace BuisnessLayer
             username = User.username; 
             password = User.password;
             isActive = User.isActive;
-            PersonInfo = clsPerson.Find(this.PersonID); 
+            PersonInfo = clsPerson.FindAsync(this.PersonID).GetAwaiter().GetResult() ; 
             _Mode = enMode.update;
         }
         public static async Task<clsUser> Find_ByPersonIDAsync(int PersonID)

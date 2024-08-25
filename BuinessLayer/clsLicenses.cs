@@ -131,16 +131,18 @@ namespace BuisnessLayer
         }
         public async Task<clsLicenses> RenewLicenseAsync(string Notes, int CreatedByUserID)
         {
-            clsApplication NewApplication = new clsApplication();
-            clsLicenses NewLicense = new clsLicenses();
+            var NewApplication = new clsApplication
+            {
+                PersonID = this.DriverInfo.PersonID,
+                Status = enStatus.New,
+                TypeID = (int)enApplicationType.RenewDL,
+                PaidFees = clsApplicationTypes.FeeAsync((int)enApplicationType.RenewDL).GetAwaiter().GetResult();
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                lastStatusDate = DateOnly.FromDateTime(DateTime.Now),
+                CreatedByUserID = CreatedByUserID,
+            };
 
-            NewApplication.PersonID = this.DriverInfo.PersonID;
-            NewApplication.Status = enStatus.New;
-            NewApplication.TypeID = (int)enApplicationType.RenewDL;
-            NewApplication.PaidFees = clsApplicationTypes.FeeAsync(NewApplication.TypeID).GetAwaiter().GetResult();
-            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
-            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
-            NewApplication.CreatedByUserID = CreatedByUserID;
+            var NewLicense = new clsLicenses();
 
             if (await NewApplication.SaveAsync())
             {
@@ -165,8 +167,8 @@ namespace BuisnessLayer
         }
         public async Task<clsLicenses> ReplaceAsync(enIssueReason reason, int CreatedByUserID)
         {
-            clsApplication NewApplication = new clsApplication();
-            clsLicenses NewLicense = new clsLicenses();
+            var NewApplication = new clsApplication();
+            var NewLicense = new clsLicenses();
 
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
@@ -203,7 +205,7 @@ namespace BuisnessLayer
         public async Task<int> DetainAsync(decimal finefee, int CreatedByUserID)
         {
             int DetainID = -1;
-            clsDetainedLicenses DetainInfo = new clsDetainedLicenses();
+            var DetainInfo = new clsDetainedLicenses();
             DetainInfo.DetainDate = DateOnly.FromDateTime(DateTime.Now);
             DetainInfo.FineFees = finefee;
             DetainInfo.isReleased = false;
@@ -224,8 +226,8 @@ namespace BuisnessLayer
             if (!this.isDetained)
                 return false;
 
-            clsDetainedLicenses detainInfo = await clsDetainedLicenses.FindByLicenseIDAsync(this.ID);
-            clsApplication NewApplication = new clsApplication();
+            var detainInfo = await clsDetainedLicenses.FindByLicenseIDAsync(this.ID);
+            var NewApplication = new clsApplication();
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (int)enApplicationType.ReleaseDetainedDL;

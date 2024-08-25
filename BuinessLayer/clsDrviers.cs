@@ -33,7 +33,7 @@ namespace BuisnessLayer
             this.PersonID = driver.PersonID;
             this.CreationDate = driver.CreationDate;
             this.CreatedByUserID = driver.CreatedByUserID;
-            this.PersonInfo = clsPerson.Find(PersonID);
+            this.PersonInfo = clsPerson.FindAsync(PersonID).GetAwaiter().GetResult();
             _Mode = enMode.update;
         }
         public static async Task<clsDrviers> Find_ByPersonIDAsync(int PersonID)

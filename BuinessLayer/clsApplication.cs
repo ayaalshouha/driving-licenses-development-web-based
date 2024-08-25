@@ -68,7 +68,7 @@ namespace BuisnessLayer
             this.lastStatusDate = application.lastStatusDate;
             this.CreatedByUserID = application.CreatedByUserID;
             this.PaidFees = application.PaidFees;
-            this.PersonInfo = clsPerson.Find(this.PersonID);
+            this.PersonInfo = clsPerson.FindAsync(this.PersonID).GetAwaiter().GetResult();
             _Mode = enMode.update; 
         }
         public static clsApplication Find(int ApplicationID)

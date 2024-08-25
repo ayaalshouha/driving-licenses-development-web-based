@@ -39,7 +39,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                // Console.WriteLine("Error: " + e.Message);
             }
           
@@ -77,7 +77,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
             
@@ -111,7 +111,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
 
             return newID;
@@ -141,7 +141,7 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -163,7 +163,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             
             return RowAffected > 0;
@@ -201,7 +201,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
            
             return table; 
@@ -438,7 +438,7 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
 
             finally
