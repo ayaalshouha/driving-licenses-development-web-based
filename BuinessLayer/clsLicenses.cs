@@ -8,7 +8,6 @@ namespace BuisnessLayer
     public class clsLicenses
     {
         public enMode _Mode = enMode.add; 
-       
         public int ID { get; set; }
         public int ApplicationID { get; set; }
         public int DriverID { get; set; }
@@ -51,7 +50,6 @@ namespace BuisnessLayer
             this.IssueReason = enIssueReason.FirstTime;
             this._Mode = enMode.add;
         }
-
         private clsLicenses(_License license)
         {
             this.ID = license.ID;
@@ -255,5 +253,14 @@ namespace BuisnessLayer
             }
             return false; 
         }
+        public static async Task<bool> DeleteAsync(int licenseID)
+        {
+            return await LicensesData.DeleteAsync(licenseID); 
+        }
+        public static async Task<bool> isExistAsync(int LicenseID)
+        {
+            return await LicensesData.isExistAsync(LicenseID);
+        }
+    
     }
 }

@@ -19,22 +19,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureLogging((context, logging) =>
-            {
-                logging.AddConsole();
-                logging.AddDebug();
-            })
-            .ConfigureServices((context, services) =>
-            {
-                services.AddTransient(provider =>
-                {
-                    var logger = provider.GetRequiredService<ILogger<DataSettings>>();
-                    DataSettings.ConfigureLogger(logger);
-                    return logger;
-                });
-            });
+//static IHostBuilder CreateHostBuilder(string[] args) =>
+//        Host.CreateDefaultBuilder(args)
+//            .ConfigureLogging((context, logging) =>
+//            {
+//                logging.AddConsole();
+//                logging.AddDebug();
+//            })
+//            .ConfigureServices((context, services) =>
+//            {
+//                services.AddTransient(provider =>
+//                {
+//                    var logger = provider.GetRequiredService<ILogger<DataSettings>>();
+//                    DataSettings.ConfigureLogger(logger);
+//                    return logger;
+//                });
+//            });
 
 app.UseHttpsRedirection();
 

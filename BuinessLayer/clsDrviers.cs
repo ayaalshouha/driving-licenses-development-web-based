@@ -99,6 +99,9 @@ namespace BuisnessLayer
         {
             return await DriverData.GetActiveLicenseIDAsync(DriverID);
         }
-
+        public static async Task<bool> isExistAsync(int driverid)
+        {
+            return await DriverData.isExistAsync(driverid);
+        }
     }
 }

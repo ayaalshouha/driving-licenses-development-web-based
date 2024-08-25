@@ -167,7 +167,7 @@ namespace DataLayer
            
             return RowAffected > 0;
         }
-        public static bool isExistAsync(int licenseID)
+        public static async Task<bool> isExistAsync(int licenseID)
         {
             bool isFound = false;
             try
@@ -179,7 +179,7 @@ namespace DataLayer
                     {
                         command.Parameters.AddWithValue("@licenseID", licenseID);
                         Connection.Open();
-                        object result = command.ExecuteScalar();
+                        object result = await command.ExecuteScalarAsync();
                         isFound = (result != null);
                     }
                 }

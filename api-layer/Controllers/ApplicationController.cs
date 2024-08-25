@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return application;
         }
      
-        [HttpGet("getByID", Name = "getByID")]
+        [HttpGet("getByID", Name = "getApplicationByID")]
         public async Task<ActionResult<_Application>> GetByID(int ApplicationID)
         {
             if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
@@ -63,7 +63,7 @@ namespace api_layer.Controllers
             clsApplication app = await AssignDataToApp(newApp);
 
             if (await app.SaveAsync())
-                return CreatedAtRoute("getByID", new { app.ID }, newApp);
+                return CreatedAtRoute("getApplicationByID", new { app.ID }, newApp);
             else
                 return StatusCode(500, new { message = "Error Creating Application" });
         }

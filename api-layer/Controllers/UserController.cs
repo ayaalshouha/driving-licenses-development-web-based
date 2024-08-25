@@ -46,7 +46,7 @@ namespace api_layer.Controllers
             return Ok(usersList);
         }
 
-        [HttpGet("getByID", Name="getByID")]
+        [HttpGet("getByID", Name="getUserByID")]
         public async Task<ActionResult<User>> GetByID(int ID)
         {
             if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
@@ -73,7 +73,7 @@ namespace api_layer.Controllers
             clsUser user = assignDataToUser(newUser);
 
             if (await user.SaveAsync())
-                return CreatedAtRoute("getByID", new { user.ID }, newUser);
+                return CreatedAtRoute("getUserByID", new { user.ID }, newUser);
             else
                 return StatusCode(500, new { message = "Error Creating User" });
         }
