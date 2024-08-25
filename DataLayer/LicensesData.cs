@@ -13,14 +13,14 @@ namespace DataLayer
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "select * from Licenses where ID = @licenseID"; 
-                    using(SqlCommand command = new SqlCommand(Query, connection))
+                    using(var command = new SqlCommand(Query, connection))
                     {
                         command.Parameters.AddWithValue("@licenseID", licenseID);
                         connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (var reader = command.ExecuteReader())
                         {
                             while (await reader.ReadAsync())
                             {
@@ -162,7 +162,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                //DataSettings.LogError(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
            
             return RowAffected > 0;

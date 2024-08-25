@@ -10,16 +10,16 @@ namespace DataLayer
     {
         public static async Task<ApplicationType> getApplicationTypeInfoAsync(int TypeID)
         {
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
+            var connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = "select * from ApplicationTypes where ID = @typeID";
 
-                SqlCommand command = new SqlCommand(Query, connection);
+                var command = new SqlCommand(Query, connection);
                 command.Parameters.AddWithValue("@typeID", TypeID);
 
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
                 while (await reader.ReadAsync())
                 {
                     return new ApplicationType(
@@ -77,14 +77,14 @@ namespace DataLayer
         public static async Task<IEnumerable<ApplicationType>> getAllApplicationTypesAsync()
         {
             var table = new List<ApplicationType>();
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = "SELECT * FROM ApplicationTypes;";
-                SqlCommand command = new SqlCommand(Query, Connection);
+                var command = new SqlCommand(Query, Connection);
 
                 Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
 
                 while (await reader.ReadAsync())
                 {
@@ -113,14 +113,14 @@ namespace DataLayer
         public static async Task<decimal> GetFeeAsync(int TypeID)
         { 
             decimal fee = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = @"SELECT Fees From ApplicationTypes 
                         WHERE ID = @TypeID;";
 
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
+                var Command = new SqlCommand(Query, Connection);
 
                 Command.Parameters.AddWithValue("@TypeID", TypeID);
 

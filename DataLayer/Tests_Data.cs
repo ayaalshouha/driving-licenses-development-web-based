@@ -185,7 +185,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                //DataSettings.LogError(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -209,7 +209,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                //DataSettings.LogError(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -244,7 +244,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                //DataSettings.LogError(ex.Message.ToString());
+                DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {

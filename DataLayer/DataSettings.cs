@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using Microsoft.Extensions.Logging;
 

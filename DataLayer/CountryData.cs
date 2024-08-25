@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using System;
 using Microsoft.Data.SqlClient;
 using System.Data;
 

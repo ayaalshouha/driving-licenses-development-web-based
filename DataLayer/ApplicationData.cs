@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Xml.XPath;
 using static System.Net.Mime.MediaTypeNames;
 using DTOsLayer;
 using System.Reflection.PortableExecutable;
+
 
 namespace DataLayer
 {
@@ -55,7 +57,7 @@ namespace DataLayer
                 }
             }
             catch(Exception e){
-                //DataSettings.LogError(e.Message.ToString());
+                DataSettings.LogError(e.Message.ToString());
                 //Console.WriteLine("Error: " + e.Message);
             }
             return null; 
@@ -145,10 +147,10 @@ namespace DataLayer
             int RowAffected = 0;
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = "DELETE  FROM Applications WHERE ID = @ApplicationID;";
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
                         Connection.Open();
@@ -309,10 +311,10 @@ namespace DataLayer
             string name = "";
             try
             {
-                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
                     string Query = @"SELECT Name From FullNames WHERE PersonID = @personID;";
-                    using (SqlCommand command = new SqlCommand(Query, Connection))
+                    using (var command = new SqlCommand(Query, Connection))
                     {
                         command.Parameters.AddWithValue("@personID", personID);
                         Connection.Open();

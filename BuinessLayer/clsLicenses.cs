@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using System;
 using DataLayer;
 using DTOsLayer; 
 
@@ -136,7 +137,7 @@ namespace BuisnessLayer
                 PersonID = this.DriverInfo.PersonID,
                 Status = enStatus.New,
                 TypeID = (int)enApplicationType.RenewDL,
-                PaidFees = clsApplicationTypes.FeeAsync((int)enApplicationType.RenewDL).GetAwaiter().GetResult();
+                PaidFees = clsApplicationTypes.FeeAsync((int)enApplicationType.RenewDL).GetAwaiter().GetResult(),
                 Date = DateOnly.FromDateTime(DateTime.Now),
                 lastStatusDate = DateOnly.FromDateTime(DateTime.Now),
                 CreatedByUserID = CreatedByUserID,

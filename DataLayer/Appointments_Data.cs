@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using System;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using DTOsLayer;
@@ -50,7 +51,7 @@ namespace DataLayer
         public static async Task<int> AddAsync(Appointment appointment)
         {
             int newID = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = @"INSERT INTO TestAppointments 
@@ -58,7 +59,7 @@ namespace DataLayer
                         SELECT SCOPE_IDENTITY();";
 
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
+                var Command = new SqlCommand(Query, Connection);
 
                 Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);
                 Command.Parameters.AddWithValue("@Date", appointment.Date);
@@ -96,7 +97,7 @@ namespace DataLayer
         public static async Task<bool> UpdateAsync(Appointment appointment)
         {
             int RowAffected = 0;
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = @"Update TestAppointments
@@ -110,7 +111,7 @@ namespace DataLayer
 
                 WHERE ID = @AppointmentID;";
 
-                SqlCommand Command = new SqlCommand(Query, Connection);
+                var Command = new SqlCommand(Query, Connection);
 
                 Command.Parameters.AddWithValue("@AppointmentID", appointment.ID);
                 Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);

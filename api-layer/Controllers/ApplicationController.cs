@@ -1,4 +1,5 @@
-﻿using BuisnessLayer;
+﻿#pragma warning disable CS8604 // Possible null reference argument
+using BuisnessLayer;
 using DTOsLayer;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -146,7 +147,7 @@ namespace api_layer.Controllers
         [HttpGet("getPaidFees")]
         public async Task<ActionResult<int>> GetPaidFees(int ApplicationID)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out int result) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
             clsApplication app = await clsApplication.FindAsync(ApplicationID);
