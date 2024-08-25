@@ -114,10 +114,7 @@ namespace BuisnessLayer
             return International_DL_Data.getInternationalLicenses();
         }
 
-        public static int getActiveLicenseID(int DriverID)
-        {
-            return International_DL_Data.GetActiveLicenseID(DriverID);
-        }
+       
 
     }
 }

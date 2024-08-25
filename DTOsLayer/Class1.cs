@@ -14,31 +14,8 @@ namespace DTOsLayer
     {
         NewLocalDL = 1, RenewDL = 2, LostReplacement = 3,
         DamagedReplacement = 4, ReleaseDetainedDL = 5, NewInternationalDL = 6, RetakeTest = 7
-    }
-     
-    public class InternationalLicenses
-    {
-        public int ID { get; set; }
-        public int ApplicationID { get; set; }
-        public int DriverID { get; set; }
-        public int IssuedByLocalLicenseID { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
-        public bool isActive { get; set; }
-        public int CreatedByUserID { get; set; }
-
-        public InternationalLicenses(int id, int appid, int driverid, int issuedbylocalid, DateTime issuedate, DateTime expdate, bool isactive, int createdby)
-        {
-            this.ID = id;
-            this.ApplicationID = appid;
-            this.DriverID = driverid;
-            this.IssuedByLocalLicenseID = issuedbylocalid;
-            this.isActive = isactive;
-            this.ExpDate = expdate;
-            this.IssueDate = issuedate;
-            this.CreatedByUserID = createdby;
-        }
-    }
+    }    
+    
     public class Appointment
     {
         public int ID { get; set; }

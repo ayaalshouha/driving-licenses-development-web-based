@@ -7,36 +7,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
+using DTOsLayer;
 
 namespace DataLayer
 {
     public class International_DL_Data
     {
-        public static bool getApplicationInfo(int ApplicationID, ref stInternationalLicenses application)
+        public static async Task<InternationalLicense> getApplicationInfoAsync(int ApplicationID)
         {
-            bool isFound = false;
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
                 string Query = "select * from InternationalLicenses where ID = @ApplicationID";
-
                 SqlCommand command = new SqlCommand(Query, connection);
                 command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    isFound = true;
-                    application.ID = (int)reader["ID"];
-                    application.ApplicationID = (int)reader["ApplicationID"];
-                    application.DriverID = (int)reader["DriverID"];
-                    application.isActive = (bool)reader["isActive"];
-                    application.IssueDate = (DateTime)reader["IssueDate"];
-                    application.ExpDate = (DateTime)reader["ExpirationDate"];
-                    application.IssuedByLocalLicenseID = (int)reader["IssuedUsingLocalLicenseID"];
-                    application.CreatedByUserID = (int)reader["CreatedByUserID"]; 
-                    
+                    return new InternationalLicense(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                            reader.GetInt32(reader.GetOrdinal("DriverID")),
+                            reader.GetInt32(reader.GetOrdinal("IssuedUsingLocalLicenseID")),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate")),)
+                            reader.GetBoolean(reader.GetOrdinal("isActive")),
+                            reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        );
                 }
                 reader.Close();
             }
@@ -49,10 +47,9 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
-
-        public static int Add(stInternationalLicenses application)
+        public static async Task<int> AddAsync(InternationalLicense application)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -78,7 +75,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@isActive", application.isActive);
                 Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
                 Connection.Open();
-                object result = Command.ExecuteScalar();
+                object result = await Command.ExecuteScalarAsync();
 
                 if (result != null && int.TryParse(result.ToString(), out int LastID))
                 {
@@ -97,8 +94,7 @@ namespace DataLayer
 
             return newID;
         }
-
-        public static bool Update(stInternationalLicenses application)
+        public static async Task<bool> UpdateAsync(InternationalLicense application)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -122,7 +118,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
 
                 Connection.Open();
-                RowAffected = Command.ExecuteNonQuery();
+                RowAffected = await Command.ExecuteNonQueryAsync();
             }
 
             catch (Exception ex)
@@ -136,7 +132,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int ApplicationID)
+        public static async Task<bool> DeleteAsync(int ApplicationID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -146,7 +142,7 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@LicenseID", ApplicationID);
                 Connection.Open();
-                RowAffected = command.ExecuteNonQuery();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
@@ -158,7 +154,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int ApplicationID)
+        public static async Task<bool> isExistAsync(int ApplicationID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -169,7 +165,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
 
                 Connection.Open();
-                object result = command.ExecuteScalar();
+                object result = await command.ExecuteScalarAsync();
                 isFound = (result != null);
             }
             catch (Exception ex)
@@ -182,10 +178,9 @@ namespace DataLayer
             }
             return isFound;
         }
-
-        public static DataTable getInternationalLicenses()
+        public static async Task<IEnumerable<InternationalLicense>> ListAsync()
         {
-            DataTable table = new DataTable();
+            var table = new List<InternationalLicense>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -195,9 +190,18 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.HasRows)
+                while (await reader.ReadAsync())
                 {
-                    table.Load(reader);
+                    table.Add(new InternationalLicense(
+                            reader.GetInt32(reader.GetOrdinal("ID")),
+                            reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                            reader.GetInt32(reader.GetOrdinal("DriverID")),
+                            reader.GetInt32(reader.GetOrdinal("IssuedUsingLocalLicenseID")),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate")),)
+                            reader.GetBoolean(reader.GetOrdinal("isActive")),
+                            reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        ));
                 }
                 reader.Close();
             }
@@ -211,36 +215,6 @@ namespace DataLayer
             }
             return table;
         }
-
-        public static int GetActiveLicenseID(int DriverID)
-        {
-            int ID = -1; 
-            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
-            try
-            {
-                string Query = @"SELECT ID FROM InternationalLicenses
-                            WHERE DriverID = @DriverID and isActive = 1;";
-
-                SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@DriverID", DriverID);
-
-                Connection.Open();
-                object result = command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int InsertedResult))
-                {
-                    ID = InsertedResult;
-                }
-            }
-            catch (Exception ex)
-            {
-                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
-            }
-            finally
-            {
-                Connection.Close();
-            }
-            return ID;
-        }
+   
     }
 }

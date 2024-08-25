@@ -91,6 +91,10 @@ namespace BuisnessLayer
         {
             return await DriverData.getInternationalLicensesAsync(DriverID);
         }
-    
+        public static async Task<int> getActiveLicenseIDAsync(int DriverID)
+        {
+            return await DriverData.GetActiveLicenseIDAsync(DriverID);
+        }
+
     }
 }

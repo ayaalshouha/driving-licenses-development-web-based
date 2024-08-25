@@ -329,6 +329,35 @@ namespace DataLayer
             }
             return dt;
         }
-    
+        public static async Task<int> GetActiveLicenseIDAsync(int DriverID)
+        {
+            int ID = -1;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"SELECT ID FROM InternationalLicenses
+                            WHERE DriverID = @DriverID and isActive = 1;";
+
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@DriverID", DriverID);
+
+                Connection.Open();
+                object result = await command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int InsertedResult))
+                {
+                    ID = InsertedResult;
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.StoreUsingEventLogs(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return ID;
+        }
     }
 }
