@@ -23,7 +23,8 @@ namespace BuisnessLayer
         {
             get
             {
-                return new DetainedLicense(this.ID, this.ReleaseApplicationID, this.LicenseID, this.ReleaseDate, this.DetainedLicenseDTO, this.isReleased,
+                return new DetainedLicense(this.ID, this.ReleaseApplicationID, this.LicenseID,
+                    this.ReleaseDate, this.DetainDate, this.isReleased,
                     this.FineFees, this.ReleasedByUserID, this.CreatedByUserID); 
             }
         }

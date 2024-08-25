@@ -4,18 +4,6 @@ using System.Diagnostics;
 
 namespace DataLayer
 { 
-    public struct stAppointment
-    {
-        public int ID { get; set; }
-        public DateTime Date { get; set; }
-        public int TestType { get; set; }
-        public decimal PaidFees { get; set; }
-        public bool isLocked { get; set; }
-        public int CreatedByUserID { get; set; }
-        public int LocalLicenseApplicationID { get; set; }
-        public int RetakeTestID { get; set; }
-
-    }
     public class DataSettings
     {
         public static string ConnectionString = "server=.;database=DVLD_Database;user id=sa;password=sa123456;TrustServerCertificate=True;";

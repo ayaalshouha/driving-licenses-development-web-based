@@ -1,18 +1,25 @@
 ﻿using DataLayer;
 using System;
+using DTOsLayer;
 namespace BuisnessLayer
 {
     public class clsTests
     {
+        public enMode _Mode { get; set; }
         public int ID { get; set; }
         public int AppointmentID { get; set; }
         public clsAppointment AppointmentInfo { get; set; }
         public bool Result { get; set; }
         public string Notes { get; set; }
         public int CreatedByUserID { get; set; }
-        public enum enMode { Add, Update };
-        public enMode _Mode { get; set; }
 
+        public Test testDTO
+        {
+            get
+            {
+                return new Test(this.ID, this.AppointmentID, this.Result, this.Notes, this.CreatedByUserID);
+            }
+        }
         public clsTests()
         {
             this.ID = -1; 
@@ -20,81 +27,57 @@ namespace BuisnessLayer
             this.Notes = string.Empty;
             this.Result = false;
             this.CreatedByUserID = -1;
-            this._Mode = enMode.Add;
+            this._Mode = enMode.add;
         }
 
-        private clsTests(stTests test)
+        private clsTests(Test test)
         {
             this.ID=test.ID;
             this.AppointmentID = test.AppointmentID;
-            AppointmentInfo = clsAppointment.Find(AppointmentID);
+            AppointmentInfo = clsAppointment.FindAsync(AppointmentID).GetAwaiter().GetResult();
             this.Notes = test.Notes;
             this.CreatedByUserID=test.CreatedByUserID;
             this.Result= test.Result;
-            this._Mode = enMode.Update;
+            this._Mode = enMode.update;
         }
-
-        public static clsTests Find(int testID)
+        public static async Task<clsTests> Find(int testID)
         {
-            stTests test = new stTests();
-            if (Tests_Data.getTestInfo(testID, ref test))
+            Test test = await Tests_Data.getTestInfoAsync(testID);
+            if (test != null)
                 return new clsTests(test);
             else
                 return null;
         }
-        public static clsTests FindTestByPersonIDAndLicenseClass(int personID, int LicenseCLassID, clsTestTypes.enTestType TestType)
+        public static async Task<clsTests> FindTestByPersonIDAndLicenseClassAsync(int personID, int LicenseCLassID,enTestType TestType)
         {
-            stTests Test = new stTests();
-            if(Tests_Data.GetLastTestPerTestType(personID,LicenseCLassID, (int)TestType, ref Test))
-            {
+            Test Test = await Tests_Data.GetLastTestPerTestTypeAsync(personID, LicenseCLassID, (int)TestType);
+            if(Test != null)
                 return new clsTests(Test); 
-            }
             return null; 
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stTests test = new stTests()
-            {
-                ID = this.ID,
-                AppointmentID= this.AppointmentID,
-                Result = this.Result,
-                Notes = this.Notes,
-                CreatedByUserID = this.CreatedByUserID
-            };
-
-            this.ID = Tests_Data.Add(test);
+            this.ID = await Tests_Data.AddAsync(testDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stTests test = new stTests()
-            {
-                ID = this.ID,
-                AppointmentID = this.AppointmentID,
-                Result = this.Result,
-                Notes = this.Notes,
-                CreatedByUserID = this.CreatedByUserID
-            };
-
-            return Tests_Data.Update(test);
+            return await Tests_Data.UpdateAsync(testDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
-
             return false;
         }
 

@@ -242,17 +242,17 @@ namespace DataLayer
         }       
         public static async Task<IEnumerable<LocalDLApp_View>> New_LocalApplicationsViewAsync()
         {
-            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsViewAsync();
             return list.Where(E=>E.Status == "New");
         }
         public static async Task<IEnumerable<LocalDLApp_View>> Cancelled_LocalApplicationsViewAsync()
         {
-            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsViewAsync();
             return list.Where(E => E.Status == "Cancelled");
         }
         public static async Task<IEnumerable<LocalDLApp_View>> Completed_LocalApplicationsViewAsync()
         {
-            IEnumerable<LocalDLApp_View> list = await LocalApplicationsView();
+            IEnumerable<LocalDLApp_View> list = await LocalApplicationsViewAsync();
             return list.Where(E => E.Status == "Completed");
         }
         public static async Task<int> getPassedTestCountAsync(int localAppID)

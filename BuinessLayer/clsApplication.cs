@@ -63,7 +63,7 @@ namespace BuisnessLayer
             this.PersonID = application.PersonID;
             this.Status = (enStatus)application.Status;
             this.TypeID = application.Type;
-            this.TypeInfo = clsApplicationTypes.Find(TypeID); 
+            this.TypeInfo = clsApplicationTypes.FindAsync(TypeID).GetAwaiter().GetResult(); 
             this.Date = application.Date;
             this.lastStatusDate = application.lastStatusDate;
             this.CreatedByUserID = application.CreatedByUserID;

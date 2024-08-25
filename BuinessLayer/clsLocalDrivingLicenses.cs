@@ -155,45 +155,42 @@ namespace BuisnessLayer
             return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 3); 
         }
 
-        //TODO Make Drivers layers async
-        public int IssueLicenseForTheFirstTime(int CreatedByUserID, string Notes)
+        public async Task<int> IssueLicenseForTheFirstTime(int CreatedByUserID, string Notes)
         {
             int DriverID = -1; 
-            clsDrviers Driver = clsDrviers.Find_ByPersonID(this.MainApplicationInfo.PersonID);
+            clsDrviers Driver = await clsDrviers.Find_ByPersonIDAsync(this.MainApplicationInfo.PersonID);
 
             if(Driver == null)
             {
                 Driver = new clsDrviers();
                 Driver.PersonID = this.MainApplicationInfo.PersonID;
-                Driver.CreationDate = DateTime.Now;
+                Driver.CreationDate = DateOnly.FromDateTime(DateTime.Now);
                 Driver.CreatedByUserID = CreatedByUserID;
 
-                if (Driver.Save())
-                {
+                if (await Driver.SaveAsync())
                     DriverID = Driver.ID;
-                }
             }
             else
-            {
                 DriverID = Driver.ID; 
-            }
+
+
 
             clsLicenses New_License = new clsLicenses();
 
             New_License.ApplicationID = this.ApplicationID;
             New_License.DriverID = DriverID;
-            New_License.IssueDate = DateTime.Now;
+            New_License.IssueDate = DateOnly.FromDateTime(DateTime.Now);
             New_License.LicenseClass = this.LicenseClassID;
             New_License.Notes = Notes;
-            New_License.ExpDate = DateTime.Now.AddYears(this.LicenseClassesInfo.DefaultValidityLength);
+            New_License.ExpDate = DateOnly.FromDateTime(DateTime.Now.AddYears(this.LicenseClassesInfo.DefaultValidityLength));
             New_License.PaidFees = (decimal)this.LicenseClassesInfo.ClassFees;
-            New_License.IssueReason = clsLicenses.enIssueReason.FirstTime;
+            New_License.IssueReason = enIssueReason.FirstTime;
             New_License.isActive = true;
             New_License.CreatedByUserID = CreatedByUserID;
 
-            if (New_License.Save())
+            if (await New_License.SaveAsync())
             {
-                if (this.setCompleted())
+                if (await this.setCompletedAsync())
                     return New_License.ID;
             }
            

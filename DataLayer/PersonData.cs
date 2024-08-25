@@ -8,7 +8,7 @@ namespace DataLayer
 {
     public static class PersonData
     {
-        public static Person getPersonInfo(int PersonID)
+        public static async Task<Person> getPersonInfoAsync(int PersonID)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace DataLayer
                         Connection.Open();
                         using (SqlDataReader Reader = Command.ExecuteReader())
                         {
-                            while (Reader.Read())
+                            while (await Reader.ReadAsync())
                             {
                                 return new Person(
                                       Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -62,7 +62,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static Person getPersonInfo(string NationalNum)
+        public static async Task<Person> getPersonInfoAsync(string NationalNum)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace DataLayer
                         Connection.Open();
                         using (SqlDataReader Reader = Command.ExecuteReader())
                         {
-                            while (Reader.Read())
+                            while (await Reader.ReadAsync())
                             {
                                 return new Person(
                                     Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -116,7 +116,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static int Add(Person person)
+        public static async Task<int> AddAsync(Person person)
         {
             int newID = -1;
             try
@@ -161,7 +161,7 @@ namespace DataLayer
 
 
                         Connection.Open();
-                        object result = Command.ExecuteScalar();
+                        object result = await Command.ExecuteScalarAsync();
 
                         if (result != null && int.TryParse(result.ToString(), out int LastID))
                         { newID = LastID; }
@@ -174,7 +174,7 @@ namespace DataLayer
             }
             return newID;
         }
-        public static bool Update(Person person)
+        public static async Task<bool> UpdateAsync(Person person)
         {
             int RowAffected = 0;
             try
@@ -233,7 +233,7 @@ namespace DataLayer
                             Command.Parameters.AddWithValue("@CreationDate", person.CreationDate);
 
                         Connection.Open();
-                        RowAffected = Command.ExecuteNonQuery();
+                        RowAffected = await Command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -244,7 +244,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(int PersonID)
+        public static async Task<bool> DeleteAsync(int PersonID)
         {
             int RowAffected = 0;
             try
@@ -256,7 +256,7 @@ namespace DataLayer
                     {
                         command.Parameters.AddWithValue("@PersonID", PersonID);
                         Connection.Open();
-                        RowAffected = command.ExecuteNonQuery();
+                        RowAffected = await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -267,7 +267,7 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static bool Delete(string NationalNumber)
+        public static async Task<bool> DeleteAsync(string NationalNumber)
         {
             int RowAffected = 0;
             try
@@ -279,7 +279,7 @@ namespace DataLayer
                     {
                         command.Parameters.AddWithValue("@NationalNumber", NationalNumber);
                         Connection.Open();
-                        RowAffected = command.ExecuteNonQuery();
+                        RowAffected = await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -289,7 +289,7 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static bool isExist(int PersonID)
+        public static async Task<bool> isExistAsync(int PersonID)
         {
             bool isFound = false;
             try
@@ -301,7 +301,7 @@ namespace DataLayer
                     {
                         command.Parameters.AddWithValue("@PersonID", PersonID);
                         Connection.Open();
-                        object result = command.ExecuteScalar();
+                        object result =await command.ExecuteScalarAsync();
                         isFound = (result != null);
                     }
                 }
@@ -313,7 +313,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static bool isExist(string NationalNumber)
+        public static async Task<bool> isExistAsync(string NationalNumber)
         {
             bool isFound = false;
             try
@@ -325,7 +325,7 @@ namespace DataLayer
                     {
                         command.Parameters.AddWithValue("@NationalNumber", NationalNumber);
                         Connection.Open();
-                        object result = command.ExecuteScalar();
+                        object result = await command.ExecuteScalarAsync();
                         isFound = (result != null);
                     }
                 }
@@ -336,7 +336,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static List<Person_View> List()
+        public static async Task<IEnumerable<Person_View>> ListAsync()
         {
             var peopleList = new List<Person_View>();
             try

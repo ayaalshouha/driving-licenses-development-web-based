@@ -55,7 +55,7 @@ namespace DataLayer
         }
         public static async Task<DetainedLicense> getDetainedInfoByLicenseIDAsync(int licenseID)
         {
-            bool isFound = false;
+           
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -92,7 +92,7 @@ namespace DataLayer
             {
                 connection.Close();
             }
-            return isFound;
+            return null;
         }
         public static async Task<int> AddAsync(DetainedLicense license)
         {

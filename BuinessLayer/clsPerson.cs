@@ -161,9 +161,9 @@ namespace BuisnessLayer
             
             return false;
         }
-        public static bool Delete(int ID)
+        public static async Task<bool> DeleteAsync(int ID)
         {
-            if (UserData.isExist_ByPersonID(ID) || DriverData.isExist_ByPersonID(ID))
+            if (await UserData.isExist_ByPersonIDAsync(ID) || await DriverData.isExist_ByPersonIDAsync(ID))
                 return false;
             
             return PersonData.Delete(ID);

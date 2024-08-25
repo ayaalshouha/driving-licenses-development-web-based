@@ -34,7 +34,7 @@ namespace BuisnessLayer
             _Mode = enMode.update;
         }
 
-        public static async Task<clsApplicationTypes> Find(int TypeID)
+        public static async Task<clsApplicationTypes> FindAsync(int TypeID)
         {
             ApplicationType type = await ApplicationTypesData.getApplicationTypeInfoAsync(TypeID);
 

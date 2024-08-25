@@ -31,7 +31,7 @@ namespace DataLayer
                             reader.GetInt32(reader.GetOrdinal("DriverID")),
                             reader.GetInt32(reader.GetOrdinal("IssuedUsingLocalLicenseID")),
                             DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
-                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate")),)
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
                             reader.GetBoolean(reader.GetOrdinal("isActive")),
                             reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
                         );
@@ -198,7 +198,7 @@ namespace DataLayer
                             reader.GetInt32(reader.GetOrdinal("DriverID")),
                             reader.GetInt32(reader.GetOrdinal("IssuedUsingLocalLicenseID")),
                             DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
-                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate")),)
+                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
                             reader.GetBoolean(reader.GetOrdinal("isActive")),
                             reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
                         ));

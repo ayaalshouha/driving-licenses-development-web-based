@@ -23,7 +23,7 @@ namespace BuisnessLayer
         public int CreatedByUserID { get; set; }
         public bool isDetained
         {
-            get { return clsDetainedLicenses.isLicenseDetained(this.ID); }
+            get { return clsDetainedLicenses.isLicenseDetainedAsync(this.ID).GetAwaiter().GetResult(); }
         }
         public _License licenseDTO
         {
@@ -137,7 +137,7 @@ namespace BuisnessLayer
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (int)enApplicationType.RenewDL;
-            NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
+            NewApplication.PaidFees = clsApplicationTypes.FeeAsync(NewApplication.TypeID).GetAwaiter().GetResult();
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = CreatedByUserID;
@@ -173,7 +173,7 @@ namespace BuisnessLayer
             NewApplication.TypeID = (reason == enIssueReason.DamagedReplacement ?
                 (int)enApplicationType.DamagedReplacement :
                 (int)enApplicationType.LostReplacement);
-            NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID);
+            NewApplication.PaidFees = clsApplicationTypes.FeeAsync(NewApplication.TypeID).GetAwaiter().GetResult();
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = CreatedByUserID;
@@ -204,14 +204,14 @@ namespace BuisnessLayer
         {
             int DetainID = -1;
             clsDetainedLicenses DetainInfo = new clsDetainedLicenses();
-            DetainInfo.DetainDate = DateTime.Now;
+            DetainInfo.DetainDate = DateOnly.FromDateTime(DateTime.Now);
             DetainInfo.FineFees = finefee;
             DetainInfo.isReleased = false;
             DetainInfo.CreatedByUserID = CreatedByUserID;
             DetainInfo.LicenseID = this.ID;
 
             //TODO : update to SaveAsync
-            if (DetainInfo.Save())
+            if (await DetainInfo.SaveAsync())
             {
                await this.DeactivateCurrentLicenseAsync();
                 DetainID = DetainInfo.ID; 
@@ -224,28 +224,25 @@ namespace BuisnessLayer
             if (!this.isDetained)
                 return false;
 
-
-            clsDetainedLicenses detainInfo = clsDetainedLicenses.FindByLicenseID(this.ID);
+            clsDetainedLicenses detainInfo = await clsDetainedLicenses.FindByLicenseIDAsync(this.ID);
             clsApplication NewApplication = new clsApplication();
-
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (int)enApplicationType.ReleaseDetainedDL;
             NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
-            NewApplication.PaidFees = clsApplicationTypes.Fee(NewApplication.TypeID); 
+            NewApplication.PaidFees = clsApplicationTypes.FeeAsync(NewApplication.TypeID).GetAwaiter().GetResult(); 
             NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
             NewApplication.CreatedByUserID = ReleasedByUserID;
-
             if (await NewApplication.SaveAsync())
             {
                 if (detainInfo != null)
                 {
                     detainInfo.ReleaseApplicationID = NewApplication.ID;
                     detainInfo.isReleased = true;
-                    detainInfo.ReleaseDate = DateTime.Now;
+                    detainInfo.ReleaseDate = DateOnly.FromDateTime(DateTime.Now);
                     detainInfo.ReleasedByUserID = ReleasedByUserID;
 
-                    if (detainInfo.Save())
+                    if (await detainInfo.SaveAsync())
                     {
                         await this.ActivateCurrentLicenseAsync();
                         await NewApplication.setCompletedAsync();
@@ -255,6 +252,5 @@ namespace BuisnessLayer
             }
             return false; 
         }
-    
     }
 }
