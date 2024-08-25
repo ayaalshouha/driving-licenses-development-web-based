@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Data;
+using System.Runtime.InteropServices;
 using DataLayer;
+using DTOsLayer; 
 
 namespace BuisnessLayer
 {
     public class clsAppointment
     {
-        public enum enMode { Add, Update };
-        public enMode _Mode = enMode.Add;
-
+        public enMode _Mode = enMode.add;
         public int ID { get; set; }
-        public DateTime Date { get; set; }
-        public clsTestTypes.enTestType TestType { get; set; }
+        public DateOnly Date { get; set; }
+        public enTestType TestType { get; set; }
         public decimal PaidFees { get; set; }
         public bool isLocked { get; set; }
         public int CreatedByUserID { get; set; }
@@ -22,103 +22,82 @@ namespace BuisnessLayer
         {
             get
             {
-                return Appointments_Data.getTestID(this.ID); 
+                return Appointments_Data.getTestIDAsync(this.ID).GetAwaiter().GetResult(); 
+            }
+        }
+        public Appointment AppointementDTO
+        {
+            get
+            {
+                return new Appointment(this.ID, this.Date, (int)this.TestType, this.PaidFees, this.isLocked, this.CreatedByUserID, this.LocalLicenseApplicationID, this.RetakeTestApplicationID);
             }
         }
         public clsAppointment()
         {
             this.ID = -1;
-            this.Date = DateTime.Now;
+            this.Date = DateOnly.FromDateTime(DateTime.Now);
             this.TestType = 0;
             this.PaidFees = -1;
             this.isLocked = false;
             this.CreatedByUserID = -1;
             this.LocalLicenseApplicationID = -1;
             this.RetakeTestApplicationID = -1;
-            this._Mode = enMode.Add;
+            this._Mode = enMode.add;
         }
-        private clsAppointment(stAppointment appointment)
+        private clsAppointment(Appointment appointment)
         {
             this.ID = appointment.ID;
             this.Date = appointment.Date;
-            this.TestType = (clsTestTypes.enTestType)appointment.TestType;
+            this.TestType = (enTestType)appointment.TestType;
             this.PaidFees = appointment.PaidFees;
             this.isLocked = appointment.isLocked;
             this.CreatedByUserID = appointment.CreatedByUserID;
             this.LocalLicenseApplicationID = appointment.LocalLicenseApplicationID;
             this.RetakeTestApplicationID = appointment.RetakeTestID; 
-            this._Mode = enMode.Update; 
+            this._Mode = enMode.update; 
         }
 
-        public static clsAppointment Find(int appointmentID)
+        public static async Task<clsAppointment> FindAsync(int appointmentID)
         {
-            stAppointment appointment = new stAppointment();
-            if (Appointments_Data.getAppointmentInfo(appointmentID, ref appointment))
+            Appointment appointment = await Appointments_Data.getAppointmentInfoAsync(appointmentID);
+            if(appointment != null)
                 return new clsAppointment(appointment);
             else
                 return null;
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stAppointment appointment = new stAppointment
-            {
-                ID = this.ID,
-                Date = this.Date,
-                PaidFees = this.PaidFees,
-                LocalLicenseApplicationID = this.LocalLicenseApplicationID,
-                isLocked = this.isLocked,
-                TestType = (int)this.TestType,
-                CreatedByUserID = this.CreatedByUserID,
-                RetakeTestID = this.RetakeTestApplicationID
-            };
-
-            this.ID = Appointments_Data.Add(appointment);
+            this.ID = await Appointments_Data.AddAsync(AppointementDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stAppointment appointment = new stAppointment
-            {
-                ID = this.ID,
-                Date = this.Date,
-                TestType = (int)this.TestType,
-                LocalLicenseApplicationID = this.LocalLicenseApplicationID,
-                isLocked = this.isLocked,
-                PaidFees = this.PaidFees,
-                CreatedByUserID = this.CreatedByUserID,
-                 RetakeTestID = this.RetakeTestApplicationID
-            };
-
-            return Appointments_Data.Update(appointment);
+            return await Appointments_Data.UpdateAsync(AppointementDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
 
             return false;
         }
-
-        public static DataTable AppointmentsTablePerTestType(int LocalDrivingID, clsTestTypes.enTestType TestType)
+        public static async Task<IEnumerable<Appointment_Veiw>> AppointmentsTablePerTestTypeAsync(int LocalDrivingID,enTestType TestType)
         {
-            return Appointments_Data.getAppointmentsTablePerTestType(LocalDrivingID, (int)TestType); 
+            return await Appointments_Data.getAppointmentsTablePerTestTypeAsync(LocalDrivingID, (int)TestType); 
         }
-
-        public static bool isThereAnyActiveAppointments(int LocalDrivingID, clsTestTypes.enTestType TestType)
+        public static async Task<bool> isThereAnyActiveAppointments(int LocalDrivingID, enTestType TestType)
         {
-            return Appointments_Data.isThereAnyActiveAppointments(LocalDrivingID, (int)TestType); 
+            return await Appointments_Data.isThereAnyActiveAppointmentsAsync(LocalDrivingID, (int)TestType); 
         }
     }
 }
