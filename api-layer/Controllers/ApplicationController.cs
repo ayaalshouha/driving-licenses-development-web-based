@@ -1,8 +1,6 @@
-﻿#pragma warning disable CS8604 // Possible null reference argument
+﻿using Microsoft.AspNetCore.Mvc;
 using BuisnessLayer;
 using DTOsLayer;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace api_layer.Controllers
@@ -15,7 +13,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class ApplicationController : Controller
     {
-        private async Task<clsApplication> assignDataToApp(_Application newApp, int ID = -1)
+        private static async Task<clsApplication> AssignDataToApp(_Application newApp, int ID = -1)
         {
             clsApplication application; 
 
@@ -62,7 +60,7 @@ namespace api_layer.Controllers
             if (!personFound)
                 return BadRequest("Person with ID {newApp.PersonID} NOT found, You have to add person details first!");
 
-            clsApplication app = await assignDataToApp(newApp);
+            clsApplication app = await AssignDataToApp(newApp);
 
             if (await app.SaveAsync())
                 return CreatedAtRoute("getByID", new { app.ID }, newApp);
@@ -84,7 +82,7 @@ namespace api_layer.Controllers
             if (!isExist)
                 return NotFound("Application NOT Found");
 
-            clsApplication app = await assignDataToApp(newApp, ApplicationID);
+            clsApplication app = await AssignDataToApp(newApp, ApplicationID);
 
             if (app != null && await app.SaveAsync())
                 return Ok(app.applicationDTO);

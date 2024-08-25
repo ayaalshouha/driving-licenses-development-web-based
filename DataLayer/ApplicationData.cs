@@ -1,17 +1,6 @@
-﻿#pragma warning disable CS8604 // Possible null reference argument
-using System;
-using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.XPath;
+﻿using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 using DTOsLayer;
-using System.Reflection.PortableExecutable;
 
 
 namespace DataLayer

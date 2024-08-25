@@ -86,35 +86,6 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static List<string> GetAllCountries()
-        {
-            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
-            List<string> Countries = new List<string>();
-            try
-            {
-                string Query = "SELECT nicename From Countries;";
-                SqlCommand command = new SqlCommand(Query, connection);
-
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Countries.Add(reader["nicename"].ToString());
-                }
-
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-
-            return Countries;
-        }
+       
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BuisnessLayer
 {
+    //TODO Make this async
     public class clsCountries
     {
         public int ID { set; get; }
@@ -46,7 +47,7 @@ namespace BuisnessLayer
 
         }
 
-        public static DataTable GetAllCountries()
+        public static List<string> GetAllCountries()
         {
             return CountryData.GetAllCountries();
         }

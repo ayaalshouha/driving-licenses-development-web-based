@@ -5,6 +5,7 @@ using System.Data;
 
 namespace DataLayer 
 {
+    //TODO Make async
     public class CountryData
     {
         public enum enGendor { Male = 0, Female = 1 };
@@ -75,36 +76,35 @@ namespace DataLayer
             return isFound;
         }
 
-        public static DataTable GetAllCountries()
+        public static List<string> GetAllCountries()
         {
-
-            DataTable dt = new DataTable();
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
+            List<string> Countries = new List<string>();
             try
             {
-                string query = "SELECT nicename FROM Countries";
-               SqlCommand command = new SqlCommand(query, connection);
-           
+                string Query = "SELECT nicename From Countries;";
+                SqlCommand command = new SqlCommand(Query, connection);
+
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (reader.HasRows)
+                while (reader.Read())
                 {
-                    dt.Load(reader);
+                    Countries.Add(reader["nicename"].ToString());
                 }
+
                 reader.Close();
             }
-
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
                 connection.Close();
             }
-            return dt;
+
+            return Countries;
         }
     }
 }
