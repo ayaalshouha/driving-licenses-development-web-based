@@ -45,10 +45,14 @@ namespace BuisnessLayer
         }
         public static async Task<clsDrviers> FindAsync(int DriverID)
         {
-            Driver driver = await DriverData.getDriverInfo_ByIDAsync(PersonID);
+            Driver driver = await DriverData.getDriverInfo_ByIDAsync(DriverID);
             if (driver != null)
                 return new clsDrviers(driver);
             else return null;
+        }
+        public static clsDrviers Find(int DriverID)
+        {
+            return FindAsync(DriverID).GetAwaiter().GetResult();
         }
         private async Task<bool> _AddNewAsync()
         {

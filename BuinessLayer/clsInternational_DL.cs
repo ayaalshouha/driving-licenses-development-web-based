@@ -1,4 +1,5 @@
 ﻿using DataLayer;
+using DTOsLayer;
 using System;
 using System.Data;
 
@@ -6,34 +7,38 @@ namespace BuisnessLayer
 {
     public class clsInternational_DL
     {
-        public enum enMode { Add, Update };
         public enMode _Mode { get; set; }
         public int ID { get; set; }
         public int ApplicationID { get; set; }
-        public clsApplication MainApplicationInfo {  get; set; }
+        public clsApplication MainApplicationInfo { get; set; }
         public int DriverID { get; set; }
         public clsDrviers DriverInfo { get; set; }
         public int IssuedByLocalLicenseID { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ExpDate { get; set; }
+        public DateOnly IssueDate { get; set; }
+        public DateOnly ExpDate { get; set; }
         public bool isActive { get; set; }
         public int CreatedByUserID { get; set; }
-     
-
+        public InternationalLicense internationalLicenseDTO
+        {
+            get
+            {
+                return new InternationalLicense(this.ID, this.ApplicationID, this.DriverID, this.IssuedByLocalLicenseID, 
+                    this.IssueDate, this.ExpDate, this.isActive, this.CreatedByUserID);
+            }
+        }
         public clsInternational_DL()
         {
             this.ID = -1; 
             this.ApplicationID = -1;
             this.DriverID = -1;
             this.IssuedByLocalLicenseID = -1;
-            this.IssueDate = DateTime.Now; 
-            this.ExpDate = DateTime.Now;
+            this.IssueDate = DateOnly.FromDateTime(DateTime.Now); 
+            this.ExpDate = DateOnly.FromDateTime(DateTime.Now);
             this.isActive = false;
             this.CreatedByUserID = -1;
-            _Mode = enMode.Add; 
+            _Mode = enMode.add; 
         }
-
-        private clsInternational_DL(stInternationalLicenses license)
+        private clsInternational_DL(InternationalLicense license)
         {
             this.ID = license.ID;
             this.ApplicationID = license.ApplicationID;
@@ -45,76 +50,45 @@ namespace BuisnessLayer
             this.ExpDate = license.ExpDate;
             this.isActive=true;
             this.CreatedByUserID= license.CreatedByUserID;
-            _Mode = enMode.Update;
+            _Mode = enMode.update;
         }
-
-        public static clsInternational_DL Find(int ApplicationID)
+        public static async Task<clsInternational_DL> FindAsync(int ApplicationID)
         {
-            stInternationalLicenses application = new stInternationalLicenses();
-            if (International_DL_Data.getApplicationInfo(ApplicationID, ref application))
+            InternationalLicense application = await International_DL_Data.getApplicationInfoAsync(ApplicationID);
+            if (application != null)
                 return new clsInternational_DL(application);
             else
                 return null;
         }
-
-        public bool _AddNew()
+        public async Task<bool> _AddNewAsync()
         {
-            stInternationalLicenses application = new stInternationalLicenses
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                DriverID = this.DriverID, 
-                IssueDate = this.IssueDate,
-                ExpDate = this.ExpDate,
-                isActive=this.isActive, 
-                IssuedByLocalLicenseID = this.IssuedByLocalLicenseID,
-                CreatedByUserID = this.CreatedByUserID
-            };
-
-            this.ID = International_DL_Data.Add(application);
+            this.ID = await International_DL_Data.AddAsync(internationalLicenseDTO);
             return this.ID != -1;
         }
-
-        public bool _Update()
+        public async Task<bool> _UpdateAsync()
         {
-            stInternationalLicenses application = new stInternationalLicenses
-            {
-                ID = this.ID,
-                ApplicationID = this.ApplicationID,
-                DriverID = this.DriverID,
-                IssueDate = this.IssueDate,
-                ExpDate = this.ExpDate,
-                isActive = this.isActive,
-                IssuedByLocalLicenseID = this.IssuedByLocalLicenseID,
-                CreatedByUserID = this.CreatedByUserID
-            };
-
-            return International_DL_Data.Update(application);
+            return await International_DL_Data.UpdateAsync(internationalLicenseDTO);
         }
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
             switch (_Mode)
             {
-                case enMode.Add:
-                    if (_AddNew())
+                case enMode.add:
+                    if (await _AddNewAsync())
                     {
-                        this._Mode = enMode.Update;
+                        this._Mode = enMode.update;
                         return true;
                     }
                     break;
-                case enMode.Update:
-                    return _Update();
+                case enMode.update:
+                    return await _UpdateAsync();
             }
 
             return false;
         }
-
-        public static DataTable List()
+        public static async Task<IEnumerable<InternationalLicense>> ListAsync()
         {
-            return International_DL_Data.getInternationalLicenses();
+            return await International_DL_Data.ListAsync();
         }
-
-       
-
     }
 }
