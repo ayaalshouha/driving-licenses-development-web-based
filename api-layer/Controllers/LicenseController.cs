@@ -168,10 +168,33 @@ namespace api_layer.Controllers
                 if (license != null)
                     return Ok(license.ReplaceAsync(enIssueReason.DamagedReplacement, UserID));
                 else
-                    return NotFound("Application Not Found");
+                    return NotFound("License Not Found");
             }
-       
-             
+            [HttpGet("Detain")]
+            public async Task<ActionResult<int>> Detain(int licenseID,decimal fee, int UserID)
+            {
+                if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+                    return BadRequest("Invalid License ID");
+
+                var license = await clsLicenses.FindAsync(licenseID);
+                if (license != null)
+                    return Ok(license.DetainAsync(fee, UserID));
+                else
+                    return NotFound("License Not Found");
+            }
+            [HttpGet("Release")]
+            public async Task<ActionResult<bool>> Release(int licenseID, int UserID)
+            {
+                if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+                    return BadRequest("Invalid License ID");
+
+                var license = await clsLicenses.FindAsync(licenseID);
+                if (license != null)
+                    return Ok(license.ReleaseLicenseAsync(UserID));
+                else
+                    return NotFound("License Not Found");
+            }
+
         }
     }
 }

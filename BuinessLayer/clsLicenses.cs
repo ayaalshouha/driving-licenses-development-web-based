@@ -211,7 +211,6 @@ namespace BuisnessLayer
             DetainInfo.CreatedByUserID = CreatedByUserID;
             DetainInfo.LicenseID = this.ID;
 
-            //TODO : update to SaveAsync
             if (await DetainInfo.SaveAsync())
             {
                await this.DeactivateCurrentLicenseAsync();
