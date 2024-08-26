@@ -37,7 +37,7 @@ namespace api_layer.Controllers
         }
      
         [HttpGet("Read", Name = "ReadApplicationByID")]
-        public async Task<ActionResult<_Application>> GetByID(int ApplicationID)
+        public async Task<ActionResult<_Application>> Read(int ApplicationID)
         {
             if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid Application ID Number");
@@ -50,7 +50,7 @@ namespace api_layer.Controllers
             return Ok(app);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Create", Name = "CreateApplication")]
         public async Task<ActionResult<_Application>> Create(_Application newApp)
         {
             if (newApp == null)
@@ -58,17 +58,17 @@ namespace api_layer.Controllers
 
             bool personFound = await clsPerson.isExistAsync(newApp.PersonID);
             if (!personFound)
-                return BadRequest("Person with ID {newApp.PersonID} NOT found, You have to add person details first!");
+                return BadRequest($"Person with ID {newApp.PersonID} NOT found, You have to add person details first!");
 
             clsApplication app = await AssignDataToApp(newApp);
 
             if (await app.SaveAsync())
-                return CreatedAtRoute("getApplicationByID", new { app.ID }, newApp);
+                return CreatedAtRoute("ReadApplicationByID", new { app.ID }, newApp);
             else
                 return StatusCode(500, new { message = "Error Creating Application" });
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update", Name = "UpdateApplication")]
         public async Task<ActionResult<User>> Update(int ApplicationID, _Application newApp)
         {
             if (newApp == null)
@@ -90,7 +90,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Application" });
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete", Name = "DleteApplication")]
         public async Task<ActionResult> Delete(int ApplicationID)
         {
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
@@ -102,15 +102,15 @@ namespace api_layer.Controllers
             {
                 bool isDeleted = await clsApplication.DeleteAsync(ApplicationID);
                 if (isDeleted)
-                    return Ok("User with ID {ID} Deletted Successfully");
+                    return Ok($"Application with ID {ApplicationID} Deletted Successfully");
                 else
-                    return StatusCode(500, new { Message = "Error Deletting Person" });
+                    return StatusCode(500, new { Message = "Error Deletting Application" });
             }
             else
                 return NotFound("Application Not Found");
         }
 
-        [HttpGet("isClassExist")]
+        [HttpGet("isClassExist", Name = "IsClassExist")]
         public async Task<ActionResult<bool>> isClassExist(int PersonID, int ClassID)
         {
             if (!Int32.TryParse(PersonID.ToString(), out _) || Int32.IsNegative(PersonID))
@@ -122,7 +122,7 @@ namespace api_layer.Controllers
             return Ok(await clsApplication.isClassExistAsync(PersonID, ClassID));
         }
 
-        [HttpGet("SetCompleted")]
+        [HttpGet("SetCompleted", Name = "CompleteApplication")]
         public async Task<ActionResult<bool>> SetCompleted(int ApplicationID)
         {
             clsApplication app = await clsApplication.FindAsync(ApplicationID);
@@ -132,7 +132,7 @@ namespace api_layer.Controllers
                 return Ok(app.setCompletedAsync());
         }
 
-        [HttpGet("Cancel")]
+        [HttpGet("Cancel", Name = "CancelApplciation")]
         public async Task<ActionResult<bool>> Cancel(int ApplicationID)
         {
             bool isExist = await clsApplication.isExistAsync(ApplicationID);
@@ -142,7 +142,7 @@ namespace api_layer.Controllers
                 return NotFound("Application Not Found"); 
         }
 
-        [HttpGet("getPaidFees")]
+        [HttpGet("getPaidFees", Name = "GetApplicationPaidFees")]
         public async Task<ActionResult<int>> GetPaidFees(int ApplicationID)
         {
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
@@ -154,5 +154,6 @@ namespace api_layer.Controllers
             else
                 return Ok(app.FeesAsync()); 
         }
+   
     }
 }

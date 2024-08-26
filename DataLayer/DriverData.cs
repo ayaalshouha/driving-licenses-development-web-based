@@ -212,9 +212,9 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<IEnumerable<Driver>> ListAsync()
+        public static async Task<IEnumerable<Driver_View>> ListAsync()
         {
-            var dt = new List<Driver>();
+            var dt = new List<Driver_View>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -226,11 +226,13 @@ namespace DataLayer
                 if (await Reader.ReadAsync())
                 {
                     dt.Add(
-                        new Driver(
+                        new Driver_View(
                             Reader.GetInt32(Reader.GetOrdinal("ID")),
                             Reader.GetInt32(Reader.GetOrdinal("PersonID")),
-                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))),
-                            Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID"))
+                            Reader.GetString(Reader.GetOrdinal("FullName")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("Date"))),
+                            Reader.GetString(Reader.GetOrdinal("NationalID")),
+                            Reader.GetInt32(Reader.GetOrdinal("ActiveLicenses"))
                         ));
                 }
                 Reader.Close();

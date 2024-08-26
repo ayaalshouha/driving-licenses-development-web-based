@@ -59,7 +59,7 @@ namespace api_layer.Controllers
                 var license = await clsLicenses.FindAsync(LicenseID);
 
                 if (license == null)
-                    return NotFound($"Application With ID {LicenseID} Not Found");
+                    return NotFound($"License With ID {LicenseID} Not Found");
 
                 return Ok(license.licenseDTO);
             }
@@ -77,7 +77,7 @@ namespace api_layer.Controllers
                 var license = AssignDataToLicense(newLicense);
 
                 if (await license.SaveAsync())
-                    return CreatedAtRoute("getLicenseByID", new { license.ID }, newLicense);
+                    return CreatedAtRoute("ReadLicenseByID", new { license.ID }, newLicense);
                 else
                     return StatusCode(500, new { message = "Error Creating License" });
             }

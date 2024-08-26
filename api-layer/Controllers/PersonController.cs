@@ -59,7 +59,7 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("Read", Name = "ReadPersonByID")]
-        public async Task<ActionResult<Person>>GetByID(int ID)
+        public async Task<ActionResult<Person>>Read(int ID)
         {
             if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
                 return BadRequest("Invalid ID Number"); 
@@ -83,7 +83,7 @@ namespace api_layer.Controllers
             if (await person.SaveAsync())
             {
                 newPerson.ID = person.ID; 
-                return CreatedAtRoute("getPersonByID", new { person.ID }, newPerson);
+                return CreatedAtRoute("ReadPersonByID", new { person.ID }, newPerson);
             }
             else
                 return StatusCode(500, new { message = "Error Creating Person" });

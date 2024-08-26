@@ -20,6 +20,26 @@ namespace DTOsLayer
             this.CreatedByUserID = createdByUserId;
         }
     }
+
+    public class Driver_View
+    {
+        public int ID { get; set; }
+        public int PersonID { get; set; }
+        public string FullName { get; set; }
+        public string NationalID { get; set; }
+        public DateOnly Date { get; set; }
+        public int ActiveLicenses { get; set; }
+
+        public Driver_View(int id, int personid, string fullname, DateOnly date, string nationalid, int activelicenses)
+        {
+            this.ID = ID;
+            this.PersonID = personid;
+            this.NationalID = nationalid;
+            this.Date = date;
+            this.ActiveLicenses= activelicenses;
+            this.FullName = fullname; 
+        }
+    }
     public class ActiveLicense
     {
         public int LicenseID { get; set; }
