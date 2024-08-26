@@ -99,9 +99,13 @@ namespace BuisnessLayer
         {
             return await Appointments_Data.isThereAnyActiveAppointmentsAsync(LocalDrivingID, (int)TestType); 
         }    
-        public static async Task<bool> isExist(int id)
+        public static async Task<bool> isExistAsync(int id)
         {
             return await Appointments_Data.isExist(id);
+        }
+        public static async Task<bool> DeleteAsync(int id)
+        {
+            return await Appointments_Data.DeleteAsync(id);
         }
     }
 }

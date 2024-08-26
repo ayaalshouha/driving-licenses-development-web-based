@@ -197,9 +197,10 @@ namespace BuisnessLayer
             return -1;
         }
 
-    } 
-   
-
-    
+        public static async Task<bool> isExistAsync(int appID)
+        {
+            return await Local_DL_Data.isExistAsync(appID);
+        }
+    }
 }
 

@@ -287,7 +287,6 @@ namespace DataLayer
             }
             return Count; 
         }
-
         public static async Task<bool> DoesItCancelledAsync(int LocalID)
         {
             string StatusText = "";
@@ -327,7 +326,6 @@ namespace DataLayer
             }
             return Cancelled;
         }
-
         public static async Task<bool> DoesItCompletedAsync(int LocalID)
         {
             string StatusText = "";
@@ -367,7 +365,6 @@ namespace DataLayer
             }
             return Completed;
         }
-
         public static async Task<bool> isTestPassedAsync(int localAppID, int TestType)
         {
             bool testResult = false;
@@ -407,7 +404,6 @@ namespace DataLayer
             }
             return testResult;
         }
-
         public static async Task<bool> DoesAttendTestTypeAsync(int LocalAppID, int TestTypeID)
         {
             bool IsFound = false;
@@ -447,7 +443,30 @@ namespace DataLayer
             }
             return IsFound;
         }
-
-
+        public static async Task<bool> isExistAsync(int LocalAppID)
+        {
+            bool isFound = false;
+            try
+            {
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "SELECT ID FROM LocalDrivingLicensesApplications WHERE ID = @LocalAppID;";
+                    using (var command = new SqlCommand(Query, Connection))
+                    {
+                        command.Parameters.AddWithValue("@LocalAppID", LocalAppID);
+                        Connection.Open();
+                        object result = await command.ExecuteScalarAsync();
+                        isFound = (result != null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+                //Console.WriteLine("Error: " + ex.Message);
+            }
+            return isFound;
+        }
+   
     }
 }
