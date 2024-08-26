@@ -106,5 +106,14 @@ namespace BuisnessLayer
         {
             return await DetainedLicenses_Data.DetainedLicesesListAsync();
         }
+    
+        public static async Task<bool> isExistAsync(int detainID)
+        {
+            return await DetainedLicenses_Data.isExistAsync(detainID);
+        }
+        public static async Task<bool> DeleteAsync(int detainID)
+        {
+            return await DetainedLicenses_Data.DeleteAsync(detainID);
+        }
     }
 }

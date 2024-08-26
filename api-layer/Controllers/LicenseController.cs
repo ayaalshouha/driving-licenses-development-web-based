@@ -202,6 +202,19 @@ namespace api_layer.Controllers
                 else
                     return NotFound("License Not Found");
             }
+            [HttpGet("isDetained")]
+            public async Task<ActionResult<bool>> isDetained(int licenseID)
+            {
+                if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+                    return BadRequest("Invalid License ID");
+
+                var license = await clsLicenses.FindAsync(licenseID);
+                if (license != null)
+                    return Ok(clsDetainedLicenses.isLicenseDetainedAsync(licenseID));
+                else
+                    return NotFound("License Not Found");
+            }
+
 
         }
     }

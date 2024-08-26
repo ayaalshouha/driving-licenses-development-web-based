@@ -152,7 +152,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static async Task<bool> UpdateAsync(DetainedLicense license)
+        public static async Task<bool> UpdateAsync(DetainedLicense detain)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -167,12 +167,12 @@ namespace DataLayer
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@DetainID", license.ID);
-                Command.Parameters.AddWithValue("@LicenseID", license.LicenseID);
-                Command.Parameters.AddWithValue("@DetainDate", license.DetainDate);
-                Command.Parameters.AddWithValue("@FineFees", license.FineFees);
-                Command.Parameters.AddWithValue("@CreatedByUserID", license.CreatedByUserID);
-                Command.Parameters.AddWithValue("@isReleased", license.isReleased);
+                Command.Parameters.AddWithValue("@DetainID", detain.ID);
+                Command.Parameters.AddWithValue("@LicenseID", detain.LicenseID);
+                Command.Parameters.AddWithValue("@DetainDate", detain.DetainDate);
+                Command.Parameters.AddWithValue("@FineFees", detain.FineFees);
+                Command.Parameters.AddWithValue("@CreatedByUserID", detain.CreatedByUserID);
+                Command.Parameters.AddWithValue("@isReleased", detain.isReleased);
 
                 if (license.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
@@ -205,15 +205,15 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static async Task<bool> DeleteAsync(int licenseID)
+        public static async Task<bool> DeleteAsync(int detainID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "DELETE  FROM DetainedLicenses WHERE ID = @licenseID;";
+                string Query = "DELETE  FROM DetainedLicenses WHERE ID = @detainID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@licenseID", licenseID);
+                command.Parameters.AddWithValue("@detainID", detainID);
                 Connection.Open();
                 RowAffected = await command.ExecuteNonQueryAsync();
             }
@@ -228,15 +228,15 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static async Task<bool> isExistAsync(int licenseID)
+        public static async Task<bool> isExistAsync(int detainID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT ID FROM DetainedLicenses WHERE ID = @licenseID;";
+                string Query = "SELECT ID FROM DetainedLicenses WHERE ID = @detainID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@licenseID", licenseID);
+                command.Parameters.AddWithValue("@detainID", detainID);
 
                 Connection.Open();
                 object result = await command.ExecuteScalarAsync();
