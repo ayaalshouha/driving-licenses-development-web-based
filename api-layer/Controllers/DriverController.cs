@@ -55,7 +55,7 @@ namespace api_layer.Controllers
             return Ok(driver.DriverDTO);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Create", Name ="CreateDriver")]
         public async Task<ActionResult<Driver>> Create(Driver newDriver)
         {
             if (newDriver == null)
@@ -73,7 +73,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Driver" });
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update", Name ="UpdateDriver")]
         public async Task<ActionResult<Driver>> Update(int DriverID, Driver newDriver)
         {
             if (newDriver == null)
@@ -95,7 +95,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Driver" });
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete", Name = "DeleteDriver")]
         public async Task<ActionResult> Delete(int DriverID)
         {
             if (!Int32.TryParse(DriverID.ToString(), out _) || Int32.IsNegative(DriverID))
