@@ -51,7 +51,7 @@ namespace api_layer.Controllers
             if (newTest == null)
                 return BadRequest("invalid object data");
 
-            bool appointmentFound = await clsAppointment.isExist(newTest.AppointmentID);
+            bool appointmentFound = await clsAppointment.isExistAsync(newTest.AppointmentID);
             if (!appointmentFound)
                 return BadRequest($"Appointment with ID {newTest.AppointmentID} NOT found, You have to add appointment details first!");
 

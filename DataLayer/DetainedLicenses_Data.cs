@@ -174,21 +174,21 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", detain.CreatedByUserID);
                 Command.Parameters.AddWithValue("@isReleased", detain.isReleased);
 
-                if (license.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
+                if (detain.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
-                    Command.Parameters.AddWithValue("@ReleaseDate", license.ReleaseDate);
+                    Command.Parameters.AddWithValue("@ReleaseDate", detain.ReleaseDate);
 
-                if (license.ReleasedByUserID == -1)
+                if (detain.ReleasedByUserID == -1)
                     Command.Parameters.AddWithValue("@ReleasedByUserID", DBNull.Value);
                 else
-                    Command.Parameters.AddWithValue("@ReleasedByUserID", license.ReleasedByUserID);
+                    Command.Parameters.AddWithValue("@ReleasedByUserID", detain.ReleasedByUserID);
 
 
-                if (license.ReleaseApplicationID == -1)
+                if (detain.ReleaseApplicationID == -1)
                     Command.Parameters.AddWithValue("@ReleaseApplicationID", DBNull.Value);
                 else
-                    Command.Parameters.AddWithValue("@ReleaseApplicationID", license.ReleaseApplicationID);
+                    Command.Parameters.AddWithValue("@ReleaseApplicationID", detain.ReleaseApplicationID);
 
                 Connection.Open();
                 RowAffected = await Command.ExecuteNonQueryAsync();
