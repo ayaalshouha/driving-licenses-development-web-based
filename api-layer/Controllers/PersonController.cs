@@ -48,7 +48,7 @@ namespace api_layer.Controllers
             return person;
         }
 
-        [HttpGet("All")]
+        [HttpGet("All", Name = "Allpeople")]
         public async Task<ActionResult<IEnumerable<Person_View>>> getAll()
         {
             var peopleList = await clsPerson.ListAsync();
@@ -58,7 +58,7 @@ namespace api_layer.Controllers
             return Ok(peopleList);
         }
 
-        [HttpGet("Read", Name = "Read")]
+        [HttpGet("Read", Name = "ReadPersonByID")]
         public async Task<ActionResult<Person>>GetByID(int ID)
         {
             if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
@@ -83,7 +83,7 @@ namespace api_layer.Controllers
             if (await person.SaveAsync())
             {
                 newPerson.ID = person.ID; 
-                return CreatedAtRoute("Read", new { person.ID }, newPerson);
+                return CreatedAtRoute("getPersonByID", new { person.ID }, newPerson);
             }
             else
                 return StatusCode(500, new { message = "Error Creating Person" });

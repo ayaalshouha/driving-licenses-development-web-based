@@ -1,9 +1,6 @@
 ﻿using BuisnessLayer;
 using DTOsLayer;
-using DTOsLayer;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.ComponentModel;
 
 namespace api_layer.Controllers
 {
@@ -43,7 +40,17 @@ namespace api_layer.Controllers
                 return license;
             }
 
-            [HttpGet("getByID", Name = "getLicenseByID")]
+            [HttpGet("All", Name ="AllLicenses")]
+            public async Task<ActionResult<IEnumerable<_License>>> getAll()
+            {
+                var licensesList = await clsLicenses.ListAsync();
+                if (licensesList.Count() <= 0)
+                    return NotFound("No Licenses Found");
+
+                return Ok(licensesList);
+            }
+
+            [HttpGet("Read", Name = "ReadLicenseByID")]
             public async Task<ActionResult<_License>> GetByID(int LicenseID)
             {
                 if (!int.TryParse(LicenseID.ToString(), out _) || Int32.IsNegative(LicenseID))
@@ -182,6 +189,7 @@ namespace api_layer.Controllers
                 else
                     return NotFound("License Not Found");
             }
+            
             [HttpGet("Release")]
             public async Task<ActionResult<bool>> Release(int licenseID, int UserID)
             {

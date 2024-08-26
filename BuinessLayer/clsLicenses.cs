@@ -261,5 +261,9 @@ namespace BuisnessLayer
             return await LicensesData.isExistAsync(LicenseID);
         }
     
+        public static async Task<IEnumerable<_License>> ListAsync()
+        {
+            return await LicensesData.LicensesListAsync();
+        }
     }
 }

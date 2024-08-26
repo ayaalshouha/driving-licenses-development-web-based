@@ -271,6 +271,47 @@ namespace DataLayer
            
             return RowAffected > 0;
         }
-    
+
+        public static async Task<IEnumerable<_License>> LicensesListAsync()
+        {
+            var list = new List<_License>();
+            try
+            {
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "select * from Licenses;";
+                    using (var command = new SqlCommand(Query, Connection))
+                    {
+                        Connection.Open();
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                list.Add(new _License(
+                                        reader.GetInt32(reader.GetOrdinal("ID")),
+                                        reader.GetInt32(reader.GetOrdinal("ApplicationID")),
+                                        reader.GetInt32(reader.GetOrdinal("DriverID")),
+                                        reader.GetInt32(reader.GetOrdinal("LicenseClass")),
+                                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
+                                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
+                                        reader.GetBoolean(reader.GetOrdinal("isActive")),
+                                        reader.GetInt32(reader.GetOrdinal("PaidFees")),
+                                        reader.GetInt32(reader.GetOrdinal("IssueReason")),
+                                        reader.GetString(reader.GetOrdinal("Notes")),
+                                        reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
+                                    ));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            return list;
+        }
+
+
     }
 }

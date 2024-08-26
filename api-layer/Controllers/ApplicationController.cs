@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return application;
         }
      
-        [HttpGet("getByID", Name = "getApplicationByID")]
+        [HttpGet("Read", Name = "ReadApplicationByID")]
         public async Task<ActionResult<_Application>> GetByID(int ApplicationID)
         {
             if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))

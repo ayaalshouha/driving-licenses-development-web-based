@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return user;
         }
 
-        [HttpGet("All")]
+        [HttpGet("All", Name = "AllUsers")]
         public async Task<ActionResult<IEnumerable<UserSummery>>> getAll()
         {
             var usersList = await clsUser.UsersListAsync();
@@ -46,7 +46,7 @@ namespace api_layer.Controllers
             return Ok(usersList);
         }
 
-        [HttpGet("getByID", Name="getUserByID")]
+        [HttpGet("Read", Name= "ReadUserByID")]
         public async Task<ActionResult<User>> GetByID(int ID)
         {
             if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
