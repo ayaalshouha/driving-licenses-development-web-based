@@ -60,7 +60,7 @@ namespace api_layer.Controllers
             return Ok(user);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Create", Name = "CreateUser")]
         public async Task<ActionResult<User>> Create(User newUser)
         {
             if (newUser == null)
@@ -78,7 +78,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating User" });
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update", Name ="UpdateUser")]
         public async Task<ActionResult<User>> Update(int ID, User newUser)
         {
             if (newUser == null)
@@ -92,7 +92,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating User" });
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete", Name = "DeleteUser")]
         public async Task<ActionResult> Delete(int ID)
         {
             if (!Int32.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
@@ -110,7 +110,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { Message = "Error Deletting Person" });
         }
 
-        [HttpGet("isExistByID")]
+        [HttpGet("isExistByID", Name = "isUserExistByID")]
         public async Task<ActionResult<bool>> isExist(int ID)
         {
             if (ID < 0)
@@ -119,7 +119,7 @@ namespace api_layer.Controllers
             return await clsUser.isExistAsync(ID);
         }
 
-        [HttpGet("isExistByNationalNo")]
+        [HttpGet("isExistByNationalNo", Name = "isUserExistByNationalNo")]
         public async Task<ActionResult<bool>> isExist(string NationalNumber)
         {
             if (string.IsNullOrEmpty(NationalNumber))
