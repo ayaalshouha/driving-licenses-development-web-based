@@ -40,7 +40,7 @@ namespace BuisnessLayer
             this.Result= test.Result;
             this._Mode = enMode.update;
         }
-        public static async Task<clsTests> Find(int testID)
+        public static async Task<clsTests> FindAsync(int testID)
         {
             Test test = await Tests_Data.getTestInfoAsync(testID);
             if (test != null)
@@ -81,5 +81,13 @@ namespace BuisnessLayer
             return false;
         }
 
+        public static async Task<bool> isExistAsync(int TestID)
+        {
+            return await Tests_Data.isExistAsync(TestID);
+        }
+        public static async Task<bool> DeleteAsync(int TestID)
+        {
+            return await Tests_Data.DeleteAsync(TestID);
+        }
     }
 }

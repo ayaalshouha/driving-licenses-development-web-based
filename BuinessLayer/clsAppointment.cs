@@ -98,6 +98,10 @@ namespace BuisnessLayer
         public static async Task<bool> isThereAnyActiveAppointments(int LocalDrivingID, enTestType TestType)
         {
             return await Appointments_Data.isThereAnyActiveAppointmentsAsync(LocalDrivingID, (int)TestType); 
+        }    
+        public static async Task<bool> isExist(int id)
+        {
+            return await Appointments_Data.isExist(id);
         }
     }
 }
