@@ -49,6 +49,24 @@ namespace api_layer.Controllers
             return Ok(detain.DetainedLicenseDTO);
         }
 
+        [HttpGet("ReadByLicenseID", Name = "ReadDetainByLicenseID")]
+        public async Task<ActionResult<DetainedLicense>> ReadByLicenseID(int licenseID)
+        {
+            if (!int.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+                return BadRequest("Invalid Detain ID Number");
+            var isFound = await clsLicenses.isExistAsync(licenseID);
+            
+            if (!isFound)
+                return NotFound($"License with ID {licenseID} NOT found"); 
+
+            var detain = await clsDetainedLicenses.FindByLicenseIDAsync(licenseID);
+
+            if (detain == null)
+                return NotFound($"detain With ID {licenseID} Not Found");
+
+            return Ok(detain.DetainedLicenseDTO);
+        }
+
         [HttpPost("Create", Name = "CreateDetain")]
         public async Task<ActionResult<DetainedLicense>> Create(DetainedLicense newDetain)
         {
