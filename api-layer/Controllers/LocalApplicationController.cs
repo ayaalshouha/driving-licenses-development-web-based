@@ -29,6 +29,15 @@ namespace api_layer.Controllers
             return application;
         }
 
+        [HttpGet("All", Name = "AllLocalLicensesApplications")]
+        public async Task<ActionResult<IEnumerable<LocalDLApp_View>>> getAll()
+        {
+            var appsList = await clsLocalDrivingLicenses.ListAsync();
+            if (appsList.Count() <= 0)
+                return NotFound("No Local Driving License Applications Found");
+
+            return Ok(appsList);
+        }
        
         [HttpGet("Read", Name = "ReadLocalApplicationByID")]
         public async Task<ActionResult<LocalDLApp>> Read(int ApplicationID)
@@ -142,15 +151,6 @@ namespace api_layer.Controllers
             return Ok(passedTest);
         }
 
-        [HttpGet("All", Name = "AllLocalLicensesApplications")]
-        public async Task<ActionResult<IEnumerable<LocalDLApp_View>>> getAll()
-        {
-            var appsList = await clsLocalDrivingLicenses.ListAsync();
-            if (appsList.Count() <= 0)
-                return NotFound("No Local Driving License Applications Found");
-
-            return Ok(appsList);
-        }
 
         [HttpGet("isTestPassed", Name = "isTestPassed")]
         public async Task<ActionResult<bool>> isTestPassed(int localAppID, enTestType TestTypeID)
@@ -255,9 +255,6 @@ namespace api_layer.Controllers
             else
                 return Ok(app.setCancelledAsync());
         }
-
-
-
 
         [HttpGet("IssueFirstTimeLicense", Name = "IssueFirstTimeLicense")]
         public async Task<ActionResult<int>> IssueFirstTimeLicense(int ApplicationID, int CreatedByUserID, string Notes )

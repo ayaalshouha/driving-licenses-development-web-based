@@ -28,8 +28,18 @@ namespace api_layer.Controllers
             application.Fees = newApp.TypeFee;
             return application;
         }
-        
-        
+             
+        [HttpGet("All", Name = "GetApplicationTypes")]
+        public async Task<ActionResult<IEnumerable<ApplicationType>>> AllTypes()
+        {
+            var typesList = await clsApplicationTypes.getAllTypesAsync();
+
+            if (typesList.Count()<=0)
+                return NotFound("No Application Types Found");
+            else
+                return Ok(typesList);
+        }
+
         [HttpGet("Read", Name = "ReadApplicationTypeByID")]
         public async Task<ActionResult<ApplicationType>> Read(int ApplicationID)
         {
@@ -43,7 +53,6 @@ namespace api_layer.Controllers
 
             return Ok(app.AppTypeDTO);
         }
-
        
         [HttpPost("Create", Name = "CreateApplicationType")]
         public async Task<ActionResult<ApplicationType>> Create(ApplicationType newApp)
@@ -68,39 +77,52 @@ namespace api_layer.Controllers
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.ise(ApplicationID);
+            bool isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
 
             if (!isExist)
-                return NotFound("Application NOT Found");
+                return NotFound("Application Type NOT Found");
 
-            clsApplication app = await AssignDataToApp(newApp, ApplicationID);
+            clsApplicationTypes app = await AssignDataToAppType(newApp, ApplicationID);
 
             if (app != null && await app.SaveAsync())
-                return Ok(app.applicationDTO);
+                return Ok(app.AppTypeDTO);
             else
-                return StatusCode(500, new { message = "Error Updating Application" });
+                return StatusCode(500, new { message = "Error Updating Application Type" });
         }
 
-        [HttpDelete("Delete", Name = "DleteApplication")]
+        [HttpDelete("Delete", Name = "DleteApplicationType")]
         public async Task<ActionResult> Delete(int ApplicationID)
         {
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplication.isExistAsync(ApplicationID);
+            bool isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
 
             if (isExist)
             {
-                bool isDeleted = await clsApplication.DeleteAsync(ApplicationID);
+                bool isDeleted = await clsApplicationTypes.DeleteAsync(ApplicationID);
                 if (isDeleted)
-                    return Ok($"Application with ID {ApplicationID} Deletted Successfully");
+                    return Ok($"Application Type with ID {ApplicationID} Deletted Successfully");
                 else
-                    return StatusCode(500, new { Message = "Error Deletting Application" });
+                    return StatusCode(500, new { Message = "Error Deletting Application Type" });
             }
             else
-                return NotFound("Application Not Found");
+                return NotFound("Application Type Not Found");
         }
 
+        [HttpGet("ApplicationTypeFees", Name = "GetApplicationTypeFees")]
+        public async Task<ActionResult<int>> GetFees(int ApplicationID)
+        {
+            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+                return BadRequest("Invalid ID");
+
+            var isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
+            
+            if (!isExist)
+                return NotFound("Application Type Not Found");
+            else
+                return Ok(clsApplicationTypes.FeeAsync(ApplicationID));
+        }
 
     }
 }

@@ -166,5 +166,27 @@ namespace DataLayer
             }
             return isFound;
         }
+        public static async Task<bool> DeleteAsync(int typeID)
+        {
+            int RowAffected = 0;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "DELETE  FROM ApplicationTypes WHERE ID = @typeID;";
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@typeID", typeID);
+                Connection.Open();
+                RowAffected = await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return RowAffected > 0;
+        }
     }
 }
