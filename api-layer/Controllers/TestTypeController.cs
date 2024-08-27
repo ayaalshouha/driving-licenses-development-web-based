@@ -92,38 +92,24 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Test Type" });
         }
 
-        [HttpDelete("Delete", Name = "DleteApplicationType")]
-        public async Task<ActionResult> Delete(int ApplicationID)
+        [HttpDelete("Delete", Name = "DleteTestType")]
+        public async Task<ActionResult> Delete(int typeID)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(typeID.ToString(), out _) || Int32.IsNegative(typeID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
+            bool isExist = await clsTestTypes.isExistAsync(typeID);
 
             if (isExist)
             {
-                bool isDeleted = await clsApplicationTypes.DeleteAsync(ApplicationID);
+                bool isDeleted = await clsTestTypes.DeleteAsync(typeID);
                 if (isDeleted)
-                    return Ok($"Application Type with ID {ApplicationID} Deletted Successfully");
+                    return Ok($"Test Type with ID {typeID} Deletted Successfully");
                 else
-                    return StatusCode(500, new { Message = "Error Deletting Application Type" });
+                    return StatusCode(500, new { Message = "Error Deletting Test Type" });
             }
             else
                 return NotFound("Application Type Not Found");
-        }
-
-        [HttpGet("ApplicationTypeFees", Name = "GetApplicationTypeFees")]
-        public async Task<ActionResult<int>> GetFees(int ApplicationID)
-        {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
-                return BadRequest("Invalid ID");
-
-            var isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
-
-            if (!isExist)
-                return NotFound("Application Type Not Found");
-            else
-                return Ok(clsApplicationTypes.FeeAsync(ApplicationID));
         }
 
     }
