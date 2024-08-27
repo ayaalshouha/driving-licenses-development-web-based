@@ -139,5 +139,51 @@ namespace DataLayer
             return table;
         }
 
+        public static async Task<bool> isExistAsync(int typeID)
+        {
+            bool isFound = false;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "SELECT ID FROM TestTypes WHERE ID = @typeID;";
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@typeID", typeID);
+
+                Connection.Open();
+                object result = await command.ExecuteScalarAsync();
+                isFound = (result != null);
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return isFound;
+        }
+        public static async Task<bool> DeleteAsync(int typeID)
+        {
+            int RowAffected = 0;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "DELETE  FROM TestTypes WHERE ID = @typeID;";
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@typeID", typeID);
+                Connection.Open();
+                RowAffected = await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return RowAffected > 0;
+        }
     }
 }

@@ -75,6 +75,13 @@ namespace BuisnessLayer
             }
             return false;
         }
-
+        public static async Task<bool> isExistAsync(int id)
+        {
+            return await TestTypesData.isExistAsync(id);
+        }
+        public static async Task<bool> DeleteAsync(int id)
+        {
+            return await TestTypesData.DeleteAsync(id);
+        }
     }
 }
