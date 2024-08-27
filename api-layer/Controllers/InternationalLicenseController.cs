@@ -35,6 +35,15 @@ namespace api_layer.Controllers
             return license;
         }
 
+        [HttpGet("All", Name = "AllInternationalLicenses")]
+        public async Task<ActionResult<IEnumerable<InternationalLicense>>> getAll()
+        {
+            var licensesList = await clsInternational_DL.ListAsync();
+            if (licensesList.Count() <= 0)
+                return NotFound("No International Licenses Found");
+
+            return Ok(licensesList);
+        }
 
         [HttpGet("Read", Name = "ReadInternationalLicenseByID")]
         public async Task<ActionResult<InternationalLicense>> Read(int licenseID)
@@ -75,7 +84,7 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpPut("Update", Name = "UpdateInternationaLicense")]
+        [HttpPut("Update", Name = "UpdateInternationalLicense")]
         public async Task<ActionResult<_Application>> Update(int licenseID, InternationalLicense newLicense)
         {
             if ( newLicense == null)
@@ -84,18 +93,40 @@ namespace api_layer.Controllers
             if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsInternational_DL.isE(licenseID);
+            bool isExist = await clsInternational_DL.isExist(licenseID);
 
             if (!isExist)
-                return NotFound("Application NOT Found");
+                return NotFound("International License NOT Found");
 
-            clsApplication app = await AssignDataToApp(newApp, ApplicationID);
+            clsInternational_DL license =  AssignDataToApp(newLicense, licenseID);
 
-            if (app != null && await app.SaveAsync())
-                return Ok(app.applicationDTO);
+            if (license != null && await license.SaveAsync())
+                return Ok(license.internationalLicenseDTO);
             else
-                return StatusCode(500, new { message = "Error Updating Application" });
+                return StatusCode(500, new { message = "Error Updating International License" });
         }
 
+
+        [HttpDelete("Delete", Name = "DeleteInternationaLicense")]
+        public async Task<ActionResult> Delete(int licenseID)
+        {
+            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+                return BadRequest("Invalid ID");
+
+            bool isExist = await clsInternational_DL.isExistAsync(licenseID);
+
+            if (isExist)
+            {
+                bool isDeleted = await clsInternational_DL.DeleteAsync(licenseID);
+                if (isDeleted)
+                    return Ok($"International License with ID {licenseID} Deletted Successfully");
+                else
+                    return StatusCode(500, new { Message = "Error Deletting International License" });
+            }
+            else
+                return NotFound("Application Not Found");
+        }
+    
+    
     }
 }
