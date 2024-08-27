@@ -1,6 +1,7 @@
 ﻿using DataLayer;
 using System.Data;
-using DTOsLayer; 
+using DTOsLayer;
+using Azure.Core;
 
 namespace BuisnessLayer
 {
@@ -63,6 +64,11 @@ namespace BuisnessLayer
         public static async Task<decimal> FeeAsync(int TypeID)
         {
             return await ApplicationTypesData.GetFeeAsync(TypeID);
+        }
+
+        public static async Task<bool> isExistAsync(int id)
+        {
+            return await ApplicationTypesData.isExistAsync(id);
         }
 
     }

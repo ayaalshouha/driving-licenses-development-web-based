@@ -41,7 +41,6 @@ namespace DataLayer
             }
             return null;
         }
-
         public static async Task<bool> UpdateAsync(ApplicationType type)
         {
             int RowAffected = 0;
@@ -109,7 +108,6 @@ namespace DataLayer
             }
             return table;
         }
-
         public static async Task<decimal> GetFeeAsync(int TypeID)
         { 
             decimal fee = 0;
@@ -143,6 +141,30 @@ namespace DataLayer
             }
 
             return fee;
+        }
+        public static async Task<bool> isExistAsync(int typeID)
+        {
+            bool isFound = false;
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "SELECT ID FROM ApplicationTypes WHERE ID = @typeID;";
+                SqlCommand command = new SqlCommand(Query, Connection);
+                command.Parameters.AddWithValue("@typeID", typeID);
+
+                Connection.Open();
+                object result = await command.ExecuteScalarAsync();
+                isFound = (result != null);
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return isFound;
         }
     }
 }
