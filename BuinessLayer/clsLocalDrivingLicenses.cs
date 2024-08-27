@@ -14,7 +14,6 @@ namespace BuisnessLayer
         public int LicenseClassID { get; set; }
         public clsApplication MainApplicationInfo { get; set; }
         public clsLicenseClasses LicenseClassesInfo { get; set; }
-
         public LocalDLApp LocalDLAppDTO
         {
             get{
@@ -38,7 +37,6 @@ namespace BuisnessLayer
              LicenseClassesInfo = clsLicenseClasses.Find(this.LicenseClassID); 
             this._Mode = enMode.update; 
         }
-
         public async Task<string> FullNameAsync()
         {
             clsApplication applicant = await clsApplication.FindAsync(ApplicationID); 
@@ -112,7 +110,7 @@ namespace BuisnessLayer
             //total passed test for the applicant
             return await Local_DL_Data.getPassedTestCountAsync(LocalAppID); 
         }
-        public async Task<bool> DoesPassedAllTestAsync()
+        public async Task<bool> isAllTestsPassed()
         {
             return (await PassedTestAsync(this.ID) == 3); 
         }
@@ -134,18 +132,20 @@ namespace BuisnessLayer
            //get ID if person has an active license of specific Class and -1 if he does NOT have one
             return await LicensesData.GetActiveLicenseIDByPersonIDAsync(MainApplicationInfo.PersonID, this.LicenseClassID);
         }
-
-        //TODO : Make Tests class async dataa and buisness
         public async Task<clsTests> GetLastTestPerTestTypeAsync(enTestType Type)
         {
             //decide if there is a test record for the person , regardless the result 
             return await clsTests.FindTestByPersonIDAndLicenseClassAsync(MainApplicationInfo.PersonID, LicenseClassID, Type);
         }
+       
+        
         public async Task<bool> DoesAttendTestTypeAsync(enTestType Type)
         {
             //decide if the creation mode of appointment is a first time mode or a retake test mode 
             return await Local_DL_Data.DoesAttendTestTypeAsync(this.ID, (int)Type);
         }
+        
+        
         public async Task<bool> setCancelledAsync()
         {
             return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 2);
@@ -154,7 +154,6 @@ namespace BuisnessLayer
         {
             return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 3); 
         }
-
         public async Task<int> IssueLicenseForTheFirstTime(int CreatedByUserID, string Notes)
         {
             int DriverID = -1; 
@@ -196,7 +195,6 @@ namespace BuisnessLayer
            
             return -1;
         }
-
         public static async Task<bool> isExistAsync(int appID)
         {
             return await Local_DL_Data.isExistAsync(appID);

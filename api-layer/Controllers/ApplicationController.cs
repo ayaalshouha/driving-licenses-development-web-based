@@ -69,7 +69,7 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("Update", Name = "UpdateApplication")]
-        public async Task<ActionResult<User>> Update(int ApplicationID, _Application newApp)
+        public async Task<ActionResult<_Application>> Update(int ApplicationID, _Application newApp)
         {
             if (newApp == null)
                 return BadRequest("invalid object data");
@@ -154,6 +154,5 @@ namespace api_layer.Controllers
             else
                 return Ok(app.FeesAsync()); 
         }
-   
     }
 }
