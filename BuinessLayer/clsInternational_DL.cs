@@ -90,5 +90,10 @@ namespace BuisnessLayer
         {
             return await International_DL_Data.ListAsync();
         }
+    
+        public static async Task<bool> isExist(int licenseID)
+        {
+            return await International_DL_Data.isExistAsync(licenseID);
+        }
     }
 }
