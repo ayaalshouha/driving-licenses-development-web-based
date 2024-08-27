@@ -50,7 +50,6 @@ namespace BuisnessLayer
             Mode = enMode.update;
         }
 
-
         public static async Task<clsLicenseClasses> FindAsync(int ClassID)
         {
             LicenseClass Class = await LicenseClassesData.getClassInfoAsync(ClassID);

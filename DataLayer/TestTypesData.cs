@@ -53,7 +53,7 @@ namespace DataLayer
             int newID = 0;
             using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
             {
-                string Query = @"INSERT INTO ApplicationTypes 
+                string Query = @"INSERT INTO TestTypes 
                              VALUES (@TypeTitle,@Fee, @Desc);
                         SELECT SCOPE_IDENTITY();";
 

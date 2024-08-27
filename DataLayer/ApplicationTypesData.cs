@@ -41,6 +41,44 @@ namespace DataLayer
             }
             return null;
         }
+
+        public static async Task<int> AddAsync(ApplicationType appType)
+        {
+            int newID = 0;
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"INSERT INTO ApplicationTypes 
+                             VALUES (@ApplicationType,@AppFee);
+                        SELECT SCOPE_IDENTITY();";
+
+
+                var Command = new SqlCommand(Query, Connection);
+
+                Command.Parameters.AddWithValue("@ApplicationType", appType.TypeTitle);
+                Command.Parameters.AddWithValue("@AppFee", appType.TypeFee);
+               
+                Connection.Open();
+                object result = await Command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int LastID))
+                {
+                    newID = LastID;
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+                //Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
+            return newID;
+        }
+
         public static async Task<bool> UpdateAsync(ApplicationType type)
         {
             int RowAffected = 0;
@@ -188,5 +226,6 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
+    
     }
 }

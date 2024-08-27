@@ -48,6 +48,11 @@ namespace BuisnessLayer
         {
             return await ApplicationTypesData.getAllApplicationTypesAsync();
         }
+        public async Task<bool> _AddNewAsync()
+        {
+            this.ID = await ApplicationTypesData.AddAsync(AppTypeDTO);
+            return this.ID != -1;
+        }
         private async Task<bool> _UpdateAsync()
         {
             return await ApplicationTypesData.UpdateAsync(AppTypeDTO);
@@ -55,10 +60,19 @@ namespace BuisnessLayer
 
         public async Task<bool> SaveAsync()
         {
-            if(this._Mode == enMode.update)
-                return await _UpdateAsync();
-            
-            return false; 
+            switch (_Mode)
+            {
+                case enMode.add:
+                    if (await _AddNewAsync())
+                    {
+                        this._Mode = enMode.update;
+                        return true;
+                    }
+                    break;
+                case enMode.update:
+                    return await _UpdateAsync();
+            }
+            return false;
         }
         public static async Task<decimal> FeeAsync(int TypeID)
         {
