@@ -136,16 +136,12 @@ namespace BuisnessLayer
         {
             //decide if there is a test record for the person , regardless the result 
             return await clsTests.FindTestByPersonIDAndLicenseClassAsync(MainApplicationInfo.PersonID, LicenseClassID, Type);
-        }
-       
-        
+        }            
         public async Task<bool> DoesAttendTestTypeAsync(enTestType Type)
         {
             //decide if the creation mode of appointment is a first time mode or a retake test mode 
             return await Local_DL_Data.DoesAttendTestTypeAsync(this.ID, (int)Type);
-        }
-        
-        
+        }        
         public async Task<bool> setCancelledAsync()
         {
             return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 2);

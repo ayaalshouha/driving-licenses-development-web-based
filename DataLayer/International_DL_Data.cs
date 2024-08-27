@@ -13,14 +13,14 @@ namespace DataLayer
 {
     public class International_DL_Data
     {
-        public static async Task<InternationalLicense> getApplicationInfoAsync(int ApplicationID)
+        public static async Task<InternationalLicense> getLicenseInfoAsync(int licenseID)
         {
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from InternationalLicenses where ID = @ApplicationID";
+                string Query = "select * from InternationalLicenses where ID = @licenseID";
                 SqlCommand command = new SqlCommand(Query, connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                command.Parameters.AddWithValue("@licenseID", licenseID);
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 while (await reader.ReadAsync())
@@ -49,7 +49,7 @@ namespace DataLayer
             }
             return null;
         }
-        public static async Task<int> AddAsync(InternationalLicense application)
+        public static async Task<int> AddAsync(InternationalLicense license)
         {
             int newID = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -67,13 +67,13 @@ namespace DataLayer
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
-                Command.Parameters.AddWithValue("@DriverID", application.DriverID);
-                Command.Parameters.AddWithValue("@IssuedUsingLocalLicenseID", application.IssuedByLocalLicenseID);
-                Command.Parameters.AddWithValue("@IssueDate", application.IssueDate);
-                Command.Parameters.AddWithValue("@ExpirationDate", application.ExpDate);
-                Command.Parameters.AddWithValue("@isActive", application.isActive);
-                Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
+                Command.Parameters.AddWithValue("@ApplicationID", license.ApplicationID);
+                Command.Parameters.AddWithValue("@DriverID", license.DriverID);
+                Command.Parameters.AddWithValue("@IssuedUsingLocalLicenseID", license.IssuedByLocalLicenseID);
+                Command.Parameters.AddWithValue("@IssueDate", license.IssueDate);
+                Command.Parameters.AddWithValue("@ExpirationDate", license.ExpDate);
+                Command.Parameters.AddWithValue("@isActive", license.isActive);
+                Command.Parameters.AddWithValue("@CreatedByUserID", license.CreatedByUserID);
                 Connection.Open();
                 object result = await Command.ExecuteScalarAsync();
 
@@ -94,7 +94,7 @@ namespace DataLayer
 
             return newID;
         }
-        public static async Task<bool> UpdateAsync(InternationalLicense application)
+        public static async Task<bool> UpdateAsync(InternationalLicense license)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -108,14 +108,14 @@ namespace DataLayer
                 WHERE ID = @LicenseID;";
 
                 SqlCommand Command = new SqlCommand(Query, Connection);
-                Command.Parameters.AddWithValue("@LicenseID", application.ID);
-                Command.Parameters.AddWithValue("@ApplicationID", application.ApplicationID);
-                Command.Parameters.AddWithValue("@DriverID", application.DriverID);
-                Command.Parameters.AddWithValue("@IssuedUsingLocalLicenseID", application.IssuedByLocalLicenseID);
-                Command.Parameters.AddWithValue("@IssueDate", application.IssueDate);
-                Command.Parameters.AddWithValue("@ExpirationDate", application.ExpDate);
-                Command.Parameters.AddWithValue("@isActive", application.isActive);
-                Command.Parameters.AddWithValue("@CreatedByUserID", application.CreatedByUserID);
+                Command.Parameters.AddWithValue("@LicenseID", license.ID);
+                Command.Parameters.AddWithValue("@ApplicationID", license.ApplicationID);
+                Command.Parameters.AddWithValue("@DriverID", license.DriverID);
+                Command.Parameters.AddWithValue("@IssuedUsingLocalLicenseID", license.IssuedByLocalLicenseID);
+                Command.Parameters.AddWithValue("@IssueDate", license.IssueDate);
+                Command.Parameters.AddWithValue("@ExpirationDate", license.ExpDate);
+                Command.Parameters.AddWithValue("@isActive", license.isActive);
+                Command.Parameters.AddWithValue("@CreatedByUserID", license.CreatedByUserID);
 
                 Connection.Open();
                 RowAffected = await Command.ExecuteNonQueryAsync();
@@ -132,15 +132,15 @@ namespace DataLayer
 
             return RowAffected > 0;
         }
-        public static async Task<bool> DeleteAsync(int ApplicationID)
+        public static async Task<bool> DeleteAsync(int licenseID)
         {
             int RowAffected = 0;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "DELETE  FROM InternationalLicenses WHERE ID = @LicenseID;";
+                string Query = "DELETE  FROM InternationalLicenses WHERE ID = @licenseID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@LicenseID", ApplicationID);
+                command.Parameters.AddWithValue("@licenseID", licenseID);
                 Connection.Open();
                 RowAffected = await command.ExecuteNonQueryAsync();
             }
@@ -154,15 +154,15 @@ namespace DataLayer
             }
             return RowAffected > 0;
         }
-        public static async Task<bool> isExistAsync(int ApplicationID)
+        public static async Task<bool> isExistAsync(int licenseID)
         {
             bool isFound = false;
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT ID FROM InternationalLicenses WHERE ID = @ApplicationID;";
+                string Query = "SELECT ID FROM InternationalLicenses WHERE ID = @licenseID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+                command.Parameters.AddWithValue("@licenseID", licenseID);
 
                 Connection.Open();
                 object result = await command.ExecuteScalarAsync();
