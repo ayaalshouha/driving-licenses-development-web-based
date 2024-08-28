@@ -171,7 +171,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT ID FROM Drviers WHERE ID = @DriverID;";
+                string Query = "SELECT ID FROM Drivers WHERE ID = @DriverID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@DriverID", DriverID);
 
@@ -218,12 +218,12 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT * FROM Drivers_Views order by ID asc;";
+                string Query = "select * from Drivers_Views order by ID asc;";
                 SqlCommand command = new SqlCommand(Query, Connection);
 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (await Reader.ReadAsync())
+                while (await Reader.ReadAsync())
                 {
                     dt.Add(
                         new Driver_View(
@@ -268,7 +268,7 @@ namespace DataLayer
 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (await Reader.ReadAsync())
+                while (await Reader.ReadAsync())
                 {
                     dt.Add(new ActiveLicense(
                             Reader.GetInt32(Reader.GetOrdinal("ID")),
@@ -308,7 +308,7 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@DriverID", DriverID); 
                 Connection.Open();
                 SqlDataReader Reader = command.ExecuteReader();
-                if (await Reader.ReadAsync())
+                while (await Reader.ReadAsync())
                 {
                     dt.Add(new DriverInterNationalLicense(
                             Reader.GetInt32(Reader.GetOrdinal("ID")),

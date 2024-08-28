@@ -21,7 +21,7 @@ namespace DataLayer
                 string Query = "select * from DetainedLicenses where ID = @DetainID";
 
                 SqlCommand command = new SqlCommand(Query, connection);
-                command.Parameters.AddWithValue("@licenseID", DetainID);
+                command.Parameters.AddWithValue("@DetainID", DetainID);
 
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

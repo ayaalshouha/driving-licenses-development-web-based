@@ -130,10 +130,11 @@ namespace api_layer.Controllers
         public async Task<ActionResult<bool>> isAllTestsPassed(int localAppID)
         {
             clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(localAppID);
-            if (app != null)
+            if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await app.isAllTestsPassed());
+            var result = await app.isAllTestsPassed();
+            return Ok(result);
         }
 
         [HttpGet("getPassedTestCount", Name = "PassedTestCount")]
@@ -156,7 +157,7 @@ namespace api_layer.Controllers
         public async Task<ActionResult<bool>> isTestPassed(int localAppID, enTestType TestTypeID)
         {
             clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(localAppID);
-            if (app != null)
+            if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
             return Ok(await app.isTestPassedAsync(TestTypeID));
