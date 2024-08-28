@@ -61,11 +61,11 @@ namespace DataLayer
 
                 var Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@TestTypeID", appointment.appoint.TestType);
-                Command.Parameters.AddWithValue("@Date", appointment.appoint.info.Date);
-                Command.Parameters.AddWithValue("@PaidFees", appointment.appoint.info.PaidFees);
+                Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);
+                Command.Parameters.AddWithValue("@Date", appointment.Date);
+                Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.appoint.LocalLicenseApplicationID);
+                Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.LocalLicenseApplicationID);
                 if(appointment.RetakeTestID == -1)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestApplicationID", DBNull.Value);
@@ -113,13 +113,13 @@ namespace DataLayer
 
                 var Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@AppointmentID", appointment.appoint.info.ID);
-                Command.Parameters.AddWithValue("@TestTypeID", appointment.appoint.TestType);
-                Command.Parameters.AddWithValue("@Date", appointment.appoint.info.Date);
-                Command.Parameters.AddWithValue("@PaidFees", appointment.appoint.info.PaidFees);
-                Command.Parameters.AddWithValue("@isLocked", appointment.appoint.info.isLocked);
+                Command.Parameters.AddWithValue("@AppointmentID", appointment.ID);
+                Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);
+                Command.Parameters.AddWithValue("@Date", appointment.Date);
+                Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
+                Command.Parameters.AddWithValue("@isLocked", appointment.isLocked);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LocalDrvingLicenseApplicationID", appointment.appoint.LocalLicenseApplicationID);
+                Command.Parameters.AddWithValue("@LocalDrvingLicenseApplicationID", appointment.LocalLicenseApplicationID);
                 if (appointment.RetakeTestID == -1)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestID", DBNull.Value);

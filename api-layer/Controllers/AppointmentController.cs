@@ -25,13 +25,13 @@ namespace api_layer.Controllers
                 if (appointment == null) return null;
             }
 
-            appointment.LocalLicenseApplicationID = newAppointment.appoint.LocalLicenseApplicationID;
-            appointment.TestType = (enTestType)newAppointment.appoint.TestType;
-            appointment.isLocked = newAppointment.appoint.info.isLocked;
-            appointment.Date = newAppointment.appoint.info.Date;
+            appointment.LocalLicenseApplicationID = newAppointment.LocalLicenseApplicationID;
+            appointment.TestType = (enTestType)newAppointment.TestType;
+            appointment.isLocked = newAppointment.isLocked;
+            appointment.Date = newAppointment.Date;
             appointment.RetakeTestApplicationID = newAppointment.RetakeTestID;
             appointment.CreatedByUserID = newAppointment.CreatedByUserID;
-            appointment.PaidFees = newAppointment.appoint.info.PaidFees;
+            appointment.PaidFees = newAppointment.PaidFees;
             return appointment;
         }
 
@@ -55,9 +55,9 @@ namespace api_layer.Controllers
             if (newAppointment == null)
                 return BadRequest("invalid object data");
 
-            bool appointmentFound = await clsAppointment.isExistAsync(newAppointment.appoint.info.ID);
+            bool appointmentFound = await clsAppointment.isExistAsync(newAppointment.ID);
             if (!appointmentFound)
-                return BadRequest($"Appointment with ID {newAppointment.appoint.info.ID} NOT found, You have to add appointment details first!");
+                return BadRequest($"Appointment with ID {newAppointment.ID} NOT found, You have to add appointment details first!");
 
             var appointment = AssignDataToAppointment(newAppointment);
 

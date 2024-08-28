@@ -22,31 +22,39 @@ namespace DTOsLayer
         }
 
     }
-    public class Appointment_Veiw
+    public class Appointment_Veiw : Appointement_
     {
-        public Appointement_ info;
         public int TestType { get; set; }
         public int LocalLicenseApplicationID { get; set; }
 
         public Appointment_Veiw(int testtype,int locallicenseid, int id, DateOnly date, decimal fees, bool islocked)
+            : base(id, date, fees, islocked)
         {
             this.TestType = testtype;
             this.LocalLicenseApplicationID = locallicenseid;
-            info = new Appointement_(id, date, fees, islocked);
+            this.isLocked = islocked;
+            this.ID = id;
+            this.PaidFees= fees;
+            this.Date= date;
         }
 
     }
-    public class Appointment
+    public class Appointment : Appointment_Veiw
     {
-        public Appointment_Veiw appoint;
         public int CreatedByUserID { get; set; }
         public int RetakeTestID { get; set; }
 
-        public Appointment(int createdby, int retaketestid, int testtype, int locallicenseid, int id, DateOnly date, decimal fees, bool islocked)
+        public Appointment(int createdby, int retaketestid, int testtype, int locallicenseid, int id, DateOnly date, decimal fees, bool islocked) 
+            : base(testtype, locallicenseid, id, date, fees, islocked)
         {
             this.RetakeTestID = retaketestid;
             this.CreatedByUserID = createdby;
-            appoint = new Appointment_Veiw(testtype, locallicenseid,id, date, fees, islocked);
+            this.ID = id; 
+            this.PaidFees= fees;
+            this.Date= date;
+            this.isLocked = islocked;
+            this.TestType= testtype;
+            this.LocalLicenseApplicationID= locallicenseid;
         }
     }
 

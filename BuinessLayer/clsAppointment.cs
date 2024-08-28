@@ -48,13 +48,13 @@ namespace BuisnessLayer
         }
         private clsAppointment(Appointment appointment)
         {
-            this.ID = appointment.appoint.info.ID;
-            this.Date = appointment.appoint.info.Date;
-            this.TestType = (enTestType)appointment.appoint.TestType;
-            this.PaidFees = appointment.appoint.info.PaidFees;
-            this.isLocked = appointment.appoint.info.isLocked;
+            this.ID = appointment.ID;
+            this.Date = appointment.Date;
+            this.TestType = (enTestType)appointment.TestType;
+            this.PaidFees = appointment.PaidFees;
+            this.isLocked = appointment.isLocked;
             this.CreatedByUserID = appointment.CreatedByUserID;
-            this.LocalLicenseApplicationID = appointment.appoint.LocalLicenseApplicationID;
+            this.LocalLicenseApplicationID = appointment.LocalLicenseApplicationID;
             this.RetakeTestApplicationID = appointment.RetakeTestID; 
             this._Mode = enMode.update; 
         }
