@@ -33,9 +33,10 @@ namespace DataLayer
                                         DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
                                         DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
                                         reader.GetBoolean(reader.GetOrdinal("isActive")),
-                                        reader.GetInt32(reader.GetOrdinal("PaidFees")),
+                                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
                                         reader.GetInt32(reader.GetOrdinal("IssueReason")),
-                                        reader.GetString(reader.GetOrdinal("Notes")),
+                                        reader.IsDBNull(reader.GetOrdinal("Notes")) ? string.Empty :
+                                         reader.GetString(reader.GetOrdinal("Notes")),
                                         reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
                                     ); 
                             }
@@ -295,9 +296,10 @@ namespace DataLayer
                                         DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("IssueDate"))),
                                         DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ExpirationDate"))),
                                         reader.GetBoolean(reader.GetOrdinal("isActive")),
-                                        reader.GetInt32(reader.GetOrdinal("PaidFees")),
+                                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
                                         reader.GetInt32(reader.GetOrdinal("IssueReason")),
-                                        reader.GetString(reader.GetOrdinal("Notes")),
+                                        reader.IsDBNull(reader.GetOrdinal("Notes")) ? string.Empty :
+                                         reader.GetString(reader.GetOrdinal("Notes")), 
                                         reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
                                     ));
                             }

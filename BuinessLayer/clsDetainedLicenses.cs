@@ -80,7 +80,8 @@ namespace BuisnessLayer
         }
         public async Task<bool> _UpdateAsync()
         {
-            return await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO);
+            var result =await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO);
+            return result; 
         }
         public async Task<bool> SaveAsync()
         {
@@ -100,7 +101,8 @@ namespace BuisnessLayer
         }
         public static async Task<bool> isLicenseDetainedAsync(int LicenseID)
         {
-            return await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
+            var result = await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
+            return result;
         }
         public static async Task<IEnumerable<DetainedLicense>> ListAsync()
         {

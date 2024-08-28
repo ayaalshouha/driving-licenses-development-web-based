@@ -268,6 +268,7 @@ namespace DataLayer
 
                 Connection.Open();
                 object result = await command.ExecuteScalarAsync();
+                //TODO Fix problem here 
                 if (result != null)
                 {
                     Detained = Convert.ToBoolean(result); 
