@@ -30,15 +30,8 @@ namespace BuisnessLayer
         {
             get
             {
-                Appointment AppointmentDTO = new Appointment(this.CreatedByUserID, this.RetakeTestApplicationID);
-                AppointmentDTO.appoint.TestType = (int)this.TestType;
-                AppointmentDTO.appoint.LocalLicenseApplicationID = this.LocalLicenseApplicationID;
-                AppointmentDTO.appoint.info.ID = this.ID;
-                AppointmentDTO.appoint.info.isLocked = this.isLocked;
-                AppointmentDTO.appoint.info.PaidFees = this.PaidFees;
-                AppointmentDTO.appoint.info.Date = this.Date;
-
-                return AppointmentDTO;
+                return new Appointment(this.CreatedByUserID, this.RetakeTestApplicationID, (int)this.TestType, 
+                    this.LocalLicenseApplicationID, this.ID, this.Date, this.PaidFees, this.isLocked);
             }
         }
         public clsAppointment()

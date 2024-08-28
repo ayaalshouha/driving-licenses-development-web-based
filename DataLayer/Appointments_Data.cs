@@ -23,20 +23,17 @@ namespace DataLayer
                 SqlDataReader reader = await command.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    int createdby = reader.GetInt32(reader.GetOrdinal("CreateByUserID"));
-                    int retakeID = reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
-                            reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"));
-                    
-                    Appointment appointment = new Appointment(createdby, retakeID);
-
-                    appointment.appoint.TestType = reader.GetInt32(reader.GetOrdinal("TestTypeID"));
-                    appointment.appoint.LocalLicenseApplicationID = reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID"));
-                    appointment.appoint.info.ID = reader.GetInt32(reader.GetOrdinal("ID"));
-                    appointment.appoint.info.isLocked = reader.GetBoolean(reader.GetOrdinal("isLocked"));
-                    appointment.appoint.info.PaidFees = reader.GetDecimal(reader.GetOrdinal("PaidFees"));
-                    appointment.appoint.info.Date = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date")));
-
-                    return appointment; 
+                    return new Appointment(
+                        reader.GetInt32(reader.GetOrdinal("CreateByUserID")),
+                        reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
+                        reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                        reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                        reader.GetBoolean(reader.GetOrdinal("isLocked"))
+                   ); 
                 }
                 reader.Close();
             }

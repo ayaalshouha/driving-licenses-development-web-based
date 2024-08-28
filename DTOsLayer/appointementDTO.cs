@@ -28,10 +28,11 @@ namespace DTOsLayer
         public int TestType { get; set; }
         public int LocalLicenseApplicationID { get; set; }
 
-        public Appointment_Veiw(int testtype,int locallicenseid)
+        public Appointment_Veiw(int testtype,int locallicenseid, int id, DateOnly date, decimal fees, bool islocked)
         {
             this.TestType = testtype;
             this.LocalLicenseApplicationID = locallicenseid;
+            info = new Appointement_(id, date, fees, islocked);
         }
 
     }
@@ -41,10 +42,11 @@ namespace DTOsLayer
         public int CreatedByUserID { get; set; }
         public int RetakeTestID { get; set; }
 
-        public Appointment(int createdby, int retaketestid)
+        public Appointment(int createdby, int retaketestid, int testtype, int locallicenseid, int id, DateOnly date, decimal fees, bool islocked)
         {
             this.RetakeTestID = retaketestid;
             this.CreatedByUserID = createdby;
+            appoint = new Appointment_Veiw(testtype, locallicenseid,id, date, fees, islocked);
         }
     }
 
