@@ -77,7 +77,7 @@ namespace api_layer.Controllers
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
+            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)ApplicationID);
 
             if (!isExist)
                 return NotFound("Application Type NOT Found");
@@ -91,18 +91,18 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("Delete", Name = "DleteApplicationType")]
-        public async Task<ActionResult> Delete(int ApplicationID)
+        public async Task<ActionResult> Delete(int ApplicationTypeID)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(ApplicationTypeID.ToString(), out _) || Int32.IsNegative(ApplicationTypeID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
+            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)ApplicationTypeID);
 
             if (isExist)
             {
-                bool isDeleted = await clsApplicationTypes.DeleteAsync(ApplicationID);
+                bool isDeleted = await clsApplicationTypes.DeleteAsync(ApplicationTypeID);
                 if (isDeleted)
-                    return Ok($"Application Type with ID {ApplicationID} Deletted Successfully");
+                    return Ok($"Application Type with ID {ApplicationTypeID} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Application Type" });
             }
@@ -111,17 +111,18 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("ApplicationTypeFees", Name = "GetApplicationTypeFees")]
-        public async Task<ActionResult<int>> GetFees(int ApplicationID)
+        public async Task<ActionResult<int>> GetFees(enApplicationType ApplicationTypeID)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
-                return BadRequest("Invalid ID");
 
-            var isExist = await clsApplicationTypes.isExistAsync(ApplicationID);
+            var isExist = await clsApplicationTypes.isExistAsync(ApplicationTypeID);
             
             if (!isExist)
                 return NotFound("Application Type Not Found");
             else
-                return Ok(clsApplicationTypes.FeeAsync(ApplicationID));
+            {
+                decimal fee = await clsApplicationTypes.FeeAsync(ApplicationTypeID); 
+                return Ok(fee);
+            }
         }
 
     }

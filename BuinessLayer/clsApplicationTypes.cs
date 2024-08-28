@@ -74,13 +74,13 @@ namespace BuisnessLayer
             }
             return false;
         }
-        public static async Task<decimal> FeeAsync(int TypeID)
+        public static async Task<decimal> FeeAsync(enApplicationType TypeID)
         {
-            return await ApplicationTypesData.GetFeeAsync(TypeID);
+            return await ApplicationTypesData.GetFeeAsync((int)TypeID);
         }
-        public static async Task<bool> isExistAsync(int id)
+        public static async Task<bool> isExistAsync(enApplicationType id)
         {
-            return await ApplicationTypesData.isExistAsync(id);
+            return await ApplicationTypesData.isExistAsync((int)id);
         }
         public static async Task<bool> DeleteAsync(int id)
         {

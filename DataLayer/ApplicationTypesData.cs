@@ -41,7 +41,6 @@ namespace DataLayer
             }
             return null;
         }
-
         public static async Task<int> AddAsync(ApplicationType appType)
         {
             int newID = 0;
@@ -78,7 +77,6 @@ namespace DataLayer
 
             return newID;
         }
-
         public static async Task<bool> UpdateAsync(ApplicationType type)
         {
             int RowAffected = 0;

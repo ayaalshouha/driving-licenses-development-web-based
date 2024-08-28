@@ -54,7 +54,7 @@ namespace BuisnessLayer
         }
         public static async Task<clsInternational_DL> FindAsync(int ApplicationID)
         {
-            InternationalLicense application = await International_DL_Data.getApplicationInfoAsync(ApplicationID);
+            InternationalLicense application = await International_DL_Data.getLicenseInfoAsync(ApplicationID);
             if (application != null)
                 return new clsInternational_DL(application);
             else

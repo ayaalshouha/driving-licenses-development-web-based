@@ -143,7 +143,7 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("getPaidFees", Name = "GetApplicationPaidFees")]
-        public async Task<ActionResult<int>> GetPaidFees(int ApplicationID)
+        public async Task<ActionResult<decimal>> GetPaidFees(int ApplicationID)
         {
             if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
                 return BadRequest("Invalid ID");
@@ -152,7 +152,10 @@ namespace api_layer.Controllers
             if (app == null)
                 return NotFound("Application Not Found");
             else
-                return Ok(app.FeesAsync()); 
+            {
+                decimal fee = await app.FeesAsync();
+                return Ok(fee); 
+            }
         }
     }
 }

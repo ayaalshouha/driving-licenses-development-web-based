@@ -2,6 +2,7 @@
 using DTOsLayer;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace BuisnessLayer
 {
@@ -37,7 +38,6 @@ namespace BuisnessLayer
             Mode = enMode.add;
 
         }
-
         public clsLicenseClasses(LicenseClass licenseClass)
 
         {
@@ -49,7 +49,6 @@ namespace BuisnessLayer
             this.ClassFees = licenseClass.Fees;
             Mode = enMode.update;
         }
-
         public static async Task<clsLicenseClasses> FindAsync(int ClassID)
         {
             LicenseClass Class = await LicenseClassesData.getClassInfoAsync(ClassID);
@@ -66,10 +65,46 @@ namespace BuisnessLayer
             else
                 return null;
         }
-
         public static async Task<List<string>> ClassesNames()
         {
             return await LicenseClassesData.getAllClassesNameAsync();
+        }
+        public async Task<bool> _AddNewAsync()
+        {
+            this.LicenseClassID = await LicenseClassesData.AddAsync(licenseDTO);
+            return this.LicenseClassID != -1;
+        }
+        private async Task<bool> _UpdateAsync()
+        {
+            return await LicenseClassesData.UpdateAsync(licenseDTO);
+        }
+        public async Task<bool> SaveAsync()
+        {
+            switch (Mode)
+            {
+                case enMode.add:
+                    if (await _AddNewAsync())
+                    {
+                        this.Mode = enMode.update;
+                        return true;
+                    }
+                    break;
+                case enMode.update:
+                    return await _UpdateAsync();
+            }
+            return false;
+        }
+        public static async Task<bool> isExistAsync(int id)
+        {
+            return await LicenseClassesData.isExistAsync(id);
+        }
+        public static async Task<bool> DeleteAsync(int id)
+        {
+            return await LicenseClassesData.DeleteAsync(id);
+        }
+        public static async Task<IEnumerable<LicenseClass>> ListAsync()
+        {
+            return await LicenseClassesData.AllAsync();
         }
     }
 }

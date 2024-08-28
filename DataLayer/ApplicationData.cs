@@ -213,9 +213,9 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<int> GetFeesAsync(int ApplicationID)
+        public static async Task<decimal> GetFeesAsync(int ApplicationID)
         {
-            int fees = 0;
+            decimal fees = 0;
             try
             {
                 using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
@@ -230,7 +230,7 @@ namespace DataLayer
 
                         Connection.Open();
                         object result = await Command.ExecuteScalarAsync();
-                        if (result != null && int.TryParse(result.ToString(), out int result_))
+                        if (result != null && decimal.TryParse(result.ToString(), out decimal result_))
                         {
                             fees = result_;
                         }

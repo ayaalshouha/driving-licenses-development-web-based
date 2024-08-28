@@ -20,7 +20,7 @@ namespace api_layer.Controllers
                 type = new clsTestTypes();
             else
             {
-                type = await clsTestTypes.FindAsync(ID);
+                type = clsTestTypes.FindAsync(ID).GetAwaiter().GetResult();
                 if (type == null) return null;
             }
 

@@ -2,6 +2,7 @@
 using static BuisnessLayer.clsApplication;
 using DataLayer;
 using DTOsLayer;
+using System.Text.Json.Serialization;
 
 namespace BuisnessLayer
 {
@@ -127,9 +128,11 @@ namespace BuisnessLayer
 
             return false;
         }
-        public async Task<int> FeesAsync()
+
+        public async Task<decimal> FeesAsync()
         {
-            return await ApplicationData.GetFeesAsync(this.ID);
+            decimal fee = await ApplicationData.GetFeesAsync(this.ID);
+            return fee; 
         }
         public static async Task<bool> DeleteAsync(int AppID)
         {

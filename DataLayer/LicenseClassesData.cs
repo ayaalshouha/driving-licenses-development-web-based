@@ -52,6 +52,45 @@ namespace DataLayer
             }
             return null;
         }
+        public static async Task<int> AddAsync(LicenseClass licenseClass)
+        {
+            int newID = 0;
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"INSERT INTO LicenseClasses 
+                             VALUES (@ClassName,@MinAgeAllowed, @ValidityYears, @fee, @description);
+                        SELECT SCOPE_IDENTITY();";
+
+
+                var Command = new SqlCommand(Query, Connection);
+
+                Command.Parameters.AddWithValue("@ClassName", licenseClass.ClassName);
+                Command.Parameters.AddWithValue("@MinAgeAllowed", licenseClass.MinAgeAllowed);
+                Command.Parameters.AddWithValue("@ValidityYears", licenseClass.ValidityYears);
+                Command.Parameters.AddWithValue("@fee", licenseClass.Fees);
+                Command.Parameters.AddWithValue("@description", licenseClass.Description);
+                
+                Connection.Open();
+                object result = await Command.ExecuteScalarAsync();
+
+                if (result != null && int.TryParse(result.ToString(), out int LastID))
+                {
+                    newID = LastID;
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+                //Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
+            return newID;
+        }
         public static async Task<bool> UpdateAsync(LicenseClass Class_)
         {
             int RowAffected = 0;
@@ -96,6 +135,40 @@ namespace DataLayer
                             while (await reader.ReadAsync())
                             {
                                 list.Add(reader["Class"].ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            return list;
+        }
+        public static async Task<IEnumerable<LicenseClass>> AllAsync()
+        {
+            var list = new List<LicenseClass>();
+            try
+            {
+                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = "select * from LicenseClasses;";
+                    using (var command = new SqlCommand(Query, Connection))
+                    {
+                        Connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                list.Add(new LicenseClass (
+                                        reader.GetInt32(reader.GetOrdinal("ID")),
+                                        reader.GetString(reader.GetOrdinal("Class")),
+                                        reader.GetString(reader.GetOrdinal("Description")),
+                                        reader.GetDecimal(reader.GetOrdinal("Fees")),
+                                        reader.GetByte(reader.GetOrdinal("MinimumAgeAllowed")),
+                                        reader.GetByte(reader.GetOrdinal("ValidityYears"))
+                                    ));
                             }
                         }
                     }

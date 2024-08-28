@@ -93,7 +93,7 @@ namespace api_layer.Controllers
             if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsInternational_DL.isExist(licenseID);
+            bool isExist = await clsInternational_DL.isExistAsync(licenseID);
 
             if (!isExist)
                 return NotFound("International License NOT Found");

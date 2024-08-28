@@ -31,7 +31,7 @@ namespace DataLayer
                             reader.GetBoolean(reader.GetOrdinal("isLocked")),
                             reader.GetInt32(reader.GetOrdinal("CreateByUserID")),
                             reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
-                            reader.IsDBNull(reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"))) ? 0 :
+                            reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
                             reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"))
                         );
                 }
