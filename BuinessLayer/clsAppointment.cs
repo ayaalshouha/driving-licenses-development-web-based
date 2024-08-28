@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
 using DataLayer;
 using DTOsLayer; 
@@ -29,7 +30,15 @@ namespace BuisnessLayer
         {
             get
             {
-                return new Appointment(this.ID, this.Date, (int)this.TestType, this.PaidFees, this.isLocked, this.CreatedByUserID, this.LocalLicenseApplicationID, this.RetakeTestApplicationID);
+                Appointment AppointmentDTO = new Appointment(this.CreatedByUserID, this.RetakeTestApplicationID);
+                AppointmentDTO.appoint.TestType = (int)this.TestType;
+                AppointmentDTO.appoint.LocalLicenseApplicationID = this.LocalLicenseApplicationID;
+                AppointmentDTO.appoint.info.ID = this.ID;
+                AppointmentDTO.appoint.info.isLocked = this.isLocked;
+                AppointmentDTO.appoint.info.PaidFees = this.PaidFees;
+                AppointmentDTO.appoint.info.Date = this.Date;
+
+                return AppointmentDTO;
             }
         }
         public clsAppointment()
@@ -46,13 +55,13 @@ namespace BuisnessLayer
         }
         private clsAppointment(Appointment appointment)
         {
-            this.ID = appointment.ID;
-            this.Date = appointment.Date;
-            this.TestType = (enTestType)appointment.TestType;
-            this.PaidFees = appointment.PaidFees;
-            this.isLocked = appointment.isLocked;
+            this.ID = appointment.appoint.info.ID;
+            this.Date = appointment.appoint.info.Date;
+            this.TestType = (enTestType)appointment.appoint.TestType;
+            this.PaidFees = appointment.appoint.info.PaidFees;
+            this.isLocked = appointment.appoint.info.isLocked;
             this.CreatedByUserID = appointment.CreatedByUserID;
-            this.LocalLicenseApplicationID = appointment.LocalLicenseApplicationID;
+            this.LocalLicenseApplicationID = appointment.appoint.LocalLicenseApplicationID;
             this.RetakeTestApplicationID = appointment.RetakeTestID; 
             this._Mode = enMode.update; 
         }
@@ -91,7 +100,7 @@ namespace BuisnessLayer
 
             return false;
         }
-        public static async Task<IEnumerable<Appointment_Veiw>> AppointmentsTablePerTestTypeAsync(int LocalDrivingID,enTestType TestType)
+        public static async Task<IEnumerable<Appointement_>> AppointmentsTablePerTestTypeAsync(int LocalDrivingID,enTestType TestType)
         {
             return await Appointments_Data.getAppointmentsTablePerTestTypeAsync(LocalDrivingID, (int)TestType); 
         }

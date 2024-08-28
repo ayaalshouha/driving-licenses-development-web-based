@@ -6,50 +6,47 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
-    public class Appointment
+    public class Appointement_
     {
         public int ID { get; set; }
         public DateOnly Date { get; set; }
-        public int TestType { get; set; }
         public decimal PaidFees { get; set; }
         public bool isLocked { get; set; }
-        public int CreatedByUserID { get; set; }
-        public int LocalLicenseApplicationID { get; set; }
-        public int RetakeTestID { get; set; }
 
-        public Appointment(int id, DateOnly date, int testtype, decimal paidfees, bool islocked, int createdby, int locallicenseid, int retaketestid)
+        public Appointement_(int id, DateOnly date, decimal fees, bool islocked)
         {
-            this.isLocked = islocked;
+            this.Date= date;
             this.ID = id;
-            this.Date = date;
-            this.TestType = testtype;
-            this.RetakeTestID = retaketestid;
-            this.CreatedByUserID = createdby;
-            this.PaidFees = paidfees;
-            this.LocalLicenseApplicationID = locallicenseid;
+            this.PaidFees= fees;
+            this.isLocked = islocked;
         }
-    }
 
+    }
     public class Appointment_Veiw
     {
-        public int ID { get; set; }
-        public DateOnly Date { get; set; }
+        public Appointement_ info;
         public int TestType { get; set; }
-        public decimal PaidFees { get; set; }
-        public bool isLocked { get; set; }
         public int LocalLicenseApplicationID { get; set; }
-        public int RetakeTestID { get; set; }
 
-        public Appointment_Veiw(int id, DateOnly date, int testtype,
-            decimal paidfees, bool islocked, int locallicenseid)
+        public Appointment_Veiw(int testtype,int locallicenseid)
         {
-            this.isLocked = islocked;
-            this.ID = id;
-            this.Date = date;
             this.TestType = testtype;
-            this.PaidFees = paidfees;
             this.LocalLicenseApplicationID = locallicenseid;
         }
 
     }
+    public class Appointment
+    {
+        public Appointment_Veiw appoint;
+        public int CreatedByUserID { get; set; }
+        public int RetakeTestID { get; set; }
+
+        public Appointment(int createdby, int retaketestid)
+        {
+            this.RetakeTestID = retaketestid;
+            this.CreatedByUserID = createdby;
+        }
+    }
+
+    
 }

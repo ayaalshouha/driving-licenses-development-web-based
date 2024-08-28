@@ -23,17 +23,20 @@ namespace DataLayer
                 SqlDataReader reader = await command.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    return new Appointment(
-                            reader.GetInt32(reader.GetOrdinal("ID")),
-                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
-                            reader.GetInt32(reader.GetOrdinal("TestTypeID")),
-                            reader.GetDecimal(reader.GetOrdinal("PaidFees")),
-                            reader.GetBoolean(reader.GetOrdinal("isLocked")),
-                            reader.GetInt32(reader.GetOrdinal("CreateByUserID")),
-                            reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
-                            reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
-                            reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"))
-                        );
+                    int createdby = reader.GetInt32(reader.GetOrdinal("CreateByUserID"));
+                    int retakeID = reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
+                            reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID"));
+                    
+                    Appointment appointment = new Appointment(createdby, retakeID);
+
+                    appointment.appoint.TestType = reader.GetInt32(reader.GetOrdinal("TestTypeID"));
+                    appointment.appoint.LocalLicenseApplicationID = reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID"));
+                    appointment.appoint.info.ID = reader.GetInt32(reader.GetOrdinal("ID"));
+                    appointment.appoint.info.isLocked = reader.GetBoolean(reader.GetOrdinal("isLocked"));
+                    appointment.appoint.info.PaidFees = reader.GetDecimal(reader.GetOrdinal("PaidFees"));
+                    appointment.appoint.info.Date = DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date")));
+
+                    return appointment; 
                 }
                 reader.Close();
             }
@@ -61,11 +64,11 @@ namespace DataLayer
 
                 var Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);
-                Command.Parameters.AddWithValue("@Date", appointment.Date);
-                Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
+                Command.Parameters.AddWithValue("@TestTypeID", appointment.appoint.TestType);
+                Command.Parameters.AddWithValue("@Date", appointment.appoint.info.Date);
+                Command.Parameters.AddWithValue("@PaidFees", appointment.appoint.info.PaidFees);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.LocalLicenseApplicationID);
+                Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.appoint.LocalLicenseApplicationID);
                 if(appointment.RetakeTestID == -1)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestApplicationID", DBNull.Value);
@@ -113,13 +116,13 @@ namespace DataLayer
 
                 var Command = new SqlCommand(Query, Connection);
 
-                Command.Parameters.AddWithValue("@AppointmentID", appointment.ID);
-                Command.Parameters.AddWithValue("@TestTypeID", appointment.TestType);
-                Command.Parameters.AddWithValue("@Date", appointment.Date);
-                Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
-                Command.Parameters.AddWithValue("@isLocked", appointment.isLocked);
+                Command.Parameters.AddWithValue("@AppointmentID", appointment.appoint.info.ID);
+                Command.Parameters.AddWithValue("@TestTypeID", appointment.appoint.TestType);
+                Command.Parameters.AddWithValue("@Date", appointment.appoint.info.Date);
+                Command.Parameters.AddWithValue("@PaidFees", appointment.appoint.info.PaidFees);
+                Command.Parameters.AddWithValue("@isLocked", appointment.appoint.info.isLocked);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
-                Command.Parameters.AddWithValue("@LocalDrvingLicenseApplicationID", appointment.LocalLicenseApplicationID);
+                Command.Parameters.AddWithValue("@LocalDrvingLicenseApplicationID", appointment.appoint.LocalLicenseApplicationID);
                 if (appointment.RetakeTestID == -1)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestID", DBNull.Value);
@@ -192,9 +195,9 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<IEnumerable<Appointment_Veiw>> getAppointmentsTablePerTestTypeAsync(int LocalApplicationID,int TestType)
+        public static async Task<IEnumerable<Appointement_>> getAppointmentsTablePerTestTypeAsync(int LocalApplicationID,int TestType)
         {
-            var table = new List<Appointment_Veiw>();
+            var table = new List<Appointement_>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -212,13 +215,11 @@ namespace DataLayer
 
                 if (await reader.ReadAsync())
                 {
-                    table.Add(new Appointment_Veiw(
+                    table.Add(new Appointement_(
                          reader.GetInt32(reader.GetOrdinal("ID")),
                             DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
-                            reader.GetInt32(reader.GetOrdinal("TestTypeID")),
                             reader.GetDecimal(reader.GetOrdinal("PaidFees")),
-                            reader.GetBoolean(reader.GetOrdinal("isLocked")),
-                            reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID"))
+                            reader.GetBoolean(reader.GetOrdinal("isLocked"))
                         ));
                 }
                 reader.Close();
