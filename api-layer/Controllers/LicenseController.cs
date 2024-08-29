@@ -223,10 +223,10 @@ namespace api_layer.Controllers
             if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
                 return BadRequest("Invalid License ID");
 
-            var license = await clsLicenses.FindAsync(licenseID);
-            if (license != null)
+            var found = await clsLicenses.isExistAsync(licenseID);
+            if (found)
             {
-                var result = clsDetainedLicenses.isLicenseDetainedAsync(licenseID);
+                bool result = await clsDetainedLicenses.isLicenseDetainedAsync(licenseID);
                 return Ok(result);
             }
             else

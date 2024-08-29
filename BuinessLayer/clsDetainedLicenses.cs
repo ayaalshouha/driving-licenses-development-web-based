@@ -80,8 +80,7 @@ namespace BuisnessLayer
         }
         public async Task<bool> _UpdateAsync()
         {
-            var result =await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO);
-            return result; 
+            return await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO); 
         }
         public async Task<bool> SaveAsync()
         {
@@ -101,7 +100,7 @@ namespace BuisnessLayer
         }
         public static async Task<bool> isLicenseDetainedAsync(int LicenseID)
         {
-            var result = await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
+            bool result = await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
             return result;
         }
         public static async Task<IEnumerable<DetainedLicense>> ListAsync()
@@ -111,7 +110,8 @@ namespace BuisnessLayer
     
         public static async Task<bool> isExistAsync(int detainID)
         {
-            return await DetainedLicenses_Data.isExistAsync(detainID);
+            bool result = await DetainedLicenses_Data.isExistAsync(detainID);
+            return result;
         }
         public static async Task<bool> DeleteAsync(int detainID)
         {
