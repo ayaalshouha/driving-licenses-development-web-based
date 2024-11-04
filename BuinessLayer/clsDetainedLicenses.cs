@@ -73,12 +73,12 @@ namespace BuisnessLayer
             else
                 return null;
         }
-        public async Task<bool> _AddNewAsync()
+        private async Task<bool> _AddNewAsync()
         {
             this.ID = await DetainedLicenses_Data.AddAsync(DetainedLicenseDTO);
             return this.ID != -1;
         }
-        public async Task<bool> _UpdateAsync()
+        private async Task<bool> _UpdateAsync()
         {
             return await DetainedLicenses_Data.UpdateAsync(DetainedLicenseDTO); 
         }
