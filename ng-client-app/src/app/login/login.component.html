@@ -1,0 +1,30 @@
+<div class="container">
+  <header>
+    <img src="images/login (6).png" alt="License-Manager-Featured-Image" />
+    <p>Login</p>
+  </header>
+
+  <form [formGroup]="login_form" (ngSubmit)="onSubmit()">
+    <div class="control">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        [formControl]="login_form.controls.username"
+      />
+    </div>
+
+    <div class="control">
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" />
+    </div>
+
+    <button type="submit">Login &#8594;</button>
+
+    <p>Don't have an accunt? <a href="">Sign up</a></p>
+
+    @if(invalidPassword){
+    <p class="error">invalid username/password</p>
+    }
+  </form>
+</div>

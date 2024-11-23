@@ -57,6 +57,7 @@ namespace DataLayer
             }
             return isActive;
         }
+        
         public static bool SaveLoginRecord(int UserID)
         {
             int RowAffected = 0;

@@ -159,9 +159,9 @@ namespace BuisnessLayer
         {
             return DataSettings.Authintication(username, password); 
         }
-        public static bool SaveLogin(User user)
+        public static bool SaveLogin(int userID)
         {
-            return DataSettings.SaveLoginRecord(user.ID);
+            return DataSettings.SaveLoginRecord(userID);
         }
 
     }

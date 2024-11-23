@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Poppins";
+}
+
+:root {
+  --background-color: linear-gradient(to bottom, #5a6acf, #8593ed, #c7ceff);
+}

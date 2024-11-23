@@ -119,14 +119,10 @@ namespace api_layer.Controllers
             return await clsUser.isExistAsync(ID);
         }
 
-        [HttpGet("isExistByNationalNo", Name = "isUserExistByNationalNo")]
-        public async Task<ActionResult<bool>> isExist(string NationalNumber)
-        {
-            if (string.IsNullOrEmpty(NationalNumber))
-                return BadRequest("Invalid National Number");
+        
 
-            return await clsUser.isExistAsync(NationalNumber);
-        }
+      
+    
     }
 }
 
