@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuisnessLayer", "BuinessLay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOsLayer", "DTOsLayer\DTOsLayer.csproj", "{641EB93B-3222-4E18-BBC1-279C98E8B6C2}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "dvld-presentation-ng", "dvld-presentation-ng\dvld-presentation-ng.esproj", "{76EF07EA-ABD1-4439-AD73-B658E486ADA9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +33,6 @@ Global
 		{641EB93B-3222-4E18-BBC1-279C98E8B6C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{641EB93B-3222-4E18-BBC1-279C98E8B6C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{641EB93B-3222-4E18-BBC1-279C98E8B6C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76EF07EA-ABD1-4439-AD73-B658E486ADA9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
