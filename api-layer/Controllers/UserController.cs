@@ -59,6 +59,20 @@ namespace api_layer.Controllers
 
             return Ok(user);
         }
+        [HttpGet("ReadByUsername", Name = "ReadUserByUsername")]
+        public async Task<ActionResult<User>> Read(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest("Invalid username ");
+
+            clsUser user = await clsUser.FindAsync(username);
+            
+
+            if (user == null)
+                return NotFound($"User With ID {username} Not Found");
+
+            return Ok(user.UserDTO);
+        }
 
         [HttpPost("Create", Name = "CreateUser")]
         public async Task<ActionResult<User>> Create(User newUser)

@@ -45,5 +45,14 @@ namespace api_layer.Controllers
 
             return await clsUser.isExistAsync(username);
         }
+
+        [HttpGet("isExist", Name = "isUserExist")]
+        public async Task<ActionResult<bool>> isExist(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return BadRequest("Invalid username/password");
+
+            return await clsUser.isExistAsync(username, password);
+        }
     }
 }

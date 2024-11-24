@@ -23,8 +23,11 @@
 
     <p>Don't have an accunt? <a href="">Sign up</a></p>
 
-    @if(invalidPassword){
+    @if(invalidPassword || isExist() == false){
     <p class="error">invalid username/password</p>
+    } @if(isExist() === true && isActive() === false &&
+    login_form.controls.username.value !== ''){
+    <p class="error">user {{ enteredUsername() }}is NOT active</p>
     }
   </form>
 </div>
