@@ -47,17 +47,9 @@ export class LoginService {
   }
   //save login record in database
   saveLogin(userID: number) {
-    return this.httpClient
-      .post(`${LOGIN_API_ENDPOINTS.saveLogin}${userID}`, {})
-      .pipe(
-        tap({
-          next: (response) => {
-            console.log('Login saved successfully:', response);
-          },
-          error: (error) => {
-            console.error('Error saving login:', error);
-          },
-        })
-      );
+    return this.httpClient.post(
+      `${LOGIN_API_ENDPOINTS.saveLogin}${userID}`,
+      {}
+    );
   }
 }

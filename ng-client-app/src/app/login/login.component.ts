@@ -14,7 +14,7 @@ import {
 import { LoginService } from '../services/login.service';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
-import { switchMap, tap } from 'rxjs';
+import { concatMap, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -94,19 +94,21 @@ export class LoginComponent {
           }
           return this.userService.getUser(this.enteredUsername());
         }),
-
-        switchMap((fullUser) => {
+        // Changed to concatMap to wait for saveLogin to complete
+        concatMap((fullUser) => {
           this.currentUser = fullUser;
-
           this.onclose.emit(this.currentUser);
           return this.loginService.saveLogin(this.currentUser!.id); // saveLogin returns an observable
         })
       )
       .subscribe({
         next: () => {
-          // next callback, which will only be executed after the entire observable chain completes successfully.
+          //which will only be executed after the entire observable chain completes successfully.
+        },
+        complete: () => {
+          //will work as expected, but only if the entire observable chain completes successfully (i.e., no errors were thrown
           this.loginService.setLoginStatus(true);
-          this.router.navigate(['dashboard']);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           console.error('Error during login process:', err.message || err);
