@@ -14,7 +14,8 @@ import {
 import { LoginService } from '../services/login.service';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
-import { firstValueFrom, from, switchMap, tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,6 @@ import { firstValueFrom, from, switchMap, tap } from 'rxjs';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  loggedIn = signal<boolean>(false);
   isExist = signal<Boolean | undefined>(undefined);
   isActive = signal<Boolean | undefined>(undefined);
   isLoginSaved = signal<Boolean | undefined>(undefined);
@@ -34,7 +34,7 @@ export class LoginComponent {
   private destroyRef = inject(DestroyRef);
   private userService = inject(UserService);
   private currentUser: User | undefined = undefined;
-
+  private router = inject(Router);
   login_form = new FormGroup({
     username: new FormControl('', {
       validators: [Validators.required],
@@ -74,7 +74,7 @@ export class LoginComponent {
     this.enteredUsername.set(this.login_form.controls.username.value!);
     this.enteredPassword.set(this.login_form.controls.password.value!);
 
-    this.loginService
+    const subscription = this.loginService
       .isCorrect(this.enteredUsername(), this.enteredPassword())
       .pipe(
         tap((isExistValue) => this.isExist.set(isExistValue)),
@@ -97,14 +97,22 @@ export class LoginComponent {
 
         switchMap((fullUser) => {
           this.currentUser = fullUser;
+
           this.onclose.emit(this.currentUser);
           return this.loginService.saveLogin(this.currentUser!.id); // saveLogin returns an observable
         })
       )
       .subscribe({
+        next: () => {
+          // next callback, which will only be executed after the entire observable chain completes successfully.
+          this.loginService.setLoginStatus(true);
+          this.router.navigate(['dashboard']);
+        },
         error: (err) => {
           console.error('Error during login process:', err.message || err);
         },
       });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 }

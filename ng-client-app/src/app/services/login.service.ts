@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { LOGIN_API_ENDPOINTS } from '../environments/endpoints/login.endpoints';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
   constructor(private httpClient: HttpClient) {}
 
+  private loggedIn = new BehaviorSubject<boolean>(false);
+
+  setLoginStatus(status: boolean) {
+    this.loggedIn.next(status);
+  }
+
+  getLoginStatue() {
+    return this.loggedIn.asObservable();
+  }
   //check if entered username is exist
   isExist(username: string): Observable<boolean> {
     return this.httpClient.get<boolean>(
