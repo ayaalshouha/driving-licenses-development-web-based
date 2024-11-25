@@ -3,7 +3,6 @@ import {
   DestroyRef,
   EventEmitter,
   inject,
-  output,
   signal,
 } from '@angular/core';
 import {
@@ -13,8 +12,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
+import { UserService } from '../services/user.service';
+import { firstValueFrom, from, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -24,13 +24,16 @@ import { User } from '../models/user.model';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  loggedIn = signal<boolean>(false);
   isExist = signal<Boolean | undefined>(undefined);
   isActive = signal<Boolean | undefined>(undefined);
   isLoginSaved = signal<Boolean | undefined>(undefined);
   enteredUsername = signal<string>('');
   enteredPassword = signal<string>('');
-   onclose = new EventEmitter<User>();
+  onclose = new EventEmitter<User>();
   private destroyRef = inject(DestroyRef);
+  private userService = inject(UserService);
+  private currentUser: User | undefined = undefined;
 
   login_form = new FormGroup({
     username: new FormControl('', {
@@ -63,41 +66,45 @@ export class LoginComponent {
     return this.login_form.invalid;
   }
 
-  checkActivity(): void {
-    if (this.isExist() === true) {
-      const subscription2 = this.loginService
-        .isActive(this.enteredUsername(), this.enteredPassword())
-        .subscribe({
-          next: (value) => {
-            this.isActive.set(value);
-          },
-          error: (err) => console.log('error in active request ' + err),
-        });
-      this.destroyRef.onDestroy(() => subscription2.unsubscribe());
-    }
-  }
-
   onSubmit() {
     if (this.invalidForm) {
       return;
     }
+
     this.enteredUsername.set(this.login_form.controls.username.value!);
     this.enteredPassword.set(this.login_form.controls.password.value!);
 
-    const subscription1 = this.loginService
+    this.loginService
       .isCorrect(this.enteredUsername(), this.enteredPassword())
+      .pipe(
+        tap((isExistValue) => this.isExist.set(isExistValue)),
+        switchMap((isExistValue) => {
+          if (!isExistValue) {
+            throw new Error('User does not exist.');
+          }
+          return this.loginService.isActive(
+            this.enteredUsername(),
+            this.enteredPassword()
+          );
+        }),
+        tap((isActiveValue) => this.isActive.set(isActiveValue)),
+        switchMap((isActiveValue) => {
+          if (!isActiveValue) {
+            throw new Error('User is not active.');
+          }
+          return this.userService.getUser(this.enteredUsername());
+        }),
+
+        switchMap((fullUser) => {
+          this.currentUser = fullUser;
+          this.onclose.emit(this.currentUser);
+          return this.loginService.saveLogin(this.currentUser!.id); // saveLogin returns an observable
+        })
+      )
       .subscribe({
-        next: (value) => {
-          this.isExist.set(value);
+        error: (err) => {
+          console.error('Error during login process:', err.message || err);
         },
       });
-    this.destroyRef.onDestroy(() => subscription1.unsubscribe());
-
-    this.checkActivity();
-
-    if (this.isExist() === true && this.isActive() === true) {
-      //save login and current user
-      
-    }
   }
 }

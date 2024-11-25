@@ -1,9 +1,7 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LOGIN_API_ENDPOINTS } from '../environments/endpoints/login.endpoints';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { response } from 'express';
-import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,9 +10,9 @@ export class LoginService {
 
   //check if entered username is exist
   isExist(username: string): Observable<boolean> {
-    return this.httpClient
-      .get<boolean>(`${LOGIN_API_ENDPOINTS.isUsernameExist}${username}`)
-      .pipe(tap((response) => console.log('User existence = ' + response)));
+    return this.httpClient.get<boolean>(
+      `${LOGIN_API_ENDPOINTS.isUsernameExist}${username}`
+    );
   }
 
   //check if username and passowrd BOTH match database
@@ -23,9 +21,9 @@ export class LoginService {
       .set('username', username)
       .set('password', password);
 
-    return this.httpClient
-      .get<boolean>(`${LOGIN_API_ENDPOINTS.isCorrect}`, { params })
-      .pipe(tap((response) => console.log('does user auths correct = ' + response)));
+    return this.httpClient.get<boolean>(`${LOGIN_API_ENDPOINTS.isCorrect}`, {
+      params,
+    });
   }
 
   //check if entered user is active
@@ -34,10 +32,23 @@ export class LoginService {
       .set('username', username)
       .set('password', password);
 
-    return this.httpClient
-      .get<boolean>(`${LOGIN_API_ENDPOINTS.isUserActive}`, { params })
-      .pipe(tap((response) => console.log('User Activeness = ' + response)));
+    return this.httpClient.get<boolean>(`${LOGIN_API_ENDPOINTS.isUserActive}`, {
+      params,
+    });
   }
-  //check if login record saved in database
-  isLoginSaved() {}
+  //save login record in database
+  saveLogin(userID: number) {
+    return this.httpClient
+      .post(`${LOGIN_API_ENDPOINTS.saveLogin}${userID}`, {})
+      .pipe(
+        tap({
+          next: (response) => {
+            console.log('Login saved successfully:', response);
+          },
+          error: (error) => {
+            console.error('Error saving login:', error);
+          },
+        })
+      );
+  }
 }
