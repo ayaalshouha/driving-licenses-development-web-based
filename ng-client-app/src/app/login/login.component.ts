@@ -1,10 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  EventEmitter,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 import { concatMap, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';

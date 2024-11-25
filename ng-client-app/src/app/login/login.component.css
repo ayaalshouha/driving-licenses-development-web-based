@@ -51,9 +51,18 @@ button {
   width: 100%;
   padding: 6px;
   color: white;
-  /* background: linear-gradient(to right, #5a6acf, #8593ed, #c7ceff); */
+  /*background: linear-gradient(to right, #5a6acf, #8593ed, #c7ceff);
+  */
   background: linear-gradient(to right, #5a6acf, #8593ed);
   margin-bottom: 5px;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+}
+button:hover {
+  opacity: 0.8;
 }
 
 form p {
