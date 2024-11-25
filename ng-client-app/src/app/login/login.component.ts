@@ -16,6 +16,7 @@ import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 import { concatMap, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { CurrentUserService } from '../services/current-user.service';
 
 @Component({
   selector: 'app-login',
@@ -30,10 +31,8 @@ export class LoginComponent {
   isLoginSaved = signal<Boolean | undefined>(undefined);
   enteredUsername = signal<string>('');
   enteredPassword = signal<string>('');
-  onclose = new EventEmitter<User>();
   private destroyRef = inject(DestroyRef);
   private userService = inject(UserService);
-  private currentUser: User | undefined = undefined;
   private router = inject(Router);
   login_form = new FormGroup({
     username: new FormControl('', {
@@ -44,7 +43,10 @@ export class LoginComponent {
     }),
   });
 
-  constructor(private loginService: LoginService) {}
+  constructor(
+    private loginService: LoginService,
+    private currentUserService: CurrentUserService
+  ) {}
 
   get invalidUsername() {
     return (
@@ -96,9 +98,11 @@ export class LoginComponent {
         }),
         // Changed to concatMap to wait for saveLogin to complete
         concatMap((fullUser) => {
-          this.currentUser = fullUser;
-          this.onclose.emit(this.currentUser);
-          return this.loginService.saveLogin(this.currentUser!.id); // saveLogin returns an observable
+          this.currentUserService.setCurrentUser(fullUser);
+          // saveLogin returns an observable
+          return this.loginService.saveLogin(
+            this.currentUserService.getCurrentUser()!.id
+          );
         })
       )
       .subscribe({
