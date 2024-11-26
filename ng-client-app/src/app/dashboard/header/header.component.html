@@ -1,0 +1,28 @@
+<header>
+  <div class="logo">
+    <p>Dashboard</p>
+  </div>
+  <div class="user-section">
+    <img src="images/user (4).png" alt="" class="avatar" />
+    <!-- <span>{{ currentUserService.getCurrentUser()?.username }}</span> -->
+    <span class="username">
+      Aya Alshouha
+      <button class="menu-btn" (click)="toggleMenu()">
+        <i class="fa fa-caret-down"></i>
+      </button>
+    </span>
+
+    @if(menuOpen()){
+    <ul class="dropdown-menu">
+      <li><a routerLink="/profile">Profile</a></li>
+      <li><a routerLink="/settings">Settings</a></li>
+      <li>
+        <button (click)="logout()">
+          Logout
+          <i class="fa fa-sign-out"></i>
+        </button>
+      </li>
+    </ul>
+    }
+  </div>
+</header>

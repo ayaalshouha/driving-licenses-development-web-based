@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
 export class CurrentUserService {
   private current_user = signal<User | undefined>(undefined);
 
-  setCurrentUser(status: User) {
+  setCurrentUser(status: User | undefined) {
     this.current_user.set(status);
   }
 
