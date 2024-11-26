@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LOGIN_API_ENDPOINTS } from '../environments/endpoints/login.endpoints';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,10 +17,15 @@ export class LoginService {
   getLoginStatue() {
     return this.loggedIn.asObservable();
   }
-  //check if entered username is exist
+  //check if entered username is unique for firsttime register
   isExist(username: string): Observable<boolean> {
-    return this.httpClient.get<boolean>(
-      `${LOGIN_API_ENDPOINTS.isUsernameExist}${username}`
+    return (
+      this.httpClient
+        .get<{ exist: boolean }>(
+          `${LOGIN_API_ENDPOINTS.isUsernameExist}${username}`
+        )
+        // Return true if the username exists
+        .pipe(map((response) => response.exist))
     );
   }
 

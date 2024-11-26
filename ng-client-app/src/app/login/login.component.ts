@@ -1,5 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import {
+  AbstractControl,
+  AsyncValidatorFn,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -7,9 +9,33 @@ import {
 } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { UserService } from '../services/user.service';
-import { concatMap, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
+
+//when register NOT login
+export function usernameAsyncValidator(
+  loginService: LoginService
+): AsyncValidatorFn {
+  return (control: AbstractControl) => {
+    if (!control.value) {
+      return of(null);
+    }
+    return loginService.isExist(control.value).pipe(
+      debounceTime(300),
+      map((isTaken) => (isTaken ? { usernameTaken: true } : null)),
+      catchError(() => of(null))
+    );
+  };
+}
 
 @Component({
   selector: 'app-login',
@@ -27,19 +53,18 @@ export class LoginComponent {
   private destroyRef = inject(DestroyRef);
   private userService = inject(UserService);
   private router = inject(Router);
+  private loginService = inject(LoginService);
   login_form = new FormGroup({
     username: new FormControl('', {
       validators: [Validators.required],
+      asyncValidators: [usernameAsyncValidator(this.loginService)],
     }),
     password: new FormControl('', {
       validators: [Validators.required, Validators.minLength(6)],
     }),
   });
 
-  constructor(
-    private loginService: LoginService,
-    private currentUserService: CurrentUserService
-  ) {}
+  constructor(private currentUserService: CurrentUserService) {}
 
   get invalidUsername() {
     return (
