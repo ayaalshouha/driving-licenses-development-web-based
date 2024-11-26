@@ -21,22 +21,6 @@ import {
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 
-//when register NOT login
-export function usernameAsyncValidator(
-  loginService: LoginService
-): AsyncValidatorFn {
-  return (control: AbstractControl) => {
-    if (!control.value) {
-      return of(null);
-    }
-    return loginService.isExist(control.value).pipe(
-      debounceTime(300),
-      map((isTaken) => (isTaken ? { usernameTaken: true } : null)),
-      catchError(() => of(null))
-    );
-  };
-}
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -57,7 +41,6 @@ export class LoginComponent {
   login_form = new FormGroup({
     username: new FormControl('', {
       validators: [Validators.required],
-      asyncValidators: [usernameAsyncValidator(this.loginService)],
     }),
     password: new FormControl('', {
       validators: [Validators.required, Validators.minLength(6)],

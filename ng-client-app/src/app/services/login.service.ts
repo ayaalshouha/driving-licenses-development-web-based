@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LOGIN_API_ENDPOINTS } from '../environments/endpoints/login.endpoints';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
