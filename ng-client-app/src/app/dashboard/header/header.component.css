@@ -1,48 +1,48 @@
 header {
   display: flex;
-  /* flex: 0; */
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
   padding: 0.8rem;
+  color: #1b2568;
+  border-bottom: 1px solid var(--light-color);
+}
+header .logo {
+  font-weight: bold;
 }
 
 .user-section {
   display: flex;
   align-items: center;
+
   position: relative;
+  gap: 0.3rem;
 }
 .avatar {
-  border: 1px solid var(--dark-color);
-  width: 35px;
-  height: 35px;
+  border: 1px solid #1b2568;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
-  margin-right: 0.5rem;
-}
-.username {
-  margin-right: 0.3rem;
 }
 .menu-btn {
   background: none;
   padding: 5px;
   border: none;
   cursor: pointer;
-  color: var(--dark-color);
+  color: #1f384c;
 }
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 115%;
   right: 0;
-  background: var(--dark-color);
+  background: var(--light-color);
   border-radius: 4px;
-  padding: 0.5rem 0;
-  margin: 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 8px 10px;
   list-style: none;
 }
 
 li {
-  padding: 0.3rem 0.9rem;
+  padding: 0.3rem 1.2rem;
   cursor: pointer;
 }
 
@@ -50,21 +50,23 @@ li a,
 li button {
   font-family: inherit;
   font-size: 14px;
-  color: #fff;
+  color: var(--text-color);
   text-decoration: none;
   background-color: transparent;
   border: none;
   width: 100%;
-  text-align: left;
-  padding: 0;
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-  -moz-transition: opacity 0.5s;
-  -ms-transition: opacity 0.5s;
-  -o-transition: opacity 0.5s;
+  /* text-align: left; */
   cursor: pointer;
 }
-a:hover,
-button:hover {
-  opacity: 0.5;
+li:hover {
+  background-color: var(--bg-hover-color);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+li a:hover,
+li button:hover {
+  color: var(--hover-color);
 }

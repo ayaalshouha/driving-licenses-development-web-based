@@ -4,8 +4,8 @@ nav {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 240px;
-  background-color: var(--background-color);
+  width: 200px;
+  background-color: var(--light-color);
   color: var(--dark-color);
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ li button {
   gap: 10px;
   padding: 10px 40px;
   text-decoration: none;
-  color: var(--light-color);
+  color: var(--text-color);
   font-size: 0.8rem;
   border: none;
   background-color: transparent;
@@ -63,7 +63,7 @@ li button {
 li a:hover,
 li button:hover {
   color: var(--hover-color);
-  background-color: var(--light-color);
+  background-color: var(--bg-hover-color);
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

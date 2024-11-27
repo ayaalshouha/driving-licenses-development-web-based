@@ -8,12 +8,15 @@
 
 body {
   font-family: "Poppins";
-  background-color: var(--light-color);
+  background-color: #fff;
+  font-size: 0.7rem;
+  color: #ebf0f6;
 }
 
 :root {
+  --text-color: #7c7c7c;
   --dark-color: #5a67ba;
   --light-color: #f1f2f7;
-  --background-color: #a6abc8;
   --hover-color: #707fdd;
+  --bg-hover-color: #e4e7f6;
 }
