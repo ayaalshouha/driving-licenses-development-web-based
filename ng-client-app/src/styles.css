@@ -8,10 +8,12 @@
 
 body {
   font-family: "Poppins";
-  background-color: #f1f2f7;
-  color: #1f384c;
+  background-color: var(--light-color);
 }
 
 :root {
-  --background-color: linear-gradient(to bottom, #5a6acf, #8593ed, #c7ceff);
+  --dark-color: #5a67ba;
+  --light-color: #f1f2f7;
+  --background-color: #a6abc8;
+  --hover-color: #707fdd;
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -8,7 +8,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent],
+  imports: [HeaderComponent, SidebarComponent, RouterOutlet],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loginService.getLoginStatue().subscribe((loggedIn) => {
-      console.log(loggedIn);
       if (!loggedIn) {
         this.router.navigate(['/login']);
       }

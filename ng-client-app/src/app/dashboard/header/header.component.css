@@ -1,8 +1,9 @@
 header {
   display: flex;
+  /* flex: 0; */
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  background-color: #fff;
   padding: 0.8rem;
 }
 
@@ -12,7 +13,7 @@ header {
   position: relative;
 }
 .avatar {
-  border: 1px solid #1f384c;
+  border: 1px solid var(--dark-color);
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -26,13 +27,13 @@ header {
   padding: 5px;
   border: none;
   cursor: pointer;
-  color: #1f384c;
+  color: var(--dark-color);
 }
 .dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--background-color);
+  background: var(--dark-color);
   border-radius: 4px;
   padding: 0.5rem 0;
   margin: 0;
