@@ -3,11 +3,12 @@ import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { HeaderComponent } from './header/header.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
