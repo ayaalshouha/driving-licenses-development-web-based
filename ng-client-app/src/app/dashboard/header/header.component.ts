@@ -13,7 +13,7 @@ export class HeaderComponent {
   currentUserService = inject(CurrentUserService);
   private router = inject(Router);
 
-  menuOpen = signal<boolean>(true);
+  menuOpen = signal<boolean>(false);
   constructor() {}
 
   toggleMenu() {

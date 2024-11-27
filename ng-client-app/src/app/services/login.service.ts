@@ -8,7 +8,7 @@ import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 export class LoginService {
   constructor(private httpClient: HttpClient) {}
 
-  private loggedIn = new BehaviorSubject<boolean>(false);
+  private loggedIn = new BehaviorSubject<boolean>(true);
 
   setLoginStatus(status: boolean) {
     this.loggedIn.next(status);
