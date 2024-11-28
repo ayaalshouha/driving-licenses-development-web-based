@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { TestComponent } from '../dashboard/test/test.component';
 import { ServicesComponent } from '../dashboard/services/services.component';
+import { ApplicationsManagementComponent } from '../dashboard/applications-management/applications-management.component';
+import { LicensesManagementComponent } from '../dashboard/licenses-management/licenses-management.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -15,6 +17,14 @@ export const dashboard_routes: Routes = [
   {
     path: 'services',
     component: ServicesComponent,
+  },
+  {
+    path: 'applicationsManagement',
+    component: ApplicationsManagementComponent,
+  },
+  {
+    path: 'licensesManagement',
+    component: LicensesManagementComponent,
   },
 ];
 
