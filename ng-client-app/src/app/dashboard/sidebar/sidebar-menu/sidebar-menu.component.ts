@@ -13,6 +13,7 @@ export class SidebarMenuComponent {
   apps_menuOpen = signal(false);
   license_menuOpen = signal(false);
   system_menuOpen = signal(false);
+  newApp_menuOpen = signal(false);
 
   services_toggle() {
     console.log(this.services_menuOpen());
@@ -29,5 +30,8 @@ export class SidebarMenuComponent {
   system_toggle() {
     console.log(this.system_menuOpen());
     this.system_menuOpen.set(!this.system_menuOpen());
+  }
+  newApp_toggle() {
+    this.newApp_menuOpen.set(!this.newApp_menuOpen());
   }
 }

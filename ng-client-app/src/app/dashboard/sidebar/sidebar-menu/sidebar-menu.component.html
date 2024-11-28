@@ -47,12 +47,28 @@
     @if(services_menuOpen() === true){
     <ul class="submenu">
       <li>
-        <a routerLink="services/newLocalApp">
+        <a (click)="newApp_toggle()">
           <span>New Driving License App</span>
+          <i class="fa fa-caret-down"></i>
         </a>
       </li>
+      <!-- new application sub-submenu -->
+      @if(newApp_menuOpen()){
+      <ul class="submenu">
+        <li>
+          <a routerLink="services/newApplication/Local">
+            <span>New Local Application </span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="services/newApplication/International">
+            <span>New International App</span>
+          </a>
+        </li>
+      </ul>
+      }
       <li>
-        <a routerLink="services/reNewLocalApp">
+        <a routerLink="services/renewLocalApp">
           <span>Renew Driving Licence</span>
         </a>
       </li>
