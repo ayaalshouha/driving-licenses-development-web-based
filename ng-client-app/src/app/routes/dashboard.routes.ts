@@ -17,7 +17,6 @@ export const dashboard_routes: Routes = [
   },
   {
     path: 'services',
-    component: ServicesComponent,
     children: services_routes,
   },
   {
