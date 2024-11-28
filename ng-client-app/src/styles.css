@@ -10,7 +10,7 @@ body {
   font-family: "Poppins";
   background-color: #fff;
   font-size: 0.7rem;
-  color: #ebf0f6;
+  color: var(--text-color);
 }
 
 :root {
@@ -19,4 +19,15 @@ body {
   --light-color: #f1f2f7;
   --hover-color: #707fdd;
   --bg-hover-color: #e4e7f6;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
 }
