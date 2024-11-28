@@ -91,7 +91,7 @@
     }
     <!-- apps management -->
     <li>
-      <button routerLink="applicationsManagement" (click)="apps_toggle()">
+      <button (click)="apps_toggle()">
         <svg
           width="18"
           height="18"
@@ -114,12 +114,12 @@
     @if(apps_menuOpen()===true){
     <ul class="submenu">
       <li>
-        <a href="">
+        <a routerLink="applicationsManagement/LocalApplications">
           <span>Manage Local Applications</span>
         </a>
       </li>
       <li>
-        <a href="">
+        <a routerLink="applicationsManagement/InternationalApplications">
           <span>Manage International Apps</span>
         </a>
       </li>
@@ -128,7 +128,7 @@
 
     <!-- licenses management -->
     <li>
-      <button routerLink="licensesManagement" (click)="licenses_toggle()">
+      <button (click)="licenses_toggle()">
         <svg
           width="18"
           height="18"
@@ -151,12 +151,12 @@
     @if(license_menuOpen()===true){
     <ul class="submenu">
       <li>
-        <a href="">
+        <a  routerLink="licensesManagement/Licenses" >
           <span>Manage Licenses</span>
         </a>
       </li>
       <li>
-        <a href="">
+        <a routerLink="licensesManagement/Drivers">
           <span>Manage Drivers</span>
         </a>
       </li>
