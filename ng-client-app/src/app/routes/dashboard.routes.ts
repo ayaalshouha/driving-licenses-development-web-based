@@ -1,22 +1,31 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { TestComponent } from '../dashboard/test/test.component';
 
 export const dashboard_routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'test',
     pathMatch: 'full',
   },
   {
-    path: 'people',
-    component: DashboardComponent,
+    path: 'test',
+    component: TestComponent,
   },
   {
-    path: 'users',
-    component: DashboardComponent,
-  },
-  {
-    path: 'settings',
-    component: DashboardComponent,
+    path: 'services',
+    // component:
   },
 ];
+
+// {
+//   path: 'people',
+//   component: DashboardComponent,
+// },
+// {
+//   path: 'users',
+//   component: DashboardComponent,
+// },
+// {
+//   path: 'settings',
+//   component: DashboardComponent,
+// },
