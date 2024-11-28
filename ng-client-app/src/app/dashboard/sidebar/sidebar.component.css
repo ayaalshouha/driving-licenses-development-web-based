@@ -13,12 +13,11 @@ aside {
   padding: 20px 10px;
 
   /* scrolling properties */
-  /* scrollbar-width: none; */
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 aside::-webkit-scrollbar {
-  width: 1px;
+  width: 2px;
 }
 
 aside::-webkit-scrollbar-track {
