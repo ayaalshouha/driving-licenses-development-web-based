@@ -24,7 +24,7 @@
     </li>
     <!-- services -->
     <li>
-      <button routerLink="services" (click)="services_toggle()">
+      <button (click)="services_toggle()">
         <svg
           width="18"
           height="18"
@@ -47,12 +47,12 @@
     @if(services_menuOpen() === true){
     <ul class="submenu">
       <li>
-        <a href="">
+        <a routerLink="services/newLocalApp">
           <span>New Driving License App</span>
         </a>
       </li>
       <li>
-        <a href="">
+        <a routerLink="services/reNewLocalApp">
           <span>Renew Driving Licence</span>
         </a>
       </li>
