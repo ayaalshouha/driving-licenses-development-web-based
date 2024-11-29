@@ -12,14 +12,6 @@ ul {
 ul li {
   padding: 10px 20px;
 }
-li:hover {
-  background-color: var(--bg-hover-color);
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-}
 
 li a,
 li button {
@@ -35,12 +27,6 @@ li button {
   border: none;
   background-color: transparent;
 }
-.submenu li a:hover,
-.submenu li button:hover,
-li a:hover,
-li button:hover {
-  color: var(--hover-color);
-}
 
 .submenu {
   padding-left: 1.5rem;
@@ -51,7 +37,24 @@ li button:hover {
   text-decoration: none;
 }
 
-/* Optional: Add transition effect for smooth toggling */
 .menu-item .submenu {
   transition: all 0.3s ease;
+}
+
+li:hover,
+li:has(a.active) {
+  background-color: var(--bg-hover-color);
+  border-radius: 5px;
+}
+
+li a:hover,
+li button:hover,
+.submenu li a:hover,
+.submenu li button:hover {
+  color: var(--hover-color);
+}
+
+li a.active,
+.submenu li a.active {
+  color: var(--hover-color);
 }

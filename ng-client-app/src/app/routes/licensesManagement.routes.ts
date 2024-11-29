@@ -4,11 +4,11 @@ import { DriversComponent } from '../dashboard/licenses-management/drivers/drive
 
 export const licenses_management_routes: Routes = [
   {
-    path: 'Licenses',
+    path: 'licenses',
     component: LicensesComponent,
   },
   {
-    path: 'Drivers',
+    path: 'drivers',
     component: DriversComponent,
   },
 ];

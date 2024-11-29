@@ -4,11 +4,11 @@ import { InternationalApplicationsComponent } from '../dashboard/applications-ma
 
 export const app_management_routes: Routes = [
   {
-    path: 'LocalApplications',
+    path: 'local-applications',
     component: LocalApplicationsComponent,
   },
   {
-    path: 'InternationalApplications',
+    path: 'international-applications',
     component: InternationalApplicationsComponent,
   },
 ];

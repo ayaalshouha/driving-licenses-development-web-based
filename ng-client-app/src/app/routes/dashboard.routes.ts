@@ -19,24 +19,11 @@ export const dashboard_routes: Routes = [
     children: services_routes,
   },
   {
-    path: 'applicationsManagement',
+    path: 'applications-management',
     children: app_management_routes,
   },
   {
-    path: 'licensesManagement',
+    path: 'licenses-management',
     children: licenses_management_routes,
   },
 ];
-
-// {
-//   path: 'people',
-//   component: DashboardComponent,
-// },
-// {
-//   path: 'users',
-//   component: DashboardComponent,
-// },
-// {
-//   path: 'settings',
-//   component: DashboardComponent,
-// },

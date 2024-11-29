@@ -4,11 +4,11 @@ import { NewInternationalApplicationComponent } from '../dashboard/services/new-
 
 export const new_applications_routes: Routes = [
   {
-    path: 'Local',
+    path: 'local',
     component: NewLocalApplicationComponent,
   },
   {
-    path: 'International',
+    path: 'international',
     component: NewInternationalApplicationComponent,
   },
 ];
