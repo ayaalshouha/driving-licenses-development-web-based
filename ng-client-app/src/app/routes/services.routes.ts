@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { RenewLocalApplicationComponent } from '../dashboard/folder/renew-local-application/renew-local-application.component';
 import { new_applications_routes } from './newApplications.routes';
+import { RenewLocalApplicationComponent } from '../dashboard/services/renew-local-application/renew-local-application.component';
 
 export const services_routes: Routes = [
   {
