@@ -11,4 +11,10 @@ export const services_routes: Routes = [
     path: 'renewLocalApp',
     component: RenewLocalApplicationComponent,
   },
+  {
+
+  },
+  {
+    
+  }
 ];
