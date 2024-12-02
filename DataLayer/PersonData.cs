@@ -144,7 +144,7 @@ namespace DataLayer
                         Command.Parameters.AddWithValue("@CreatedByUserID", person.CreatedByUserID);
                         Command.Parameters.AddWithValue("@CreationDate", person.CreationDate);
 
-                        if (person.Gender == "Male")
+                        if (person.Gender == "Male" || person.Gender == "male")
                             Command.Parameters.AddWithValue("@Gender", 1);
                         else
                             Command.Parameters.AddWithValue("@Gender", 0);

@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   currentUserService = inject(CurrentUserService);
   private router = inject(Router);
-
   menuOpen = signal<boolean>(false);
   constructor() {}
 
@@ -21,7 +20,6 @@ export class HeaderComponent {
   }
 
   logout() {
-    // localStorage.removeItem('authToken');
     this.currentUserService.setCurrentUser(undefined);
     this.router.navigate(['/login']);
   }

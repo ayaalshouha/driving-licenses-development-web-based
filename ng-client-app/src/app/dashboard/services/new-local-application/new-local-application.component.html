@@ -1,1 +1,135 @@
-<p>new-local-application works!</p>
+<form [formGroup]="register_form" (ngSubmit)="onSubmit()">
+  <fieldset>
+    <legend>Register form</legend>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="first-name">First name</label>
+        <input
+          type="text"
+          name="first-name"
+          id="first-name"
+          formControlName="firstname"
+        />
+      </div>
+      <div class="control">
+        <label for="second-name">Second name</label>
+        <input
+          type="text"
+          name="second-name"
+          id="second-name"
+          formControlName="secondname"
+        />
+      </div>
+      <div class="control">
+        <label for="third-name">Third name</label>
+        <input
+          type="text"
+          name="third-name"
+          id="third-name"
+          formControlName="thirdname"
+        />
+      </div>
+      <div class="control">
+        <label for="last-name">Last name</label>
+        <input
+          type="text"
+          name="last-name"
+          id="last-name"
+          formControlName="lastname"
+        />
+      </div>
+    </div>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="national-no">National number</label>
+        <input
+          type="text"
+          name="national-no"
+          id="national-no"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          formControlName="nationalno"
+          required
+        />
+      </div>
+
+      <div class="control">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" formControlName="email" />
+      </div>
+      <div class="control">
+        <label for="tel">Phone number</label>
+        <input
+          type="tel"
+          name="phone-number"
+          id="phone-number"
+          pattern="[0-9]+"
+          formControlName="phonenumber"
+        />
+      </div>
+    </div>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="gender">Gender</label>
+        <select name="gender" id="gender" formControlName="gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="birth-day">Date of birth</label>
+        <input
+          type="date"
+          name="birth-day"
+          id="birth-day"
+          formControlName="birthdate"
+        />
+      </div>
+    </div>
+    <div class="control-row">
+      <div class="control">
+        <label for="country">Country</label>
+        <select name="country" id="country" formControlName="country">
+          <option value="">--Select a country--</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="address">City-Street</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          required
+          formControlName="address"
+        />
+      </div>
+    </div>
+    <div class="control-row">
+      <div class="control">
+        <label for="file">Select an image</label>
+        <input type="file" name="file" id="file" formControlName="img" />
+      </div>
+    </div>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="license-class">License Class</label>
+        <select
+          name="license-class"
+          id="license-class"
+          formControlName="licenseclass"
+        >
+          <option value="">select a licesnses class</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="reset">Reset</button>
+      <button type="submit" class="apply">Apply</button>
+    </div>
+  </fieldset>
+</form>

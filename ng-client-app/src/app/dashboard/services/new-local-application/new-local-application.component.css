@@ -1,0 +1,68 @@
+form {
+  padding: 10px;
+}
+fieldset {
+  padding: 10px;
+}
+.control-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+.control {
+  margin-bottom: 15px;
+  width: 200px;
+}
+.control label {
+  display: block;
+  font-size: 0.6rem;
+  margin-bottom: 3px;
+}
+
+.control input,
+select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #758a8a;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  width: 200px;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  color: var(--hover-color);
+  cursor: pointer;
+}
+button.apply {
+  flex: 1;
+  border-radius: 5px;
+  padding: 8px 35px;
+  color: white;
+  background-color: #f99c30;
+  /* background: linear-gradient(to right, #5a6acf, #8593ed); */
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+button:hover {
+  opacity: 0.8;
+}

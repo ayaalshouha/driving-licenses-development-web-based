@@ -6,7 +6,7 @@ import { dashboard_routes } from './dashboard.routes';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   {
