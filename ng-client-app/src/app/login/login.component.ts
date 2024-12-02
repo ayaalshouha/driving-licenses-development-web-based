@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { UserService } from '../services/user.service';
-import { concatMap, switchMap, tap } from 'rxjs';
+import { concatMap, debounceTime, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 
@@ -18,7 +18,7 @@ import { CurrentUserService } from '../services/current-user.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   isExist = signal<Boolean | undefined>(undefined);
   isActive = signal<Boolean | undefined>(undefined);
   isLoginSaved = signal<Boolean | undefined>(undefined);
@@ -38,6 +38,34 @@ export class LoginComponent {
   });
 
   constructor(private currentUserService: CurrentUserService) {}
+  ngOnInit(): void {
+    const savedItem = window.localStorage.getItem('saved-login');
+    if (savedItem) {
+      const loadedData = JSON.parse(savedItem);
+      const savedUsername = loadedData.username;
+      const savedPassword = loadedData.password;
+
+      this.login_form.patchValue({
+        username: savedUsername,
+        password: savedPassword,
+      });
+    }
+
+    const subscription = this.login_form.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe({
+        next: (val) => {
+          window.localStorage.setItem(
+            'saved-login',
+            JSON.stringify({
+              username: val.username,
+              password: val.password,
+            })
+          );
+        },
+      });
+      this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
 
   get invalidUsername() {
     return (

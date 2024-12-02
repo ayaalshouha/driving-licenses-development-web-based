@@ -1,6 +1,6 @@
 <form [formGroup]="register_form" (ngSubmit)="onSubmit()">
   <fieldset>
-    <legend>Register form</legend>
+    <legend>Application form</legend>
 
     <div class="control-row">
       <div class="control">
@@ -93,7 +93,7 @@
       <div class="control">
         <label for="country">Country</label>
         <select name="country" id="country" formControlName="country">
-          <option value="">--Select a country--</option>
+          <option value="">--select a country--</option>
         </select>
       </div>
       <div class="control">
@@ -107,12 +107,6 @@
         />
       </div>
     </div>
-    <div class="control-row">
-      <div class="control">
-        <label for="file">Select an image</label>
-        <input type="file" name="file" id="file" formControlName="img" />
-      </div>
-    </div>
 
     <div class="control-row">
       <div class="control">
@@ -122,14 +116,21 @@
           id="license-class"
           formControlName="licenseclass"
         >
-          <option value="">select a licesnses class</option>
+          <option value="">--select a licesnses class--</option>
         </select>
       </div>
     </div>
-
+    <div class="control-row">
+      <div class="control">
+        <label for="file">--Select an image--</label>
+        <input type="file" name="file" id="file" formControlName="img" />
+      </div>
+    </div>
     <div class="actions">
       <button type="reset">Reset</button>
-      <button type="submit" class="apply">Apply</button>
+      <button type="submit" name="submit" id="submit" class="apply">
+        Apply
+      </button>
     </div>
   </fieldset>
 </form>

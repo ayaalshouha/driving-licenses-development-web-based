@@ -1,6 +1,7 @@
 form {
-  padding: 10px;
+  background: var(--light-color);
 }
+form,
 fieldset {
   padding: 10px;
 }
@@ -34,10 +35,9 @@ select {
 
 .actions {
   display: flex;
-  gap: 10px;
-  align-items: center;
   justify-content: flex-end;
-  width: 200px;
+  align-items: center;
+  gap: 10px;
 }
 
 button {
@@ -47,12 +47,10 @@ button {
   cursor: pointer;
 }
 button.apply {
-  flex: 1;
   border-radius: 5px;
   padding: 8px 35px;
   color: white;
   background-color: #f99c30;
-  /* background: linear-gradient(to right, #5a6acf, #8593ed); */
   transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
@@ -65,4 +63,9 @@ button.apply {
 }
 button:hover {
   opacity: 0.8;
+}
+
+input:focus {
+  border: 1px solid var(--special-color) !important;
+  outline: none !important;
 }

@@ -19,6 +19,7 @@ body {
   --light-color: #f1f2f7;
   --hover-color: #707fdd;
   --bg-hover-color: #e4e7f6;
+  --special-color: #f99c30;
 }
 ::-webkit-scrollbar {
   width: 5px;
