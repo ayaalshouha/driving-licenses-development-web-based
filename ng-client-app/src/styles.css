@@ -32,3 +32,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
+
+p.error {
+  color: #f84e2c;
+}

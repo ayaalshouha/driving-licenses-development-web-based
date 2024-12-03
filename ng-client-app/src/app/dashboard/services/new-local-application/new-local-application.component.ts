@@ -81,6 +81,30 @@ export class NewLocalApplicationComponent implements OnInit {
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
+
+  get invalidEmail(){
+    return (
+      this.register_form.controls.email.touched &&
+      this.register_form.controls.email.dirty &&
+      this.register_form.controls.email.invalid
+    );
+  }
+  get invalidNationalNo() {
+    return (
+      this.register_form.controls.nationalno.touched &&
+      this.register_form.controls.nationalno.dirty &&
+      this.register_form.controls.nationalno.invalid
+    );
+  }
+
+  get invalidPhoneNumber() {
+    return (
+      this.register_form.controls.phonenumber.touched &&
+      this.register_form.controls.phonenumber.dirty &&
+      this.register_form.controls.phonenumber.invalid
+    );
+  }
+
   onSubmit() {
     if (this.register_form.invalid) {
       console.log('invalid form');

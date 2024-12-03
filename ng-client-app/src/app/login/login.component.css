@@ -79,9 +79,6 @@ form p {
   font-size: 0.7rem;
 }
 
-p.error {
-  color: #f84e2c;
-}
 
 [formgroupname].ng-invalid.ng-touched.ng-dirty input,
 input.ng-invalid.ng-touched.ng-dirty {
