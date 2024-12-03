@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  MinLengthValidator,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -22,21 +23,43 @@ export class NewLocalApplicationComponent implements OnInit {
   license_classes: LicenseClass[] = [];
   private destroyRef = inject(DestroyRef);
   register_form = new FormGroup({
-    firstname: new FormControl(),
-    secondname: new FormControl(),
-    thirdname: new FormControl(),
-    lastname: new FormControl(),
-    nationalno: new FormControl(),
-    email: new FormControl(),
-    phonenumber: new FormControl(),
+    firstname: new FormControl({
+      validators: [Validators.required],
+    }),
+    secondname: new FormControl({
+      validators: [Validators.required],
+    }),
+    thirdname: new FormControl({
+      validators: [Validators.required],
+    }),
+    lastname: new FormControl({
+      validators: [Validators.required],
+    }),
+    nationalno: new FormControl({
+      validators: [Validators.required],
+    }),
+    email: new FormControl({
+      validators: [Validators.required, Validators.email],
+    }),
+    phonenumber: new FormControl({
+      validators: [Validators.required],
+    }),
     gender: new FormControl<'Male' | 'Female'>('Male', {
       validators: [Validators.required],
     }),
-    birthdate: new FormControl(),
-    country: new FormControl(),
-    address: new FormControl(),
+    birthdate: new FormControl({
+      validators: [Validators.required],
+    }),
+    country: new FormControl({
+      validators: [Validators.required],
+    }),
+    address: new FormControl({
+      validators: [Validators.required],
+    }),
     img: new FormControl(),
-    licenseclass: new FormControl(),
+    licenseclass: new FormControl({
+      validators: [Validators.required],
+    }),
   });
 
   constructor(
