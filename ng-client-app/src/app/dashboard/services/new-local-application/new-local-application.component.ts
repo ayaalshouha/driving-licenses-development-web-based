@@ -6,6 +6,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { CountryService } from '../../../services/country.service';
+import { LicenseClass } from '../../../models/license-class.model';
+import { LicenseClassService } from '../../../services/license-class.service';
+import { forkJoin, tap } from 'rxjs';
 
 @Component({
   selector: 'app-new-local-application',
@@ -16,6 +19,7 @@ import { CountryService } from '../../../services/country.service';
 })
 export class NewLocalApplicationComponent implements OnInit {
   countries: string[] = [];
+  license_classes: LicenseClass[] = [];
   private destroyRef = inject(DestroyRef);
   register_form = new FormGroup({
     firstname: new FormControl(),
@@ -35,14 +39,20 @@ export class NewLocalApplicationComponent implements OnInit {
     licenseclass: new FormControl(),
   });
 
-  constructor(private countryService: CountryService) {}
+  constructor(
+    private countryService: CountryService,
+    private licenseClassService: LicenseClassService
+  ) {}
 
   ngOnInit(): void {
-    const subscription = this.countryService
-      .AllCountries()
-      .subscribe((data) => {
-        this.countries = data;
-      });
+    // (forkJoin) perform two independent observable and get their results together in one subscription
+    const subscription = forkJoin({
+      countries: this.countryService.AllCountries(),
+      classes: this.licenseClassService.getAllClasses(),
+    }).subscribe(({ countries, classes }) => {
+      this.countries = countries;
+      this.license_classes = classes;
+    });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }

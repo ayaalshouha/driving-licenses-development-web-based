@@ -9,9 +9,9 @@ import { Observable, tap } from 'rxjs';
 export class LicenseClassService {
   constructor(private http: HttpClient) {}
 
-  getAllClasses(): Observable<LicenseClass> {
+  getAllClasses(): Observable<LicenseClass[]> {
     return this.http
-      .get<LicenseClass>(LICENSE_CLASS_API_ENDPOINT.allClasses)
+      .get<LicenseClass[]>(LICENSE_CLASS_API_ENDPOINT.allClasses)
       .pipe(tap((res) => console.log(res)));
   }
 }
