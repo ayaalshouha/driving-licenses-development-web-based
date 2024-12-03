@@ -36,7 +36,7 @@ export class NewLocalApplicationComponent implements OnInit {
     lastname: new FormControl('', {
       validators: [Validators.required],
     }),
-    // add unique validator from server
+    // add unique National No validator from server
     nationalno: new FormControl('', {
       validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
     }),
