@@ -1,4 +1,5 @@
 <form [formGroup]="register_form" (ngSubmit)="onSubmit()">
+  <p style="text-align: right">{{ current_date | date : "longDate" }}</p>
   <fieldset>
     <legend>Application form</legend>
 
@@ -49,9 +50,7 @@
           name="national-no"
           id="national-no"
           inputmode="numeric"
-          pattern="[0-9]*"
           formControlName="nationalno"
-          required
         />
       </div>
 

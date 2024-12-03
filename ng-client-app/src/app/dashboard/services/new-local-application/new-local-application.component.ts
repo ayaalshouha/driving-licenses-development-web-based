@@ -2,7 +2,6 @@ import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  MinLengthValidator,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -10,54 +9,57 @@ import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
 import { forkJoin } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
 export class NewLocalApplicationComponent implements OnInit {
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
+  current_date: Date = new Date();
   private destroyRef = inject(DestroyRef);
   register_form = new FormGroup({
-    firstname: new FormControl({
+    firstname: new FormControl('', {
       validators: [Validators.required],
     }),
-    secondname: new FormControl({
+    secondname: new FormControl('', {
       validators: [Validators.required],
     }),
-    thirdname: new FormControl({
+    thirdname: new FormControl('', {
       validators: [Validators.required],
     }),
-    lastname: new FormControl({
+    lastname: new FormControl('', {
       validators: [Validators.required],
     }),
-    nationalno: new FormControl({
-      validators: [Validators.required],
+    // add unique validator from server
+    nationalno: new FormControl('', {
+      validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
     }),
-    email: new FormControl({
+    email: new FormControl('', {
       validators: [Validators.required, Validators.email],
     }),
-    phonenumber: new FormControl({
-      validators: [Validators.required],
+    phonenumber: new FormControl('', {
+      validators: [Validators.required, Validators.minLength(10)],
     }),
     gender: new FormControl<'Male' | 'Female'>('Male', {
       validators: [Validators.required],
     }),
-    birthdate: new FormControl({
+    birthdate: new FormControl('', {
       validators: [Validators.required],
     }),
-    country: new FormControl({
+    country: new FormControl('', {
       validators: [Validators.required],
     }),
-    address: new FormControl({
+    address: new FormControl('', {
       validators: [Validators.required],
     }),
-    img: new FormControl(),
-    licenseclass: new FormControl({
+    img: new FormControl(''),
+    licenseclass: new FormControl('', {
       validators: [Validators.required],
     }),
   });
