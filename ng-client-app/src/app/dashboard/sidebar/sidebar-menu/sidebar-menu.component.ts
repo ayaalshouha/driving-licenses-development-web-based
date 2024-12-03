@@ -19,7 +19,9 @@ export class SidebarMenuComponent {
     system: signal(false),
     'new-app': signal(false),
   };
-  constructor(private currentUserService: CurrentUserService) {}
+  constructor(private currentUserService: CurrentUserService) {
+    console.log(this.currentUserService.getCurrentUser());
+  }
   ontoggle(menu: MenuKeys) {
     this.menuOpen[menu].set(!this.menuOpen[menu]());
   }

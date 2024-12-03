@@ -6,7 +6,7 @@ import { dashboard_routes } from './dashboard.routes';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -17,5 +17,6 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     children: dashboard_routes,
+    // add can deactivate guard
   },
 ];
