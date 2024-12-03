@@ -18,8 +18,8 @@ namespace api_layer.Controllers
         {
             var list =  clsCountries.GetAllCountries();
 
-            if (list.Count() <= 0)
-                return NotFound("No Countries Found");
+            if (!list.Any())
+                return NoContent();
             else
                 return Ok(list);
         }

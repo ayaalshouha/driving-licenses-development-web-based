@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { COUNTRY_API_ENDPOINT } from '../environments/endpoints/country.endpoint';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { table } from 'console';
 
 @Injectable({
   providedIn: 'root',

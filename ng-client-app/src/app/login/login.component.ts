@@ -1,4 +1,12 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Inject,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,7 +18,7 @@ import { UserService } from '../services/user.service';
 import { concatMap, debounceTime, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
-
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -37,34 +45,39 @@ export class LoginComponent implements OnInit {
     }),
   });
 
-  constructor(private currentUserService: CurrentUserService) {}
+  constructor(
+    private currentUserService: CurrentUserService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
   ngOnInit(): void {
-    const savedItem = window.localStorage.getItem('saved-login');
-    if (savedItem) {
-      const loadedData = JSON.parse(savedItem);
-      const savedUsername = loadedData.username;
-      const savedPassword = loadedData.password;
+    if (isPlatformBrowser(this.platformId)) {
+      const savedItem = window.localStorage.getItem('saved-login');
+      if (savedItem) {
+        const loadedData = JSON.parse(savedItem);
+        const savedUsername = loadedData.username;
+        const savedPassword = loadedData.password;
 
-      this.login_form.patchValue({
-        username: savedUsername,
-        password: savedPassword,
-      });
-    }
+        this.login_form.patchValue({
+          username: savedUsername,
+          password: savedPassword,
+        });
+      }
 
-    const subscription = this.login_form.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe({
-        next: (val) => {
-          window.localStorage.setItem(
-            'saved-login',
-            JSON.stringify({
-              username: val.username,
-              password: val.password,
-            })
-          );
-        },
-      });
+      const subscription = this.login_form.valueChanges
+        .pipe(debounceTime(500))
+        .subscribe({
+          next: (val) => {
+            window.localStorage.setItem(
+              'saved-login',
+              JSON.stringify({
+                username: val.username,
+                password: val.password,
+              })
+            );
+          },
+        });
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    }
   }
 
   get invalidUsername() {

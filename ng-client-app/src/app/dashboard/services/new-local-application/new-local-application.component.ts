@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CountryService } from '../../../services/country.service';
+import { countReset } from 'console';
 
 @Component({
   selector: 'app-new-local-application',
@@ -13,7 +15,9 @@ import {
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
-export class NewLocalApplicationComponent {
+export class NewLocalApplicationComponent implements OnInit {
+  countries: string[] = [];
+  private destroyRef = inject(DestroyRef);
   register_form = new FormGroup({
     firstname: new FormControl(),
     secondname: new FormControl(),
@@ -22,7 +26,7 @@ export class NewLocalApplicationComponent {
     nationalno: new FormControl(),
     email: new FormControl(),
     phonenumber: new FormControl(),
-    gender: new FormControl<'Male' | 'Male'>('Male', {
+    gender: new FormControl<'Male' | 'Female'>('Male', {
       validators: [Validators.required],
     }),
     birthdate: new FormControl(),
@@ -32,5 +36,17 @@ export class NewLocalApplicationComponent {
     licenseclass: new FormControl(),
   });
 
+  constructor(private countryService: CountryService) {}
+
+  ngOnInit(): void {
+    const subscription = this.countryService
+      .AllCountries()
+      .subscribe((data) => {
+        this.countries = data;
+        console.log(this.countries);
+      });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
   onSubmit() {}
 }
