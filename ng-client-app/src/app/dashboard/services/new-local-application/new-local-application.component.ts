@@ -81,5 +81,10 @@ export class NewLocalApplicationComponent implements OnInit {
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
-  onSubmit() {}
+  onSubmit() {
+    if (this.register_form.invalid) {
+      console.log('invalid form');
+      return;
+    }
+  }
 }

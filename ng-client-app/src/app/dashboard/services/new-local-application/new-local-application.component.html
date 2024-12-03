@@ -92,7 +92,9 @@
       <div class="control">
         <label for="country">Country</label>
         <select name="country" id="country" formControlName="country">
-          <option value="default" selected>--select a country--</option>
+          <option value="default" disabled selected>
+            --select a country--
+          </option>
           @if(countries){ @for(country of countries; track $index) {
           <option [value]="country">{{ country }}</option>
           } }
@@ -118,7 +120,9 @@
           id="license-class"
           formControlName="licenseclass"
         >
-          <option value="default" selected>--select a licesnses class--</option>
+          <option value="default" disabled selected>
+            --select a licesnses class--
+          </option>
           @if(license_classes){ @for(class of license_classes; track $index) {
           <option [value]="class.id">{{ class.className }}</option>
           } }
