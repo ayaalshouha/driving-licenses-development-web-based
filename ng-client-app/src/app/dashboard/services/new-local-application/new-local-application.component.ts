@@ -8,7 +8,7 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-new-local-application',
