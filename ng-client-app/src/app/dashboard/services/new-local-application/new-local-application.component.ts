@@ -6,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { CountryService } from '../../../services/country.service';
-import { countReset } from 'console';
 
 @Component({
   selector: 'app-new-local-application',
@@ -43,7 +42,6 @@ export class NewLocalApplicationComponent implements OnInit {
       .AllCountries()
       .subscribe((data) => {
         this.countries = data;
-        console.log(this.countries);
       });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
