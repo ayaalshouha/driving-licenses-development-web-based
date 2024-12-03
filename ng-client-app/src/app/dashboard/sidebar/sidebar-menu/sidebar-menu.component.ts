@@ -1,5 +1,6 @@
-import { Component, signal, WritableSignal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { CurrentUserService } from '../../../services/current-user.service';
 type MenuKeys = 'services' | 'apps' | 'licenses' | 'system' | 'new-app';
 
 @Component({
@@ -10,6 +11,7 @@ type MenuKeys = 'services' | 'apps' | 'licenses' | 'system' | 'new-app';
   styleUrl: './sidebar-menu.component.css',
 })
 export class SidebarMenuComponent {
+  private router = inject(Router);
   menuOpen: Record<MenuKeys, WritableSignal<boolean>> = {
     services: signal(false),
     apps: signal(false),
@@ -17,8 +19,12 @@ export class SidebarMenuComponent {
     system: signal(false),
     'new-app': signal(false),
   };
-
+  constructor(private currentUserService: CurrentUserService) {}
   ontoggle(menu: MenuKeys) {
     this.menuOpen[menu].set(!this.menuOpen[menu]());
+  }
+  logout() {
+    this.currentUserService.setCurrentUser(undefined);
+    this.router.navigate(['/login']);
   }
 }
