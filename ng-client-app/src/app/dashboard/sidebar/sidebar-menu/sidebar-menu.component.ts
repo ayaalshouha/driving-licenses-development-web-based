@@ -1,5 +1,10 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  CanDeactivateFn,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { CurrentUserService } from '../../../services/current-user.service';
 type MenuKeys = 'services' | 'apps' | 'licenses' | 'system' | 'new-app';
 

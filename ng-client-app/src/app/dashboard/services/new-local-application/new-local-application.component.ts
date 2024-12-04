@@ -10,6 +10,7 @@ import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
 import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { CanDeactivateFn } from '@angular/router';
 
 @Component({
   selector: 'app-new-local-application',
@@ -82,7 +83,7 @@ export class NewLocalApplicationComponent implements OnInit {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-  get invalidEmail(){
+  get invalidEmail() {
     return (
       this.register_form.controls.email.touched &&
       this.register_form.controls.email.dirty &&
@@ -112,3 +113,11 @@ export class NewLocalApplicationComponent implements OnInit {
     }
   }
 }
+
+export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
+  component
+) => {
+  return window.confirm(
+    'Are you sure you want to leave? Unsaved changes will be lost.'
+  );
+};
