@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,7 +15,7 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import { forkJoin, switchMap, tap } from 'rxjs';
+import { concatMap, forkJoin, switchMap, tap, throwError } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -19,6 +26,12 @@ import { CurrentUserService } from '../../../services/current-user.service';
 import { Application } from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
 import { LocalApplicationService } from '../../../services/local-application.service';
+import { matSnackBar } from '@angular/material/snack-bar';
+import {
+  ApplicationType,
+  ApplicationTypes,
+} from '../../../models/application-type.model';
+import { LocalApplication } from '../../../models/local-application.model';
 
 @Component({
   selector: 'app-new-local-application',
@@ -31,8 +44,11 @@ export class NewLocalApplicationComponent implements OnInit {
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
   current_date: Date = new Date();
+  new_app_saved = signal<boolean>(false);
+  private application_types: ApplicationType[] = ApplicationTypes;
   private destroyRef = inject(DestroyRef);
   private personService = inject(PersonService);
+
   register_form = new FormGroup({
     firstname: new FormControl('', {
       validators: [Validators.required],
@@ -70,7 +86,7 @@ export class NewLocalApplicationComponent implements OnInit {
       validators: [Validators.required],
     }),
     img: new FormControl(''),
-    licenseclass: new FormControl('', {
+    licenseclass: new FormControl(0, {
       validators: [Validators.required],
     }),
   });
@@ -81,7 +97,9 @@ export class NewLocalApplicationComponent implements OnInit {
     private currentUserSerice: CurrentUserService,
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService
-  ) {}
+  ) {
+    effect();
+  }
 
   ngOnInit(): void {
     // (forkJoin) perform two independent observable and get their results together in one subscription
@@ -96,6 +114,9 @@ export class NewLocalApplicationComponent implements OnInit {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
+  get invalidForm() {
+    return this.register_form.invalid;
+  }
   get invalidEmail() {
     return (
       this.register_form.controls.email.touched &&
@@ -148,20 +169,43 @@ export class NewLocalApplicationComponent implements OnInit {
         status: 1,
         type: 1,
         date: this.current_date,
-        paidFees: 15,
+        paidFees: this.application_types.at(1)!.typeFees,
         lastStatusDate: this.current_date,
         createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
       };
-      const subscription = this.personService.create(new_person).pipe(
-        switchMap((res) => {
-          if (res.id === 0) {
-            throw new Error('Invalid person info');
-          } else {
-            new_app.personID = res.id;
-            return this.applicationService.create(new_app);
-          }
-        })
-      );
+      let local_app: LocalApplication = {
+        id: 0,
+        applicationID: 0,
+        licenseClassID: +this.register_form.controls.licenseclass.value!,
+      };
+      const subscription = this.personService
+        .create(new_person)
+        .pipe(
+          switchMap((response) => {
+            if (response.id === 0) {
+              return throwError(() => new Error('Invalid person info'));
+            } else {
+              new_app.personID = response.id;
+              return this.applicationService.create(new_app);
+            }
+          }),
+          concatMap((response) => {
+            if (response.id === 0) {
+              return throwError(() => new Error('Invalid application info'));
+            } else {
+              local_app.applicationID = response.id;
+              return this.localAppService.create(local_app);
+            }
+          })
+        )
+        .subscribe({
+          complete: () => {
+            this.new_app_saved.set(true);
+          },
+          error: (err) => {
+            console.error(err);
+          },
+        });
     }
   }
 }
