@@ -12,6 +12,7 @@ import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { isExist } from '../../custom-validator';
 
 @Component({
   selector: 'app-new-local-application',
@@ -41,6 +42,7 @@ export class NewLocalApplicationComponent implements OnInit {
     // add unique National No validator from server
     nationalno: new FormControl('', {
       validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
+      asyncValidators: [isExist],
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
@@ -109,7 +111,6 @@ export class NewLocalApplicationComponent implements OnInit {
 
   onSubmit() {
     if (this.register_form.invalid) {
-      console.log('invalid form');
       return;
     }
   }
