@@ -126,7 +126,7 @@ export class LoginComponent implements OnInit {
           if (!isActiveValue) {
             throw new Error('User is not active.');
           }
-          return this.userService.getUser(this.enteredUsername());
+          return this.userService.readUser(this.enteredUsername());
         }),
         // Changed to concatMap to wait for saveLogin to complete
         concatMap((fullUser) => {
