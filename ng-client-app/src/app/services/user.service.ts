@@ -9,7 +9,7 @@ import { User } from '../models/user.model';
 export class UserService {
   constructor(private httpClient: HttpClient) {}
 
-  getUser(username: string) {
+  readUser(username: string) {
     return this.httpClient.get<User>(
       `${USER_API_ENDPOINTS.readByUsername}${username}`
     );
