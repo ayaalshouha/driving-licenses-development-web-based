@@ -26,7 +26,6 @@ import { CurrentUserService } from '../../../services/current-user.service';
 import { Application } from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
 import { LocalApplicationService } from '../../../services/local-application.service';
-import { matSnackBar } from '@angular/material/snack-bar';
 import {
   ApplicationType,
   ApplicationTypes,
@@ -97,9 +96,7 @@ export class NewLocalApplicationComponent implements OnInit {
     private currentUserSerice: CurrentUserService,
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService
-  ) {
-    effect();
-  }
+  ) {}
 
   ngOnInit(): void {
     // (forkJoin) perform two independent observable and get their results together in one subscription
