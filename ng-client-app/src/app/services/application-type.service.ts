@@ -2,26 +2,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface ApplicationType {
-  id: number;
-  typeName: string;
-  typeFees: number;
-}
+import { ApplicationType } from '../models/application-type.model';
+import { APPLICATION_TYPE_API_ENDPOINT } from '../environments/endpoints/application-type.endpoints';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicationTypesService {
-  private readonly apiUrl = 'https://api.example.com/application-types'; // Replace with your API endpoint
-
   constructor(private http: HttpClient) {}
 
   getApplicationTypes(): Observable<ApplicationType[]> {
-    return this.http.get<ApplicationType[]>(this.apiUrl);
+    return this.http.get<ApplicationType[]>(APPLICATION_TYPE_API_ENDPOINT.all);
   }
 
-  getApplicationTypeById(id: number): Observable<ApplicationType> {
-    return this.http.get<ApplicationType>(`${this.apiUrl}/${id}`);
-  }
+  // getApplicationTypeById(id: number): Observable<ApplicationType> {
+  //   return this.http.get<ApplicationType>(`${this.apiUrl}/${id}`);
+  // }
 }
