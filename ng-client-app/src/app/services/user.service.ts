@@ -11,7 +11,7 @@ export class UserService {
 
   getUser(username: string) {
     return this.httpClient.get<User>(
-      `${USER_API_ENDPOINTS.readUserByUsername}${username}`
+      `${USER_API_ENDPOINTS.readByUsername}${username}`
     );
   }
 }
