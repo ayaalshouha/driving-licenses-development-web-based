@@ -31,7 +31,7 @@ import {
   ApplicationTypes,
 } from '../../../models/application-type.model';
 import { LocalApplication } from '../../../models/local-application.model';
-
+import { NotificationComponent } from '../../../notification/notification.component';
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
@@ -95,7 +95,8 @@ export class NewLocalApplicationComponent implements OnInit {
     private licenseClassService: LicenseClassService,
     private currentUserSerice: CurrentUserService,
     private applicationService: ApplicationService,
-    private localAppService: LocalApplicationService
+    private localAppService: LocalApplicationService,
+    private notification: NotificationComponent
   ) {}
 
   ngOnInit(): void {
@@ -198,6 +199,7 @@ export class NewLocalApplicationComponent implements OnInit {
         .subscribe({
           complete: () => {
             this.new_app_saved.set(true);
+            this.notification.showMessage('Application saved sucesfully');
           },
           error: (err) => {
             console.error(err);
@@ -213,9 +215,9 @@ export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
   component,
   platformId: Object
 ) => {
-  if (isPlatformBrowser(platformId)) {
-  }
-  return window.confirm(
-    'Are you sure you want to leave? Unsaved changes will be lost.'
-  );
+  if (isPlatformBrowser(platformId))
+    return window.confirm(
+      'Are you sure you want to leave? Unsaved changes will be lost.'
+    );
+  return false;
 };

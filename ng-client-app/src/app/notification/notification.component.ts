@@ -4,10 +4,10 @@ import { Component, signal } from '@angular/core';
   selector: 'app-notification-component',
   standalone: true,
   imports: [],
-  templateUrl: './notification-component.component.html',
-  styleUrl: './notification-component.component.css',
+  templateUrl: './notification.component.html',
+  styleUrl: './notification.component.css',
 })
-export class NotificationComponentComponent {
+export class NotificationComponent {
   message = signal<string | null>(null);
 
   showMessage(msg: string) {

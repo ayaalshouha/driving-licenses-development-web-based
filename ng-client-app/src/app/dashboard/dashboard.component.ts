@@ -4,6 +4,7 @@ import { CanDeactivateFn, Router, RouterOutlet } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,8 +28,14 @@ export class DashboardComponent implements OnInit {
   }
 }
 
+// The error appears in the canDeactivate function.
+// If canDeactivate directly references window, it will fail during SSR.
 export const canDeactivate: CanDeactivateFn<DashboardComponent> = (
-  component
+  component,
+  platformId: Object
 ) => {
-  return window.confirm('Are you sure you want to logout?');
+  if (isPlatformBrowser(platformId)) {
+    return window.confirm('Are you sure you want to logout?');
+  }
+  return false;
 };
