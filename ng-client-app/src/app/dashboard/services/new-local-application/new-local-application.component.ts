@@ -31,11 +31,11 @@ import {
   ApplicationTypes,
 } from '../../../models/application-type.model';
 import { LocalApplication } from '../../../models/local-application.model';
-import { NotificationComponent } from '../../../notification/notification.component';
+import { NotificationService } from '../../../services/notification.service';
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, NotificationComponent],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
@@ -96,7 +96,7 @@ export class NewLocalApplicationComponent implements OnInit {
     private currentUserSerice: CurrentUserService,
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
-    private notification: NotificationComponent
+    private notificationSerice: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -199,7 +199,9 @@ export class NewLocalApplicationComponent implements OnInit {
         .subscribe({
           complete: () => {
             this.new_app_saved.set(true);
-            this.notification.showMessage('Application saved sucesfully');
+            this.notificationSerice.showMessage(
+              'Application saved sucesfully!'
+            );
           },
           error: (err) => {
             console.error(err);
