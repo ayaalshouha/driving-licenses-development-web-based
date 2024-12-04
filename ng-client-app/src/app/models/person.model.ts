@@ -7,7 +7,7 @@ export interface Person {
   nationalNumber: string;
   address: string;
   email: string;
-  phoneNumber: number;
+  phoneNumber: string;
   birthDate: Date;
   personalPicture: string;
   nationality: string;

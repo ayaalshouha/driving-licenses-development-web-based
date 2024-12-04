@@ -8,12 +8,17 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap, tap } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { isExist } from '../../custom-validator';
 import { PersonService } from '../../../services/person.service';
+import { Person } from '../../../models/person.model';
+import { CurrentUserService } from '../../../services/current-user.service';
+import { Application } from '../../../models/application.model';
+import { ApplicationService } from '../../../services/application.service';
+import { LocalApplicationService } from '../../../services/local-application.service';
 
 @Component({
   selector: 'app-new-local-application',
@@ -55,7 +60,7 @@ export class NewLocalApplicationComponent implements OnInit {
     gender: new FormControl<'Male' | 'Female'>('Male', {
       validators: [Validators.required],
     }),
-    birthdate: new FormControl('', {
+    birthdate: new FormControl(this.current_date, {
       validators: [Validators.required],
     }),
     country: new FormControl('', {
@@ -72,7 +77,10 @@ export class NewLocalApplicationComponent implements OnInit {
 
   constructor(
     private countryService: CountryService,
-    private licenseClassService: LicenseClassService
+    private licenseClassService: LicenseClassService,
+    private currentUserSerice: CurrentUserService,
+    private applicationService: ApplicationService,
+    private localAppService: LocalApplicationService
   ) {}
 
   ngOnInit(): void {
@@ -114,8 +122,46 @@ export class NewLocalApplicationComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.register_form.invalid) {
-      return;
+    if (this.register_form.valid) {
+      let new_person: Person = {
+        id: 0,
+        firstName: this.register_form.controls.firstname.value!,
+        secondName: this.register_form.controls.secondname.value!,
+        thirdName: this.register_form.controls.thirdname.value!,
+        lastName: this.register_form.controls.lastname.value!,
+        address: this.register_form.controls.address.value!,
+        birthDate: this.register_form.controls.birthdate.value!,
+        email: this.register_form.controls.email.value!,
+        gender: this.register_form.controls.gender.value!,
+        nationality: this.register_form.controls.country.value!,
+        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+        creationDate: this.current_date,
+        updatedByUserID: 0,
+        updatedDate: this.current_date,
+        personalPicture: this.register_form.controls.img.value!,
+        nationalNumber: this.register_form.controls.nationalno.value!,
+        phoneNumber: this.register_form.controls.phonenumber.value!,
+      };
+      let new_app: Application = {
+        id: 0,
+        personID: 0,
+        status: 1,
+        type: 1,
+        date: this.current_date,
+        paidFees: 15,
+        lastStatusDate: this.current_date,
+        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+      };
+      const subscription = this.personService.create(new_person).pipe(
+        switchMap((res) => {
+          if (res.id === 0) {
+            throw new Error('Invalid person info');
+          } else {
+            new_app.personID = res.id;
+            return this.applicationService.create(new_app);
+          }
+        })
+      );
     }
   }
 }
