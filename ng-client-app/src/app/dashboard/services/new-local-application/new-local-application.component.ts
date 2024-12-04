@@ -35,7 +35,7 @@ import { NotificationComponent } from '../../../notification/notification.compon
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, NotificationComponent],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
