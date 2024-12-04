@@ -11,6 +11,7 @@ import { LicenseClassService } from '../../../services/license-class.service';
 import { forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-new-local-application',
@@ -114,9 +115,14 @@ export class NewLocalApplicationComponent implements OnInit {
   }
 }
 
+// The error appears in the canDeactivate function.
+// If canDeactivate directly references window, it will fail during SSR.
 export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
-  component
+  component,
+  platformId: Object
 ) => {
+  if (isPlatformBrowser(platformId)) {
+  }
   return window.confirm(
     'Are you sure you want to leave? Unsaved changes will be lost.'
   );
