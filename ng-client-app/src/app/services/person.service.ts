@@ -11,8 +11,8 @@ export class PersonService {
   readUser(ID: number) {}
 
   isNationalNoExist(national_no: string): Observable<boolean> {
-    return this.http
-      .get<boolean>(`${PERSON_API_ENDPOINTS.isExistByNationalNo}${national_no}`)
-      .pipe(tap((res) => console.log(res)));
+    return this.http.get<boolean>(
+      `${PERSON_API_ENDPOINTS.isExistByNationalNo}${national_no}`
+    );
   }
 }

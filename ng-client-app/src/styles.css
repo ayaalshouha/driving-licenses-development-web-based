@@ -36,3 +36,8 @@ body {
 p.error {
   color: #f84e2c;
 }
+
+p.inline-error {
+  color: #f84e2c;
+  font-size: 0.5rem;
+}

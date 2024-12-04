@@ -69,7 +69,9 @@
         />
       </div>
     </div>
-
+    @if(notUniqueNationalNo){
+    <p class="inline-error">National no. already exist.</p>
+    }
     <div class="control-row">
       <div class="control">
         <label for="gender">Gender</label>

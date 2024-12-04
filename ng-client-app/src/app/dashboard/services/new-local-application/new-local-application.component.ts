@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { isExist } from '../../custom-validator';
+import { PersonService } from '../../../services/person.service';
 
 @Component({
   selector: 'app-new-local-application',
@@ -26,6 +27,7 @@ export class NewLocalApplicationComponent implements OnInit {
   license_classes: LicenseClass[] = [];
   current_date: Date = new Date();
   private destroyRef = inject(DestroyRef);
+  private personService = inject(PersonService);
   register_form = new FormGroup({
     firstname: new FormControl('', {
       validators: [Validators.required],
@@ -42,7 +44,7 @@ export class NewLocalApplicationComponent implements OnInit {
     // add unique National No validator from server
     nationalno: new FormControl('', {
       validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
-      asyncValidators: [isExist],
+      asyncValidators: [isExist(this.personService)],
     }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
@@ -100,7 +102,9 @@ export class NewLocalApplicationComponent implements OnInit {
       this.register_form.controls.nationalno.invalid
     );
   }
-
+  get notUniqueNationalNo() {
+    return this.register_form.controls.nationalno?.hasError('notUnique');
+  }
   get invalidPhoneNumber() {
     return (
       this.register_form.controls.phonenumber.touched &&

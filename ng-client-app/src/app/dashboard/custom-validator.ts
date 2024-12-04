@@ -1,18 +1,11 @@
-import { inject } from '@angular/core';
 import { PersonService } from '../services/person.service';
 import { AbstractControl } from '@angular/forms';
-import { map, of } from 'rxjs';
-export const personService = inject(PersonService);
+import { map, Observable, of } from 'rxjs';
 
-export function isExist(control: AbstractControl) {
-  return personService.isNationalNoExist(control.value).pipe(
-    map((res) => {
-      if (res) {
-        console.log(res);
-        return of({ notUnique: true });
-      } else {
-        return of(null);
-      }
-    })
-  );
+export function isExist(personService: PersonService) {
+  return (control: AbstractControl): Observable<any> => {
+    return personService
+      .isNationalNoExist(control.value)
+      .pipe(map((res) => (res ? { notUnique: true } : null)));
+  };
 }
