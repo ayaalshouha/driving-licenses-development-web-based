@@ -1,6 +1,6 @@
 import { PersonService } from '../services/person.service';
 import { AbstractControl } from '@angular/forms';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export function isExist(personService: PersonService) {
   return (control: AbstractControl): Observable<any> => {
