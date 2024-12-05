@@ -19,6 +19,8 @@ import { CurrentUserService } from '../../../services/current-user.service';
 import { Application } from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
 import { LocalApplicationService } from '../../../services/local-application.service';
+import { PLATFORM_ID } from '@angular/core';
+
 import {
   ApplicationType,
   ApplicationTypes,
@@ -202,13 +204,12 @@ export class NewLocalApplicationComponent implements OnInit {
           next: (res) => {
             this.new_app_saved.set(true);
             this.notificationSerice.showMessage(
-              `Application saved successfully, ID = ${res.id}`
+              `Application saved successfully,Application ID = ${res.id} :)`
             );
           },
           error: (err) => {
-            console.error(err);
             this.notificationSerice.showMessage(
-              'An error occurred while saving the application.'
+              `An error occurred while saving the application => ${err}`
             );
           },
         });
@@ -222,11 +223,15 @@ export class NewLocalApplicationComponent implements OnInit {
 // If canDeactivate directly references window, it will fail during SSR.
 export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
   component,
-  platformId: Object
+  currentRoute,
+  currentState,
+  nextState
 ) => {
-  if (isPlatformBrowser(platformId))
+  const platformId = inject(PLATFORM_ID);
+  if (isPlatformBrowser(platformId)) {
     return window.confirm(
       'Are you sure you want to leave? Unsaved changes will be lost.'
     );
-  return true;
+  }
+  return false;
 };

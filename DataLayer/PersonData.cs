@@ -43,10 +43,10 @@ namespace DataLayer
                                     Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ?DateTime.MinValue:
                                     Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateByUserID")) ? 0
+                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateByUserID")) ? null
                                     : Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? DateTime.MinValue :
+                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? null :
                                     Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
                                 );
                             }

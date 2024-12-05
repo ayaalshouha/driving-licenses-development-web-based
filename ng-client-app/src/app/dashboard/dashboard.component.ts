@@ -33,10 +33,15 @@ export class DashboardComponent implements OnInit {
 // If canDeactivate directly references window, it will fail during SSR.
 export const canDeactivate: CanDeactivateFn<DashboardComponent> = (
   component,
-  platformId: Object
+  currentRoute,
+  currentState,
+  nextState
 ) => {
+  const platformId = inject(PLATFORM_ID);
   if (isPlatformBrowser(platformId)) {
-    return window.confirm('Are you sure you want to logout?');
+    return window.confirm(
+      'Are you sure you want to leave? Unsaved changes will be lost.'
+    );
   }
-  return true; // Or other logic for SSR
+  return false;
 };

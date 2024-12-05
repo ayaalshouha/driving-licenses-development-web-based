@@ -134,7 +134,6 @@ namespace BuisnessLayer
                 string.IsNullOrEmpty(this.LastName) ||
                 string.IsNullOrEmpty(this.NationalNumber) ||
                 string.IsNullOrEmpty(this.Address) ||
-                string.IsNullOrEmpty(this.PersonalPicture) ||
                 string.IsNullOrEmpty(this.Nationality) ||
                 string.IsNullOrEmpty(this.Gender))
             {

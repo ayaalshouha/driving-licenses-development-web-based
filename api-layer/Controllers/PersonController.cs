@@ -87,8 +87,9 @@ namespace api_layer.Controllers
                 newPerson.ID = person.ID; 
                 return CreatedAtRoute("ReadPersonByID", new { person.ID }, person.full_person);
             }
-            else
+            else{ 
                 return StatusCode(500, new { message = "Error Creating Person" });
+            }
         }
 
         [HttpPut("Update", Name = "UpdatePerson")]
