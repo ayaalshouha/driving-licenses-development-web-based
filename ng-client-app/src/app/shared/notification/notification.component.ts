@@ -16,4 +16,8 @@ export class NotificationComponent {
       this.message.set(msg)
     );
   }
+
+  closeNotification() {
+    this.notificationService.hideNotification();
+  }
 }

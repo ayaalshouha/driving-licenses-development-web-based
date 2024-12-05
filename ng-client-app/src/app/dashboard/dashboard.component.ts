@@ -4,13 +4,19 @@ import { CanDeactivateFn, Router, RouterOutlet } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { PLATFORM_ID, Inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { NotificationComponent } from '../shared/notification/notification.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent, RouterOutlet],
+  imports: [
+    HeaderComponent,
+    SidebarComponent,
+    RouterOutlet,
+    NotificationComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -39,9 +45,7 @@ export const canDeactivate: CanDeactivateFn<DashboardComponent> = (
 ) => {
   const platformId = inject(PLATFORM_ID);
   if (isPlatformBrowser(platformId)) {
-    return window.confirm(
-      'Are you sure you want to leave? Unsaved changes will be lost.'
-    );
+    return window.confirm('Are you sure you want to logout?');
   }
   return false;
 };
