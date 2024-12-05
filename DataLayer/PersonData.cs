@@ -41,14 +41,14 @@ namespace DataLayer
 
                                     Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ?DateOnly.MinValue:
-                                    DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))),
+                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ?DateTime.MinValue:
+                                    Reader.GetDateTime(Reader.GetOrdinal("CreationDate")),
 
                                     Reader.IsDBNull(Reader.GetOrdinal("UpdateByUserID")) ? 0
                                     : Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? DateOnly.MinValue :
-                                    DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("UpdateDate")))
+                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? DateTime.MinValue :
+                                    Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
                                 );
                             }
                         }
@@ -95,14 +95,14 @@ namespace DataLayer
 
                                      Reader.GetInt32(Reader.GetOrdinal("CreatedByUserID")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("CreationDate"))), 
+                                    Reader.IsDBNull(Reader.GetOrdinal("CreationDate")) ? DateTime.MinValue
+                                    : Reader.GetDateTime(Reader.GetOrdinal("CreationDate")), 
 
                                     Reader.IsDBNull(Reader.GetOrdinal("UpdateByUserID")) ? 0
                                     : Reader.GetInt32(Reader.GetOrdinal("UpdateByUserID")),
 
-                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("UpdateDate")))
+                                    Reader.IsDBNull(Reader.GetOrdinal("UpdateDate")) ? DateTime.MinValue
+                                    : Reader.GetDateTime(Reader.GetOrdinal("UpdateDate"))
                                 );
                             }
                         }
@@ -149,7 +149,7 @@ namespace DataLayer
                         else
                             Command.Parameters.AddWithValue("@Gender", 0);
 
-                        if (person.UpdatedDate == DateOnly.MinValue)
+                        if (person.UpdatedDate == DateTime.MinValue)
                             Command.Parameters.AddWithValue("@UpdateDate", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@UpdateDate", person.UpdatedDate);
@@ -227,7 +227,7 @@ namespace DataLayer
                         else
                             Command.Parameters.AddWithValue("@CreatedByUserID", person.CreatedByUserID);
 
-                        if (person.CreationDate == DateOnly.MinValue)
+                        if (person.CreationDate == DateTime.MinValue)
                             Command.Parameters.AddWithValue("@CreationDate", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@CreationDate", person.CreationDate);

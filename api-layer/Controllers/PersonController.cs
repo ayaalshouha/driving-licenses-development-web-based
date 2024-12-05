@@ -83,7 +83,7 @@ namespace api_layer.Controllers
             if (await person.SaveAsync())
             {
                 newPerson.ID = person.ID; 
-                return CreatedAtRoute("ReadPersonByID", new { person.ID }, newPerson);
+                return CreatedAtRoute("ReadPersonByID", new { person.ID }, person.full_person);
             }
             else
                 return StatusCode(500, new { message = "Error Creating Person" });
@@ -98,7 +98,7 @@ namespace api_layer.Controllers
             clsPerson person = assignDataToPerson(newPerson, ID); 
 
             if (person != null && await person.SaveAsync())
-                return Ok(person);
+                return Ok(person.full_person);
             else
                 return StatusCode(500, new { message = "Error Updatting Person" });
         }

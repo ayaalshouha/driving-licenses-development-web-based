@@ -64,7 +64,7 @@ namespace api_layer.Controllers
             clsApplication app = await AssignDataToApp(newApp);
 
             if (await app.SaveAsync())
-                return CreatedAtRoute("ReadApplicationByID", new { app.ID }, newApp);
+                return CreatedAtRoute("ReadApplicationByID", new { app.ID }, app.applicationDTO);
             else
                 return StatusCode(500, new { message = "Error Creating Application" });
         }

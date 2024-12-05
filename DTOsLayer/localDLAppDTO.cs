@@ -12,13 +12,12 @@ namespace DTOsLayer
         public int ApplicationID { get; set; }
         public int LicenseClassID { get; set; }
 
-        public LocalDLApp(int id, int appid, int licenseclassid)
+        public LocalDLApp(int ID, int ApplicationID, int LicenseClassID)
         {
-            this.ID = id;
-            this.ApplicationID = appid;
-            this.LicenseClassID = licenseclassid;
+            this.ID = ID;
+            this.ApplicationID = ApplicationID;
+            this.LicenseClassID = LicenseClassID;
         }
-
     }
     public class LocalDLApp_View
     {

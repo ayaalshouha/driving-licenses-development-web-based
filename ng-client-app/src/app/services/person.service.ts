@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PERSON_API_ENDPOINTS } from '../environments/endpoints/person.endpoints';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Person } from '../models/person.model';
+import { NotificationService } from './notification.service';
 @Injectable({
   providedIn: 'root',
 })
 export class PersonService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private notification: NotificationService
+  ) {}
 
   readUser(ID: number) {}
 
@@ -18,12 +22,14 @@ export class PersonService {
   }
 
   create(new_person: Person): Observable<Person> {
-    return this.http
-      .post<Person>(PERSON_API_ENDPOINTS.create, { new_person })
-      .pipe(
-        map((res) => {
-          return res;
-        })
-      );
+    console.log(new_person  );
+    return this.http.post<Person>(PERSON_API_ENDPOINTS.create, new_person).pipe(
+      map((res) => res),
+      catchError((err) => {
+        console.log(err);
+        this.notification.showMessage('invalid person object');
+        return throwError(() => err);
+      })
+    );
   }
 }

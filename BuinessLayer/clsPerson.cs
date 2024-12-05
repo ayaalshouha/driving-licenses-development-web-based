@@ -23,9 +23,9 @@ namespace BuisnessLayer
         public string Nationality { get; set; }
         public string Gender { get; set; }
         public int CreatedByUserID { get; set; }
-        public DateOnly CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public int UpdateByUserID { get; set; }
-        public DateOnly UpdateDate { get; set; }
+        public DateTime UpdateDate { get; set; }
         public Person full_person
         {
             get
@@ -61,8 +61,8 @@ namespace BuisnessLayer
             Email = "";
             PhoneNumber = "";
             BirthDate = DateOnly.MinValue;
-            CreationDate = DateOnly.MinValue;
-            UpdateDate = DateOnly.MinValue;
+            CreationDate = DateTime.MinValue;
+            UpdateDate = DateTime.MinValue;
             PersonalPicture = "";
             Nationality = "";
             Gender = "";

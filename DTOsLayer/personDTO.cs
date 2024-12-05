@@ -23,14 +23,14 @@ namespace DTOsLayer
         public string Nationality { get; set; }
         public string Gender { get; set; }
         public int CreatedByUserID { get; set; }
-        public DateOnly CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public int UpdatedByUserID { get; set; }
-        public DateOnly UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
         public Person(int id, string firstName, string secondName, string thirdName, string lastName,
             string nationalNumber, string address, string email, string phoneNumber, DateOnly birthDate,
-            string personalPicture, string nationality, string gender, int createdByUserId, DateOnly creationDate,
-            int updatedByUserId, DateOnly updatedDate)
+            string personalPicture, string nationality, string gender, int createdByUserId, DateTime creationDate,
+            int updatedByUserId, DateTime updatedDate)
         {
             this.ID = id;
             this.FirstName = firstName;

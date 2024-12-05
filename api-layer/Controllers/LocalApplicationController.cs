@@ -7,6 +7,7 @@ namespace api_layer.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -67,7 +68,7 @@ namespace api_layer.Controllers
             clsLocalDrivingLicenses app = AssignDataToApplication(newApp);
 
             if (await app.SaveAsync())
-                return CreatedAtRoute("ReadLocalApplicationByID", new { app.ID }, newApp);
+                return CreatedAtRoute("ReadLocalApplicationByID", new { app.ID }, app.LocalDLAppDTO);
             else
                 return StatusCode(500, new { message = "Error Creating Local Driving License Application" });
         }
