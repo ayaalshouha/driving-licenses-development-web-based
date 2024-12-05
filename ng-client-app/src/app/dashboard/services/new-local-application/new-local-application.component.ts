@@ -169,7 +169,7 @@ export class NewLocalApplicationComponent implements OnInit {
         status: 1,
         type: 1,
         date: this.current_date,
-        paidFees: this.application_types.at(1)!.typeFees,
+        paidFees: this.application_types.at(0)!.typeFees,
         lastStatusDate: this.current_date,
         createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
       };

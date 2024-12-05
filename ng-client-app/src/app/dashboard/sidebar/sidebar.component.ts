@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { application } from 'express';
-import { SidebarMenuComponent } from "./sidebar-menu/sidebar-menu.component";
+import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,6 +8,4 @@ import { SidebarMenuComponent } from "./sidebar-menu/sidebar-menu.component";
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {
- 
-}
+export class SidebarComponent {}
