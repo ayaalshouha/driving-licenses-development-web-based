@@ -199,12 +199,11 @@ export class NewLocalApplicationComponent implements OnInit {
           })
         )
         .subscribe({
-          next: () => {
+          next: (res) => {
             this.new_app_saved.set(true);
             this.notificationSerice.showMessage(
-              'Application saved successfully'
+              `Application saved successfully, ID = ${res.id}`
             );
-            console.log('Application saved successfully!');
           },
           error: (err) => {
             console.error(err);
