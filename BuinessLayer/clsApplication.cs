@@ -15,9 +15,9 @@ namespace BuisnessLayer
         public enStatus Status { get; set; }
         public int TypeID { get; set; }
         public clsApplicationTypes TypeInfo { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public decimal PaidFees { get; set; }
-        public DateOnly lastStatusDate { get; set; }
+        public DateTime lastStatusDate { get; set; }
         public int CreatedByUserID { get; set; }   
         public string StatusText
         {
@@ -53,10 +53,10 @@ namespace BuisnessLayer
             this.PersonID = -1;
             this.Status = enStatus.New;
             this.TypeID = -1;
-            this.Date = DateOnly.FromDateTime(DateTime.Now);
+            this.Date = DateTime.Now;
             this.PaidFees = -1;
             this.CreatedByUserID = -1;
-            this.lastStatusDate = DateOnly.FromDateTime(DateTime.Now); 
+            this.lastStatusDate = DateTime.Now; 
        }
         private clsApplication(_Application application)
         {

@@ -4,12 +4,14 @@ using DTOsLayer;
 using BuisnessLayer;
 using System.Diagnostics;
 using System.Timers;
+using DataLayer;
 
 namespace api_layer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -36,7 +38,7 @@ namespace api_layer.Controllers
             person.Address = newPerson.Address;
             person.Email = newPerson.Email;
             person.PhoneNumber = newPerson.PhoneNumber;
-            person.BirthDate = newPerson.BirthDate;
+            person.BirthDate = DateOnly.Parse(newPerson.BirthDate);
             person.PersonalPicture = newPerson.PersonalPicture;
             person.Nationality = newPerson.Nationality;
             person.Gender = newPerson.Gender;

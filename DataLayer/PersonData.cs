@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Data.SqlClient; 
+﻿using Microsoft.Data.SqlClient; 
 using DTOsLayer;
-using System.Data;
 
 namespace DataLayer
 {
@@ -33,8 +30,10 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
+
+                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
+                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
+
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -58,7 +57,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
             return null;
         }
@@ -87,8 +86,9 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
+
+                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
+                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -112,7 +112,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
             return null;
         }
@@ -137,7 +137,7 @@ namespace DataLayer
                         Command.Parameters.AddWithValue("@NationalID", person.NationalNumber);
                         Command.Parameters.AddWithValue("@Email", person.Email);
                         Command.Parameters.AddWithValue("@PhoneNumber", person.PhoneNumber);
-                        Command.Parameters.AddWithValue("@Birthdate", person.BirthDate);
+                        Command.Parameters.AddWithValue("@Birthdate", DateOnly.Parse(person.BirthDate));
                         Command.Parameters.AddWithValue("@Address", person.Address);
                         Command.Parameters.AddWithValue("@Nationality", person.Nationality);
                         Command.Parameters.AddWithValue("@ProfilePicture", person.PersonalPicture);
@@ -149,12 +149,12 @@ namespace DataLayer
                         else
                             Command.Parameters.AddWithValue("@Gender", 0);
 
-                        if (person.UpdatedDate == DateTime.MinValue)
+                        if (person.UpdatedDate == null || person.UpdatedDate == DateTime.MinValue)
                             Command.Parameters.AddWithValue("@UpdateDate", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@UpdateDate", person.UpdatedDate);
 
-                        if (person.UpdatedByUserID == 0)
+                        if (person.UpdatedByUserID == null || person.UpdatedByUserID == 0)
                             Command.Parameters.AddWithValue("@UpdateByUserID", DBNull.Value);
                         else
                             Command.Parameters.AddWithValue("@UpdateByUserID", person.UpdatedByUserID);
@@ -170,7 +170,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
             return newID;
         }
@@ -210,7 +210,7 @@ namespace DataLayer
                         Command.Parameters.AddWithValue("@NationalID", person.NationalNumber);
                         Command.Parameters.AddWithValue("@Email", person.Email);
                         Command.Parameters.AddWithValue("@PhoneNumber", person.PhoneNumber);
-                        Command.Parameters.AddWithValue("@Birthdate", person.BirthDate);
+                        Command.Parameters.AddWithValue("@Birthdate", DateOnly.Parse(person.BirthDate));
                         Command.Parameters.AddWithValue("@ProfilePicture", person.PersonalPicture);
                         Command.Parameters.AddWithValue("@Address", person.Address);
                         Command.Parameters.AddWithValue("@Nationality", person.Nationality);
@@ -239,7 +239,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-               DataSettings.LogError(ex.Message.ToString());
+               Console.WriteLine("test" + ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -262,7 +262,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
 
             return RowAffected > 0;
@@ -285,7 +285,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-              DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
             return RowAffected > 0;
         }
@@ -308,8 +309,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             return isFound;
         }
@@ -332,7 +333,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("test" + ex.Message.ToString());
             }
             return isFound;
         }
@@ -361,8 +363,8 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("NationalID")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))),
+                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
+                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetString(Reader.GetOrdinal("Gender"))
                                     ));

@@ -1,9 +1,10 @@
 using DataLayer;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure CORS to allow Angular app to interact with the API
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
@@ -14,19 +15,27 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add services to the container.
-
+// Register other services to the container
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Register logging for DataSettings
+builder.Services.AddSingleton(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<DataSettings>>();
+    DataSettings.ConfigureLogger(logger); // Ensures the logger is configured before use
+    return logger;
+});
+
+// Add services for Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Use CORS policy for Angular app
 app.UseCors("AllowAngularApp");
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline for Swagger UI in Development environment
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -34,9 +43,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
+// Map API controllers
 app.MapControllers();
 
 app.Run();

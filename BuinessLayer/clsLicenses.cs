@@ -136,8 +136,8 @@ namespace BuisnessLayer
                 Status = enStatus.New,
                 TypeID = (int)enApplicationType.RenewDL,
                 PaidFees = clsApplicationTypes.FeeAsync(enApplicationType.RenewDL).GetAwaiter().GetResult(),
-                Date = DateOnly.FromDateTime(DateTime.Now),
-                lastStatusDate = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
+                lastStatusDate = DateTime.Now,
                 CreatedByUserID = CreatedByUserID,
             };
 
@@ -175,8 +175,8 @@ namespace BuisnessLayer
                 (int)enApplicationType.DamagedReplacement :
                 (int)enApplicationType.LostReplacement);
             NewApplication.PaidFees = clsApplicationTypes.FeeAsync((enApplicationType)NewApplication.TypeID).GetAwaiter().GetResult();
-            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
-            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
+            NewApplication.Date = DateTime.Now;
+            NewApplication.lastStatusDate = DateTime.Now;
             NewApplication.CreatedByUserID = CreatedByUserID;
 
             if (await NewApplication.SaveAsync())
@@ -229,9 +229,9 @@ namespace BuisnessLayer
             NewApplication.PersonID = this.DriverInfo.PersonID;
             NewApplication.Status = enStatus.New;
             NewApplication.TypeID = (int)enApplicationType.ReleaseDetainedDL;
-            NewApplication.Date = DateOnly.FromDateTime(DateTime.Now);
+            NewApplication.Date = DateTime.Now;
             NewApplication.PaidFees = clsApplicationTypes.FeeAsync((enApplicationType)NewApplication.TypeID).GetAwaiter().GetResult(); 
-            NewApplication.lastStatusDate = DateOnly.FromDateTime(DateTime.Now);
+            NewApplication.lastStatusDate = DateTime.Now;
             NewApplication.CreatedByUserID = ReleasedByUserID;
             if (await NewApplication.SaveAsync())
             {

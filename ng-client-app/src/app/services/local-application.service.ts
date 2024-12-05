@@ -11,14 +11,9 @@ export class LocalApplicationService {
   constructor(private http: HttpClient) {}
 
   create(new_application: LocalApplication): Observable<LocalApplication> {
-    return this.http
-      .post<LocalApplication>(LOCAL_APPLICATION_API_ENDPOINT.create, {
-        new_application,
-      })
-      .pipe(
-        map((res) => {
-          return res;
-        })
-      );
+    return this.http.post<LocalApplication>(
+      LOCAL_APPLICATION_API_ENDPOINT.create,
+      new_application
+    );
   }
 }

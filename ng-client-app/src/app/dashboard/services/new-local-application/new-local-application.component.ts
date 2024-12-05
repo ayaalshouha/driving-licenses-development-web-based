@@ -29,14 +29,15 @@ import { NotificationService } from '../../../services/notification.service';
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
 export class NewLocalApplicationComponent implements OnInit {
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
-  current_date: Date = new Date(2024 - 12 - 5);
+  current_date: Date = new Date();
+
   new_app_saved = signal<boolean>(false);
   private application_types: ApplicationType[] = ApplicationTypes;
   private destroyRef = inject(DestroyRef);
@@ -55,7 +56,6 @@ export class NewLocalApplicationComponent implements OnInit {
     lastname: new FormControl('', {
       validators: [Validators.required],
     }),
-    // add unique National No validator from server
     nationalno: new FormControl('', {
       validators: [Validators.required, Validators.pattern('^[0-9]{10}$')],
       asyncValidators: [isExist(this.personService)],
@@ -91,9 +91,7 @@ export class NewLocalApplicationComponent implements OnInit {
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
     private notificationSerice: NotificationService
-  ) {
-    this.current_date.setHours(0, 0, 0, 0);
-  }
+  ) {}
 
   ngOnInit(): void {
     // (forkJoin) perform two independent observable and get their results together in one subscription
@@ -143,7 +141,7 @@ export class NewLocalApplicationComponent implements OnInit {
         console.error('Current user is not available');
         return;
       }
-      console.log(this.current_date);
+
       let new_person: Person = {
         id: 0,
         firstName: this.register_form.controls.firstname.value!,
@@ -153,15 +151,17 @@ export class NewLocalApplicationComponent implements OnInit {
         nationalNumber: this.register_form.controls.nationalno.value!,
         phoneNumber: this.register_form.controls.phonenumber.value!,
         address: this.register_form.controls.address.value!,
-        birthDate: this.register_form.controls.birthdate.value!,
+        birthDate: new Date(this.register_form.controls.birthdate.value!)
+          .toISOString()
+          .split('T')[0],
         email: this.register_form.controls.email.value!,
         gender: this.register_form.controls.gender.value!,
         nationality: this.register_form.controls.country.value!,
         personalPicture: this.register_form.controls.img.value!,
         creationDate: this.current_date,
         createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
-        updatedDate: this.current_date,
-        updatedByUserID: 0,
+        updatedByUserID: null,
+        updatedDate: null,
       };
       let new_app: Application = {
         id: 0,
@@ -201,9 +201,7 @@ export class NewLocalApplicationComponent implements OnInit {
         .subscribe({
           next: () => {
             this.new_app_saved.set(true);
-            this.notificationSerice.showMessage(
-              'Application saved successfully!'
-            );
+            console.log('Application saved successfully!');
           },
           error: (err) => {
             console.error(err);
@@ -212,6 +210,8 @@ export class NewLocalApplicationComponent implements OnInit {
             );
           },
         });
+
+      this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
   }
 }
@@ -226,5 +226,5 @@ export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
     return window.confirm(
       'Are you sure you want to leave? Unsaved changes will be lost.'
     );
-  return false;
+  return true;
 };

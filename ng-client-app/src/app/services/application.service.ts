@@ -12,7 +12,7 @@ export class ApplicationService {
 
   create(new_application: Application): Observable<Application> {
     return this.http
-      .post<Application>(APPLICATION_API_ENDPOINT.create, { new_application })
+      .post<Application>(APPLICATION_API_ENDPOINT.create, new_application )
       .pipe(
         map((res) => {
           return res;

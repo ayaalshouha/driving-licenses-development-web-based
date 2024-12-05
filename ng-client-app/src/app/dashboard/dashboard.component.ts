@@ -38,5 +38,5 @@ export const canDeactivate: CanDeactivateFn<DashboardComponent> = (
   if (isPlatformBrowser(platformId)) {
     return window.confirm('Are you sure you want to logout?');
   }
-  return false; // Or other logic for SSR
+  return true; // Or other logic for SSR
 };

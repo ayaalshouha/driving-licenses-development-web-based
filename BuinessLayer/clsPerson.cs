@@ -24,16 +24,16 @@ namespace BuisnessLayer
         public string Gender { get; set; }
         public int CreatedByUserID { get; set; }
         public DateTime CreationDate { get; set; }
-        public int UpdateByUserID { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public int? UpdateByUserID { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public Person full_person
         {
             get
             {
                 return new Person(this.ID, this.FirstName, this.SecondName, this.ThirdName, this.LastName,
                 this.NationalNumber, this.Address, this.Email, this.PhoneNumber,
-                this.BirthDate, this.PersonalPicture, this.Nationality, this.Gender,
-                this.CreatedByUserID, this.CreationDate, this.UpdateByUserID, this.UpdateDate);
+                this.BirthDate.ToString(), this.PersonalPicture, this.Nationality, this.Gender,
+                this.CreatedByUserID, this.CreationDate, this.UpdateByUserID , this.UpdateDate);
             }
         }
         public Person_View person_view_DTO
@@ -42,7 +42,7 @@ namespace BuisnessLayer
             {
                 return new Person_View(this.ID, this.FirstName, this.SecondName, this.ThirdName, this.LastName,
                 this.NationalNumber, this.Email, this.PhoneNumber,
-                this.BirthDate, this.Nationality, this.Gender);
+                this.BirthDate.ToString(), this.Nationality, this.Gender);
             }
         }
         public string FullName()
@@ -62,12 +62,12 @@ namespace BuisnessLayer
             PhoneNumber = "";
             BirthDate = DateOnly.MinValue;
             CreationDate = DateTime.MinValue;
-            UpdateDate = DateTime.MinValue;
+            UpdateDate = null;
             PersonalPicture = "";
             Nationality = "";
             Gender = "";
-            UpdateByUserID = 0;
-            CreatedByUserID = 0;
+            UpdateByUserID = null;
+            CreatedByUserID =0;
 
             _Mode = enMode.add;
         }
@@ -82,13 +82,13 @@ namespace BuisnessLayer
             Address = person.Address;
             Email = person.Email;
             PhoneNumber = person.PhoneNumber;
-            BirthDate = person.BirthDate;
+            BirthDate = DateOnly.Parse(person.BirthDate);
             PersonalPicture = person.PersonalPicture;
             Nationality = person.Nationality;
             Gender = person.Gender;
-            CreationDate = person.CreationDate;
-            UpdateByUserID = person.UpdatedByUserID;
             CreatedByUserID = person.CreatedByUserID;
+            CreationDate = person.CreationDate;
+            UpdateByUserID = person.UpdatedByUserID; 
             UpdateDate = person.UpdatedDate;
             _Mode = enMode.update;
         }

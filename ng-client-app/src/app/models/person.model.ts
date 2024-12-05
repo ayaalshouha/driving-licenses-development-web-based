@@ -8,12 +8,12 @@ export interface Person {
   address: string;
   email: string;
   phoneNumber: string;
-  birthDate: Date;
+  birthDate: string;
   personalPicture: string;
   nationality: string;
   gender: string;
   createdByUserID: number;
   creationDate: Date;
-  updatedByUserID: number;
-  updatedDate: Date;
+  updatedByUserID: number | null;
+  updatedDate: Date | null;
 }

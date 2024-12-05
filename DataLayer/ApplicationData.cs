@@ -33,11 +33,11 @@ namespace DataLayer
                                     Enum.IsDefined(typeof(enStatus), reader.GetInt32(reader.GetOrdinal("Status"))) ?
                                     (enStatus)reader.GetInt32(reader.GetOrdinal("Status")) : 0,                                
                                     reader.GetInt32(reader.GetOrdinal("ApplicationTypeID")),
-                                    reader.IsDBNull(reader.GetOrdinal("Date")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                                    reader.IsDBNull(reader.GetOrdinal("Date")) ? DateTime.MinValue
+                                    : reader.GetDateTime(reader.GetOrdinal("Date")),
                                     reader.GetDecimal(reader.GetOrdinal("PaidFees")),
-                                    reader.IsDBNull(reader.GetOrdinal("LastStatusDate")) ? DateOnly.MinValue
-                                    : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("LastStatusDate"))),
+                                    reader.IsDBNull(reader.GetOrdinal("LastStatusDate")) ? DateTime.MinValue
+                                    : reader.GetDateTime(reader.GetOrdinal("LastStatusDate")),
                                     reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
                                     );
                             }
