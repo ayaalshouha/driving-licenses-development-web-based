@@ -201,6 +201,9 @@ export class NewLocalApplicationComponent implements OnInit {
         .subscribe({
           next: () => {
             this.new_app_saved.set(true);
+            this.notificationSerice.showMessage(
+              'Application saved successfully'
+            );
             console.log('Application saved successfully!');
           },
           error: (err) => {
