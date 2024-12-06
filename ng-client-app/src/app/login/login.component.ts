@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
+      //get latest login credintioal from local storage
       const savedItem = window.localStorage.getItem('saved-login');
       if (savedItem) {
         const loadedData = JSON.parse(savedItem);
@@ -62,7 +63,7 @@ export class LoginComponent implements OnInit {
           password: savedPassword,
         });
       }
-
+      // save login creditional to local storage
       const subscription = this.login_form.valueChanges
         .pipe(debounceTime(500))
         .subscribe({
@@ -78,6 +79,7 @@ export class LoginComponent implements OnInit {
         });
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
+    console.log(this.currentUserService.getCurrentUser());
   }
 
   get invalidUsername() {
@@ -130,7 +132,8 @@ export class LoginComponent implements OnInit {
         }),
         // Changed to concatMap to wait for saveLogin to complete
         concatMap((fullUser) => {
-          this.currentUserService.setCurrentUser(fullUser);
+          //save current user in local storage
+          window.localStorage.setItem('current-user', JSON.stringify(fullUser));
           // saveLogin returns an observable
           return this.loginService.saveLogin(
             this.currentUserService.getCurrentUser()!.id
@@ -143,7 +146,6 @@ export class LoginComponent implements OnInit {
         },
         complete: () => {
           //will work as expected, but only if the entire observable chain completes successfully (i.e., no errors were thrown
-          this.loginService.setLoginStatus(true);
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {

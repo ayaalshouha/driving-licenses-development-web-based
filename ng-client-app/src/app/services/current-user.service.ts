@@ -7,8 +7,11 @@ import { User } from '../models/user.model';
 export class CurrentUserService {
   private current_user = signal<User | undefined>(undefined);
 
-  setCurrentUser(status: User | undefined) {
-    this.current_user.set(status);
+  constructor() {
+    const current_user = window.localStorage.getItem('current-user');
+    current_user
+      ? this.current_user.set(JSON.parse(current_user))
+      : this.current_user.set(undefined);
   }
 
   getCurrentUser() {

@@ -8,15 +8,6 @@ import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 export class LoginService {
   constructor(private httpClient: HttpClient) {}
 
-  private loggedIn = new BehaviorSubject<boolean>(false);
-
-  setLoginStatus(status: boolean) {
-    this.loggedIn.next(status);
-  }
-
-  getLoginStatue() {
-    return this.loggedIn.asObservable();
-  }
   //check if entered username is unique for firsttime register
   isExist(username: string): Observable<boolean> {
     return (

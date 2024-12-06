@@ -93,7 +93,9 @@ export class NewLocalApplicationComponent implements OnInit {
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
     private notificationSerice: NotificationService
-  ) {}
+  ) {
+    this.notificationSerice.showMessage("aa")
+  }
 
   ngOnInit(): void {
     // (forkJoin) perform two independent observable and get their results together in one subscription
@@ -221,17 +223,17 @@ export class NewLocalApplicationComponent implements OnInit {
 
 // The error appears in the canDeactivate function.
 // If canDeactivate directly references window, it will fail during SSR.
-export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
-  component,
-  currentRoute,
-  currentState,
-  nextState
-) => {
-  const platformId = inject(PLATFORM_ID);
-  if (isPlatformBrowser(platformId)) {
-    return window.confirm(
-      'Are you sure you want to leave? Unsaved changes will be lost.'
-    );
-  }
-  return false;
-};
+// export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
+//   component,
+//   currentRoute,
+//   currentState,
+//   nextState
+// ) => {
+//   const platformId = inject(PLATFORM_ID);
+//   if (isPlatformBrowser(platformId)) {
+//     return window.confirm(
+//       'Are you sure you want to leave? Unsaved changes will be lost.'
+//     );
+//   }
+//   return false;
+// };
