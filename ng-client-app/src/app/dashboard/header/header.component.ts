@@ -20,7 +20,9 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.currentUserService.setCurrentUser(undefined);
-    this.router.navigate(['/login']);
+    if (window.confirm('Are you sure you want to logout?')) {
+      window.localStorage.setItem('current-user', JSON.stringify(undefined));
+      this.router.navigate(['/login']);
+    }
   }
 }

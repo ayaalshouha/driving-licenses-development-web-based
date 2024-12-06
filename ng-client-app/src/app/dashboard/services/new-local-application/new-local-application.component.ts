@@ -94,7 +94,7 @@ export class NewLocalApplicationComponent implements OnInit {
     private localAppService: LocalApplicationService,
     private notificationSerice: NotificationService
   ) {
-    this.notificationSerice.showMessage("aa")
+    this.notificationSerice.showMessage('aa');
   }
 
   ngOnInit(): void {
@@ -140,7 +140,7 @@ export class NewLocalApplicationComponent implements OnInit {
 
   onSubmit() {
     if (this.register_form.valid) {
-      const currentUser = this.currentUserSerice.getCurrentUser();
+      const currentUser = this.currentUserSerice.CurrentUser;
       if (!currentUser) {
         console.error('Current user is not available');
         return;
@@ -163,7 +163,7 @@ export class NewLocalApplicationComponent implements OnInit {
         nationality: this.register_form.controls.country.value!,
         personalPicture: this.register_form.controls.img.value!,
         creationDate: this.current_date,
-        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+        createdByUserID: this.currentUserSerice.CurrentUser!.id,
         updatedByUserID: null,
         updatedDate: null,
       };
@@ -175,7 +175,7 @@ export class NewLocalApplicationComponent implements OnInit {
         date: this.current_date,
         paidFees: this.application_types.at(0)!.typeFees,
         lastStatusDate: this.current_date,
-        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+        createdByUserID: this.currentUserSerice.CurrentUser!.id,
       };
       let local_app: LocalApplication = {
         id: 0,

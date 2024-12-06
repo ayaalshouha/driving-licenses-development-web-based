@@ -1,13 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { LoginService } from '../services/login.service';
-import { CanDeactivateFn, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { NotificationComponent } from '../shared/notification/notification.component';
-import { log } from 'console';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,12 +19,16 @@ import { log } from 'console';
 })
 export class DashboardComponent implements OnInit {
   private currentUserService = inject(CurrentUserService);
-  current_user = this.currentUserService.getCurrentUser();
+  current_user = this.currentUserService.CurrentUser;
 
   constructor(private router: Router) {}
 
   ngOnInit() {
-    console.log(this.currentUserService.getCurrentUser());
+    console.log('from dashboard coponent' + this.current_user?.id);
+    // if (this.currentUserService.getCurrentUser() !== undefined) {
+    // } else {
+    //   this.router.navigate(['/login']);
+    // }
     // check local storage if hold credintials
     // const saveditems = window.localStorage.getItem('saved-item');
     // if (saveditems) {

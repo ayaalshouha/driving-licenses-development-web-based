@@ -48,7 +48,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private currentUserService: CurrentUserService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.currentUserService.clearCurrentUser();
+  }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       //get latest login credintioal from local storage
@@ -79,7 +81,7 @@ export class LoginComponent implements OnInit {
         });
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
-    console.log(this.currentUserService.getCurrentUser());
+    console.log('from login coponent' + this.currentUserService.CurrentUser);
   }
 
   get invalidUsername() {
@@ -135,9 +137,7 @@ export class LoginComponent implements OnInit {
           //save current user in local storage
           window.localStorage.setItem('current-user', JSON.stringify(fullUser));
           // saveLogin returns an observable
-          return this.loginService.saveLogin(
-            this.currentUserService.getCurrentUser()!.id
-          );
+          return this.loginService.saveLogin(fullUser.id);
         })
       )
       .subscribe({
@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          console.error('Error during login process:', err.message || err);
+          console.error('Error during login process:', err.message);
         },
       });
 

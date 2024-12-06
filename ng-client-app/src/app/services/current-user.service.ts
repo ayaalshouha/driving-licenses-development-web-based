@@ -8,13 +8,18 @@ export class CurrentUserService {
   private current_user = signal<User | undefined>(undefined);
 
   constructor() {
-    const current_user = window.localStorage.getItem('current-user');
-    current_user
-      ? this.current_user.set(JSON.parse(current_user))
-      : this.current_user.set(undefined);
+    const saved_user = window.localStorage.getItem('current-user');
+    if (saved_user) {
+      this.current_user.set(JSON.parse(saved_user));
+    }
   }
 
-  getCurrentUser() {
+  clearCurrentUser() {
+    localStorage.removeItem('current-user');
+    this.current_user.set(undefined);
+  }
+
+  get CurrentUser() {
     return this.current_user();
   }
 }
