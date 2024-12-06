@@ -1,4 +1,4 @@
-import { Component, inject, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CurrentUserService } from '../../services/current-user.service';
 import { Router } from '@angular/router';
 

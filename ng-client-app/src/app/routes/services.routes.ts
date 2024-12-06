@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { new_applications_routes } from './newApplications.routes';
+import { new_applications_routes } from './new-applications.routes';
 import { RenewLocalApplicationComponent } from '../dashboard/services/renew-local-application/renew-local-application.component';
 import { ReplaceApplicationComponent } from '../dashboard/services/replace-application/replace-application.component';
 import { ReleaseApplicationComponent } from '../dashboard/services/release-application/release-application.component';

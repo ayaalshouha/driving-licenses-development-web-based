@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { TestComponent } from '../dashboard/test/test.component';
 import { services_routes } from './services.routes';
-import { app_management_routes } from './applicationManagement.routes';
-import { licenses_management_routes } from './licensesManagement.routes';
+import { app_management_routes } from './application-management.routes';
+import { licenses_management_routes } from './licenses-management.routes';
 
 export const dashboard_routes: Routes = [
   {

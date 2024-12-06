@@ -1,25 +1,32 @@
-import { Injectable, signal } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { User } from '../models/user.model';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CurrentUserService {
-  private current_user = signal<User | undefined>(undefined);
+  private current_user: User | undefined = undefined;
 
-  constructor() {
-    const saved_user = window.localStorage.getItem('current-user');
-    if (saved_user) {
-      this.current_user.set(JSON.parse(saved_user));
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  setCurrentUser(user: User) {
+    this.current_user = user;
+  }
+  getCurrentUser(): User | undefined {
+    if (isPlatformBrowser(this.platformId)) {
+      const saved_user = window.localStorage.getItem('current-user');
+      if (saved_user) {
+        this.setCurrentUser(JSON.parse(saved_user));
+        return this.current_user;
+      }
     }
+    return undefined;
   }
 
   clearCurrentUser() {
-    localStorage.removeItem('current-user');
-    this.current_user.set(undefined);
-  }
-
-  get CurrentUser() {
-    return this.current_user();
+    if (isPlatformBrowser(this.platformId)) {
+      window.localStorage.removeItem('current-user');
+    }
   }
 }

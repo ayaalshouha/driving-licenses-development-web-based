@@ -1,6 +1,6 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import {
-  CanDeactivateFn,
+
   Router,
   RouterLink,
   RouterLinkActive,

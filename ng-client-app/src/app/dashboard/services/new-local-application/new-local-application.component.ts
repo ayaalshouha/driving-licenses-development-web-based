@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -39,8 +39,6 @@ export class NewLocalApplicationComponent implements OnInit {
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
   current_date: Date = new Date();
-
-  new_app_saved = signal<boolean>(false);
   private application_types: ApplicationType[] = ApplicationTypes;
   private destroyRef = inject(DestroyRef);
   private personService = inject(PersonService);
@@ -140,7 +138,7 @@ export class NewLocalApplicationComponent implements OnInit {
 
   onSubmit() {
     if (this.register_form.valid) {
-      const currentUser = this.currentUserSerice.CurrentUser;
+      const currentUser = this.currentUserSerice.getCurrentUser();
       if (!currentUser) {
         console.error('Current user is not available');
         return;
@@ -163,7 +161,7 @@ export class NewLocalApplicationComponent implements OnInit {
         nationality: this.register_form.controls.country.value!,
         personalPicture: this.register_form.controls.img.value!,
         creationDate: this.current_date,
-        createdByUserID: this.currentUserSerice.CurrentUser!.id,
+        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
         updatedByUserID: null,
         updatedDate: null,
       };
@@ -175,7 +173,7 @@ export class NewLocalApplicationComponent implements OnInit {
         date: this.current_date,
         paidFees: this.application_types.at(0)!.typeFees,
         lastStatusDate: this.current_date,
-        createdByUserID: this.currentUserSerice.CurrentUser!.id,
+        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
       };
       let local_app: LocalApplication = {
         id: 0,
@@ -204,7 +202,6 @@ export class NewLocalApplicationComponent implements OnInit {
         )
         .subscribe({
           next: (res) => {
-            this.new_app_saved.set(true);
             this.notificationSerice.showMessage(
               `Application saved successfully,Application ID = ${res.id} :)`
             );
@@ -223,17 +220,17 @@ export class NewLocalApplicationComponent implements OnInit {
 
 // The error appears in the canDeactivate function.
 // If canDeactivate directly references window, it will fail during SSR.
-// export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
-//   component,
-//   currentRoute,
-//   currentState,
-//   nextState
-// ) => {
-//   const platformId = inject(PLATFORM_ID);
-//   if (isPlatformBrowser(platformId)) {
-//     return window.confirm(
-//       'Are you sure you want to leave? Unsaved changes will be lost.'
-//     );
-//   }
-//   return false;
-// };
+export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
+  component,
+  currentRoute,
+  currentState,
+  nextState
+) => {
+  const platformId = inject(PLATFORM_ID);
+  if (isPlatformBrowser(platformId) && component.register_form.dirty) {
+    return window.confirm(
+      'Are you sure you want to leave? Unsaved changes will be lost.'
+    );
+  }
+  return false;
+};
