@@ -1,1 +1,12 @@
-<p>confirmation-dialog works!</p>
+@if(isVisible){
+<div class="backdrop">
+  <div class="dialog">
+    <h2>{{ title }}</h2>
+    <p>{{ message }}</p>
+    <div class="actions">
+      <button (click)="confirm()">Yes</button>
+      <button (click)="cancel()">No</button>
+    </div>
+  </div>
+</div>
+}
