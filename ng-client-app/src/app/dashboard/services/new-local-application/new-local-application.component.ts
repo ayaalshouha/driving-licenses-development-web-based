@@ -91,9 +91,7 @@ export class NewLocalApplicationComponent implements OnInit {
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
     private notificationSerice: NotificationService
-  ) {
-    this.notificationSerice.showMessage('aa');
-  }
+  ) {}
 
   ngOnInit(): void {
     // (forkJoin) perform two independent observable and get their results together in one subscription
@@ -203,7 +201,7 @@ export class NewLocalApplicationComponent implements OnInit {
         .subscribe({
           next: (res) => {
             this.notificationSerice.showMessage(
-              `Application saved successfully,Application ID = ${res.id} :)`
+              `Application saved successfully, Application ID = ${res.id} :)`
             );
           },
           error: (err) => {
@@ -211,6 +209,7 @@ export class NewLocalApplicationComponent implements OnInit {
               `An error occurred while saving the application => ${err}`
             );
           },
+          complete: () => {},
         });
 
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
@@ -232,5 +231,5 @@ export const canDeactivate: CanDeactivateFn<NewLocalApplicationComponent> = (
       'Are you sure you want to leave? Unsaved changes will be lost.'
     );
   }
-  return false;
+  return true;
 };

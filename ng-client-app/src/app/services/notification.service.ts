@@ -10,7 +10,6 @@ export class NotificationService {
 
   showMessage(message: string) {
     this.notification.next(message);
-    setTimeout(() => this.notification.next(null));
   }
 
   hideNotification() {

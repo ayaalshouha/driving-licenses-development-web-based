@@ -135,10 +135,6 @@ export class LoginComponent implements OnInit {
         concatMap((fullUser) => {
           //save current user in local storage
           window.localStorage.setItem('current-user', JSON.stringify(fullUser));
-          console.log(
-            'from login coponent after st item ' +
-              this.currentUserService.getCurrentUser()
-          );
           // saveLogin returns an observable
           return this.loginService.saveLogin(fullUser.id);
         })

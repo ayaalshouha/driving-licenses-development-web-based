@@ -1,9 +1,14 @@
 @if(message()){
 <div class="notification-overlay">
   <div class="notification-box">
-    {{ message() }}
+    <div class="message">
+      {{ message() }}
+    </div>
+
+    <button class="notification-button" (click)="closeNotification()">
+      OK
+    </button>
   </div>
-  <button class="notification-button" (click)="closeNotification()">OK</button>
 </div>
 
 }
