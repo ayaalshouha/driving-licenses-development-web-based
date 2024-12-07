@@ -200,12 +200,12 @@ export class NewLocalApplicationComponent implements OnInit {
             const age =
               this.current_date.getFullYear() - birthdate.getFullYear();
             if (response.minAgeAllowed > age) {
-              const notify: NotificationBox = {
-                message: `Age does NOT require the license minimum allowed age `,
-                status: 'failed',
-              };
-              this.notificationSerice.showMessage(notify);
-              return throwError(() => new Error());
+              return throwError(
+                () =>
+                  new Error(
+                    `'Age restriction not met! must be older than ${response.minAgeAllowed}`
+                  )
+              );
             } else {
               return this.personService.create(new_person);
             }
