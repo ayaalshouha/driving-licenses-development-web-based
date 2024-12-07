@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,14 +8,7 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import {
-  catchError,
-  concatMap,
-  forkJoin,
-  switchMap,
-  tap,
-  throwError,
-} from 'rxjs';
+import { catchError, concatMap, forkJoin, switchMap, throwError } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -37,11 +30,13 @@ import {
   NotificationBox,
   NotificationService,
 } from '../../../services/notification.service';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { sign } from 'crypto';
 
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, ConfirmationDialogComponent],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
@@ -52,7 +47,8 @@ export class NewLocalApplicationComponent implements OnInit {
   private application_types: ApplicationType[] = ApplicationTypes;
   private destroyRef = inject(DestroyRef);
   private personService = inject(PersonService);
-
+  isDialogVisible = signal<boolean>(false);
+  isConfirmed = signal<boolean>(false);
   register_form = new FormGroup({
     firstname: new FormControl('', {
       validators: [Validators.required],
@@ -144,7 +140,13 @@ export class NewLocalApplicationComponent implements OnInit {
     );
   }
 
+  onDialogResult(result: boolean) {
+    this.isDialogVisible.set(false);
+    this.isConfirmed.set(result);
+  }
+
   onSubmit() {
+    this.isDialogVisible.set(false);
     const currentUser = this.currentUserSerice.getCurrentUser();
     if (!currentUser) {
       const notify: NotificationBox = {
@@ -154,100 +156,103 @@ export class NewLocalApplicationComponent implements OnInit {
       this.notificationSerice.showMessage(notify);
       return;
     }
-    
+
     if (this.register_form.valid) {
-      let new_person: Person = {
-        id: 0,
-        firstName: this.register_form.controls.firstname.value!,
-        secondName: this.register_form.controls.secondname.value!,
-        thirdName: this.register_form.controls.thirdname.value!,
-        lastName: this.register_form.controls.lastname.value!,
-        nationalNumber: this.register_form.controls.nationalno.value!,
-        phoneNumber: this.register_form.controls.phonenumber.value!,
-        address: this.register_form.controls.address.value!,
-        birthDate: new Date(this.register_form.controls.birthdate.value!)
-          .toISOString()
-          .split('T')[0],
-        email: this.register_form.controls.email.value!,
-        gender: this.register_form.controls.gender.value!,
-        nationality: this.register_form.controls.country.value!,
-        personalPicture: this.register_form.controls.img.value!,
-        creationDate: this.current_date,
-        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
-        updatedByUserID: null,
-        updatedDate: null,
-      };
-      let new_app: Application = {
-        id: 0,
-        personID: 0,
-        status: 1,
-        type: 1,
-        date: this.current_date,
-        paidFees: this.application_types.at(0)!.typeFees,
-        lastStatusDate: this.current_date,
-        createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
-      };
-      let local_app: LocalApplication = {
-        id: 0,
-        applicationID: 0,
-        licenseClassID: +this.register_form.controls.licenseclass.value!,
-      };
-      const subscription = this.licenseClassService
-        .getLicenseClass(local_app.licenseClassID)
-        .pipe(
-          switchMap((response) => {
-            const birthdate = new Date(new_person.birthDate);
-            const age =
-              this.current_date.getFullYear() - birthdate.getFullYear();
-            if (response.minAgeAllowed > age) {
-              return throwError(
-                () =>
-                  new Error(
-                    `'Age restriction not met! must be older than ${response.minAgeAllowed}`
-                  )
-              );
-            } else {
-              return this.personService.create(new_person);
-            }
-          }),
-          switchMap((response) => {
-            if (response.id === 0) {
-              return throwError(() => new Error('Invalid person info'));
-            } else {
-              new_app.personID = response.id;
-              return this.applicationService.create(new_app);
-            }
-          }),
-          concatMap((response) => {
-            if (response.id === 0) {
-              return throwError(() => new Error('Invalid application info'));
-            } else {
-              local_app.applicationID = response.id;
-              return this.localAppService.create(local_app);
-            }
-          }),
-          catchError((error) => {
-            return throwError(() => error);
-          })
-        )
-        .subscribe({
-          next: (res) => {
-            const notify: NotificationBox = {
-              message: `Application saved successfully, Application ID = ${res.id} :)`,
-              status: 'success',
-            };
-            this.notificationSerice.showMessage(notify);
-          },
-          error: (err) => {
-            const notify: NotificationBox = {
-              message: `${err.message}`,
-              status: 'failed',
-            };
-            this.notificationSerice.showMessage(notify);
-          },
-          complete: () => {},
-        });
-      this.destroyRef.onDestroy(() => subscription.unsubscribe());
+      this.isDialogVisible.set(true);
+      if (this.isConfirmed()) {
+        let new_person: Person = {
+          id: 0,
+          firstName: this.register_form.controls.firstname.value!,
+          secondName: this.register_form.controls.secondname.value!,
+          thirdName: this.register_form.controls.thirdname.value!,
+          lastName: this.register_form.controls.lastname.value!,
+          nationalNumber: this.register_form.controls.nationalno.value!,
+          phoneNumber: this.register_form.controls.phonenumber.value!,
+          address: this.register_form.controls.address.value!,
+          birthDate: new Date(this.register_form.controls.birthdate.value!)
+            .toISOString()
+            .split('T')[0],
+          email: this.register_form.controls.email.value!,
+          gender: this.register_form.controls.gender.value!,
+          nationality: this.register_form.controls.country.value!,
+          personalPicture: this.register_form.controls.img.value!,
+          creationDate: this.current_date,
+          createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+          updatedByUserID: null,
+          updatedDate: null,
+        };
+        let new_app: Application = {
+          id: 0,
+          personID: 0,
+          status: 1,
+          type: 1,
+          date: this.current_date,
+          paidFees: this.application_types.at(0)!.typeFees,
+          lastStatusDate: this.current_date,
+          createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+        };
+        let local_app: LocalApplication = {
+          id: 0,
+          applicationID: 0,
+          licenseClassID: +this.register_form.controls.licenseclass.value!,
+        };
+        const subscription = this.licenseClassService
+          .getLicenseClass(local_app.licenseClassID)
+          .pipe(
+            switchMap((response) => {
+              const birthdate = new Date(new_person.birthDate);
+              const age =
+                this.current_date.getFullYear() - birthdate.getFullYear();
+              if (response.minAgeAllowed > age) {
+                return throwError(
+                  () =>
+                    new Error(
+                      `'Age restriction not met! must be older than ${response.minAgeAllowed}`
+                    )
+                );
+              } else {
+                return this.personService.create(new_person);
+              }
+            }),
+            switchMap((response) => {
+              if (response.id === 0) {
+                return throwError(() => new Error('Invalid person info'));
+              } else {
+                new_app.personID = response.id;
+                return this.applicationService.create(new_app);
+              }
+            }),
+            concatMap((response) => {
+              if (response.id === 0) {
+                return throwError(() => new Error('Invalid application info'));
+              } else {
+                local_app.applicationID = response.id;
+                return this.localAppService.create(local_app);
+              }
+            }),
+            catchError((error) => {
+              return throwError(() => error);
+            })
+          )
+          .subscribe({
+            next: (res) => {
+              const notify: NotificationBox = {
+                message: `Application saved successfully, Application ID = ${res.id} :)`,
+                status: 'success',
+              };
+              this.notificationSerice.showMessage(notify);
+            },
+            error: (err) => {
+              const notify: NotificationBox = {
+                message: `${err.message}`,
+                status: 'failed',
+              };
+              this.notificationSerice.showMessage(notify);
+            },
+            complete: () => {},
+          });
+        this.destroyRef.onDestroy(() => subscription.unsubscribe());
+      }
     }
   }
 }

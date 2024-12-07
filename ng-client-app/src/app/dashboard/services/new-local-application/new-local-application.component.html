@@ -151,6 +151,14 @@
         <button type="submit" name="submit" id="submit" class="apply">
           Apply
         </button>
+        @if(isDialogVisible){
+        <app-confirmation-dialog
+          [isVisible]="isDialogVisible"
+          title="Confirm Applying"
+          message="Are you sure you want to apply?"
+          (confirmed)="onDialogResult($event)"
+        ></app-confirmation-dialog>
+        }
       </div>
     </div>
   </fieldset>
