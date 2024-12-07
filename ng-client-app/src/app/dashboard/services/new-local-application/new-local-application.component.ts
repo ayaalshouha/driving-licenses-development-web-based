@@ -9,7 +9,7 @@ import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
 import { concatMap, forkJoin, switchMap, tap, throwError } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { isExist } from '../../custom-validator';
@@ -142,7 +142,11 @@ export class NewLocalApplicationComponent implements OnInit {
     if (this.register_form.valid) {
       const currentUser = this.currentUserSerice.getCurrentUser();
       if (!currentUser) {
-        console.error('Current user is not available');
+        const notify: NotificationBox = {
+          message: `Current user session might end, login again!`,
+          status: 'faild',
+        };
+        this.notificationSerice.showMessage(notify);
         return;
       }
 
@@ -182,9 +186,25 @@ export class NewLocalApplicationComponent implements OnInit {
         applicationID: 0,
         licenseClassID: +this.register_form.controls.licenseclass.value!,
       };
-      const subscription = this.personService
-        .create(new_person)
+
+      const subscription = this.licenseClassService
+        .getLicenseClass(local_app.licenseClassID)
         .pipe(
+          switchMap((response) => {
+            const birthdate = new Date(new_person.birthDate);
+            const age =
+              this.current_date.getFullYear() - birthdate.getFullYear();
+            if (response.minAgeAllowed > age) {
+              return throwError(
+                () =>
+                  new Error(
+                    'Age does NOT require the license minimum allowed age '
+                  )
+              );
+            } else {
+              return this.personService.create(new_person);
+            }
+          }),
           switchMap((response) => {
             if (response.id === 0) {
               return throwError(() => new Error('Invalid person info'));

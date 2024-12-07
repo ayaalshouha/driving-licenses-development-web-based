@@ -8,7 +8,11 @@ import { Observable } from 'rxjs';
 })
 export class LicenseClassService {
   constructor(private http: HttpClient) {}
-
+  getLicenseClass(ID: number): Observable<LicenseClass> {
+    return this.http.get<LicenseClass>(
+      `${LICENSE_CLASS_API_ENDPOINT.read}${ID}`
+    );
+  }
   getAllClasses(): Observable<LicenseClass[]> {
     return this.http.get<LicenseClass[]>(LICENSE_CLASS_API_ENDPOINT.allClasses);
   }
