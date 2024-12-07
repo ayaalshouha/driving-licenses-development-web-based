@@ -154,6 +154,7 @@ export class NewLocalApplicationComponent implements OnInit {
       this.notificationSerice.showMessage(notify);
       return;
     }
+    
     if (this.register_form.valid) {
       let new_person: Person = {
         id: 0,
@@ -191,7 +192,6 @@ export class NewLocalApplicationComponent implements OnInit {
         applicationID: 0,
         licenseClassID: +this.register_form.controls.licenseclass.value!,
       };
-
       const subscription = this.licenseClassService
         .getLicenseClass(local_app.licenseClassID)
         .pipe(
@@ -247,7 +247,6 @@ export class NewLocalApplicationComponent implements OnInit {
           },
           complete: () => {},
         });
-
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
   }
