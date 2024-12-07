@@ -8,8 +8,15 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import { concatMap, forkJoin, switchMap, tap, throwError } from 'rxjs';
-import { DatePipe, formatDate } from '@angular/common';
+import {
+  catchError,
+  concatMap,
+  forkJoin,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
+import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { isExist } from '../../custom-validator';
@@ -138,18 +145,16 @@ export class NewLocalApplicationComponent implements OnInit {
   }
 
   onSubmit() {
-    //check if age allow to apply to license class
+    const currentUser = this.currentUserSerice.getCurrentUser();
+    if (!currentUser) {
+      const notify: NotificationBox = {
+        message: `Current user session might end, login again!`,
+        status: 'failed',
+      };
+      this.notificationSerice.showMessage(notify);
+      return;
+    }
     if (this.register_form.valid) {
-      const currentUser = this.currentUserSerice.getCurrentUser();
-      if (!currentUser) {
-        const notify: NotificationBox = {
-          message: `Current user session might end, login again!`,
-          status: 'failed',
-        };
-        this.notificationSerice.showMessage(notify);
-        return;
-      }
-
       let new_person: Person = {
         id: 0,
         firstName: this.register_form.controls.firstname.value!,
@@ -220,6 +225,9 @@ export class NewLocalApplicationComponent implements OnInit {
               local_app.applicationID = response.id;
               return this.localAppService.create(local_app);
             }
+          }),
+          catchError((error) => {
+            return throwError(() => error);
           })
         )
         .subscribe({
@@ -232,7 +240,7 @@ export class NewLocalApplicationComponent implements OnInit {
           },
           error: (err) => {
             const notify: NotificationBox = {
-              message: `An error occurred while saving the application => ${err}`,
+              message: `${err.message}`,
               status: 'failed',
             };
             this.notificationSerice.showMessage(notify);
