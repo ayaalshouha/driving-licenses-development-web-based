@@ -1,7 +1,11 @@
 @if(messageBox()) {
 <div class="notification-overlay">
   @if(messageBox()?.status === 'success'){
+
   <div class="success-notification-box">
+    <header>
+      {{ messageBox()?.status }}
+    </header>
     <div class="message">
       {{ messageBox()?.message }}
     </div>
@@ -11,6 +15,9 @@
   </div>
   }@else{
   <div class="failed-notification-box">
+    <header>
+      {{ messageBox()?.status }}
+    </header>
     <div class="message">
       {{ messageBox()?.message }}
     </div>

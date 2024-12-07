@@ -26,7 +26,10 @@ import {
   ApplicationTypes,
 } from '../../../models/application-type.model';
 import { LocalApplication } from '../../../models/local-application.model';
-import { NotificationService } from '../../../services/notification.service';
+import {
+  NotificationBox,
+  NotificationService,
+} from '../../../services/notification.service';
 
 @Component({
   selector: 'app-new-local-application',
@@ -200,14 +203,18 @@ export class NewLocalApplicationComponent implements OnInit {
         )
         .subscribe({
           next: (res) => {
-            this.notificationSerice.showMessage(
-              `Application saved successfully, Application ID = ${res.id} :)`
-            );
+            const notify: NotificationBox = {
+              message: `Application saved successfully, Application ID = ${res.id} :)`,
+              status: 'success',
+            };
+            this.notificationSerice.showMessage(notify);
           },
           error: (err) => {
-            this.notificationSerice.showMessage(
-              `An error occurred while saving the application => ${err}`
-            );
+            const notify: NotificationBox = {
+              message: `An error occurred while saving the application => ${err}`,
+              status: 'faild',
+            };
+            this.notificationSerice.showMessage(notify);
           },
           complete: () => {},
         });
