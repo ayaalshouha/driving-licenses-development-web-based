@@ -144,7 +144,7 @@ export class NewLocalApplicationComponent implements OnInit {
       if (!currentUser) {
         const notify: NotificationBox = {
           message: `Current user session might end, login again!`,
-          status: 'faild',
+          status: 'failed',
         };
         this.notificationSerice.showMessage(notify);
         return;
@@ -195,12 +195,12 @@ export class NewLocalApplicationComponent implements OnInit {
             const age =
               this.current_date.getFullYear() - birthdate.getFullYear();
             if (response.minAgeAllowed > age) {
-              return throwError(
-                () =>
-                  new Error(
-                    'Age does NOT require the license minimum allowed age '
-                  )
-              );
+              const notify: NotificationBox = {
+                message: `Age does NOT require the license minimum allowed age `,
+                status: 'failed',
+              };
+              this.notificationSerice.showMessage(notify);
+              return throwError(() => new Error());
             } else {
               return this.personService.create(new_person);
             }
@@ -233,7 +233,7 @@ export class NewLocalApplicationComponent implements OnInit {
           error: (err) => {
             const notify: NotificationBox = {
               message: `An error occurred while saving the application => ${err}`,
-              status: 'faild',
+              status: 'failed',
             };
             this.notificationSerice.showMessage(notify);
           },
