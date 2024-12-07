@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { NotificationService } from '../../services/notification.service';
-
+import {
+  NotificationBox,
+  NotificationService,
+} from '../../services/notification.service';
 @Component({
   selector: 'app-notification',
   standalone: true,
@@ -9,11 +11,11 @@ import { NotificationService } from '../../services/notification.service';
   styleUrl: './notification.component.css',
 })
 export class NotificationComponent {
-  message = signal<string | null>(null);
+  messageBox = signal<NotificationBox | null>(null);
 
   constructor(private notificationService: NotificationService) {
-    this.notificationService.notification$.subscribe((msg) =>
-      this.message.set(msg)
+    this.notificationService.messageBox$.subscribe((messageBoxServ) =>
+      this.messageBox.set(messageBoxServ)
     );
   }
 

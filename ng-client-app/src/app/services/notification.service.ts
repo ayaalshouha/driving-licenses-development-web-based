@@ -1,18 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
+type notifyStatus = 'success' | 'faild' | null;
+
+export interface NotificationBox {
+  message: string;
+  status: notifyStatus;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  private notification = new BehaviorSubject<string | null>(null);
-  notification$ = this.notification.asObservable();
+  private messageBox = new BehaviorSubject<NotificationBox | null>(null);
 
-  showMessage(message: string) {
-    this.notification.next(message);
+  messageBox$ = this.messageBox.asObservable();
+
+  showMessage(messageBox: NotificationBox) {
+    this.messageBox.next(messageBox);
   }
 
   hideNotification() {
-    this.notification.next(null);
+    this.messageBox.next(null);
   }
 }
