@@ -138,6 +138,7 @@ export class NewLocalApplicationComponent implements OnInit {
   }
 
   onSubmit() {
+    //check if age allow to apply to license class
     if (this.register_form.valid) {
       const currentUser = this.currentUserSerice.getCurrentUser();
       if (!currentUser) {

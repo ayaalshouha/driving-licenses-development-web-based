@@ -35,9 +35,8 @@ select {
 
 .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
 }
 
 button {
@@ -51,6 +50,7 @@ button.apply {
   padding: 8px 35px;
   color: white;
   background-color: #f99c30;
+  margin-left: 10px;
   transition: opacity 0.5s;
   -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
