@@ -151,9 +151,9 @@
         <button type="submit" name="submit" id="submit" class="apply">
           Apply
         </button>
-        @if(isDialogVisible){
+        @if(isDialogVisible()){
         <app-confirmation-dialog
-          [isVisible]="isDialogVisible"
+          [isVisible]="isDialogVisible()"
           title="Confirm Applying"
           message="Are you sure you want to apply?"
           (confirmed)="onDialogResult($event)"

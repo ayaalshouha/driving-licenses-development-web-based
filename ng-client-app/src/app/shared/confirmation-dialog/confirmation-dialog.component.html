@@ -1,11 +1,11 @@
 @if(isVisible){
 <div class="backdrop">
-  <div class="dialog">
-    <h2>{{ title }}</h2>
+  <div class="dialog-box">
+    <header>{{ title }}</header>
     <p>{{ message }}</p>
     <div class="actions">
-      <button (click)="confirm()">Yes</button>
-      <button (click)="cancel()">No</button>
+      <button class="button button-secondary" (click)="cancel()">No</button>
+      <button class="button button-primary" (click)="confirm()">Yes</button>
     </div>
   </div>
 </div>
