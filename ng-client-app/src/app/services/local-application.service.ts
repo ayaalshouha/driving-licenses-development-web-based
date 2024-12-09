@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LocalApplication } from '../models/local-application.model';
+import {
+  LocalApplication,
+  LocalApplicationView,
+} from '../models/local-application.model';
 import { LOCAL_APPLICATION_API_ENDPOINT } from '../environments/endpoints/local-application.endpoints';
 import { Observable } from 'rxjs';
 
@@ -14,6 +17,12 @@ export class LocalApplicationService {
     return this.http.post<LocalApplication>(
       LOCAL_APPLICATION_API_ENDPOINT.create,
       new_application
+    );
+  }
+
+  getAll(): Observable<LocalApplicationView> {
+    return this.http.get<LocalApplicationView>(
+      LOCAL_APPLICATION_API_ENDPOINT.all
     );
   }
 }
