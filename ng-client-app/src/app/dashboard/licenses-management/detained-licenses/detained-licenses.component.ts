@@ -1,13 +1,13 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { DetainedLicense } from '../../../models/detained-license.model';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DetainedLicenseService } from '../../../services/detained-license.service';
 import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-detained-licenses',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './detained-licenses.component.html',
   styleUrl: './detained-licenses.component.css',
 })
