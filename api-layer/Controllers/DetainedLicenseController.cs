@@ -36,6 +36,18 @@ namespace api_layer.Controllers
             return detain;
         }
 
+
+        [HttpGet("All", Name = "AllDetainedLicenses")]
+        public async Task<ActionResult<IEnumerable<DetainedLicense_View>>> getAll()
+        {
+            var appsList = await clsDetainedLicenses.ListAsync();
+            if (appsList.Count() <= 0)
+                return NotFound("No Detained Licenses Found");
+
+            return Ok(appsList);
+        }
+
+
         [HttpGet("Read", Name = "ReadDetainByID")]
         public async Task<ActionResult<DetainedLicense>> Read(int detainID)
         {
@@ -49,6 +61,7 @@ namespace api_layer.Controllers
 
             return Ok(detain.DetainedLicenseDTO);
         }
+
 
         [HttpGet("ReadByLicenseID", Name = "ReadDetainByLicenseID")]
         public async Task<ActionResult<DetainedLicense>> ReadByLicenseID(int licenseID)

@@ -205,7 +205,7 @@ namespace BuisnessLayer
         {
             int DetainID = -1;
             var DetainInfo = new clsDetainedLicenses();
-            DetainInfo.DetainDate = DateOnly.FromDateTime(DateTime.Now);
+            DetainInfo.DetainDate = DateTime.Now;
             DetainInfo.FineFees = finefee;
             DetainInfo.isReleased = false;
             DetainInfo.CreatedByUserID = CreatedByUserID;
@@ -239,7 +239,7 @@ namespace BuisnessLayer
                 {
                     detainInfo.ReleaseApplicationID = NewApplication.ID;
                     detainInfo.isReleased = true;
-                    detainInfo.ReleaseDate = DateOnly.FromDateTime(DateTime.Now);
+                    detainInfo.ReleaseDate = DateTime.Now;
                     detainInfo.ReleasedByUserID = ReleasedByUserID;
 
                     if (await detainInfo.SaveAsync())

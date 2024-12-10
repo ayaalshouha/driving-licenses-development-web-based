@@ -31,9 +31,9 @@ namespace DataLayer
                         reader.GetInt32(reader.GetOrdinal("ID")),
                         reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("LicenseID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue) 
-                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
-                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateTime.MinValue
+                        : reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                       reader.GetDateTime(reader.GetOrdinal("DetainDate")),
                         reader.GetBoolean(reader.GetOrdinal("isReleased")),
                         reader.GetDecimal(reader.GetOrdinal("FineFees")),
                         reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
@@ -44,8 +44,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -72,9 +72,9 @@ namespace DataLayer
                         reader.GetInt32(reader.GetOrdinal("ID")),
                         reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("LicenseID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue)
-                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
-                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateTime.MinValue
+                        : reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                        reader.GetDateTime(reader.GetOrdinal("DetainDate")),
                         reader.GetBoolean(reader.GetOrdinal("isReleased")),
                         reader.GetDecimal(reader.GetOrdinal("FineFees")),
                         reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
@@ -85,8 +85,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -114,7 +114,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@isReleased", license.isReleased);
 
 
-                if (license.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
+                if (license.ReleaseDate == DateTime.MinValue)
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
                     Command.Parameters.AddWithValue("@ReleaseDate", license.ReleaseDate);
@@ -142,8 +142,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -174,7 +174,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@CreatedByUserID", detain.CreatedByUserID);
                 Command.Parameters.AddWithValue("@isReleased", detain.isReleased);
 
-                if (detain.ReleaseDate == DateOnly.FromDateTime(DateTime.MinValue))
+                if (detain.ReleaseDate == DateTime.MinValue)
                     Command.Parameters.AddWithValue("@ReleaseDate", DBNull.Value);
                 else
                     Command.Parameters.AddWithValue("@ReleaseDate", detain.ReleaseDate);
@@ -195,8 +195,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -219,7 +219,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
                 //Console.WriteLine("Error: " + ex.Message);
             }
             finally
@@ -244,7 +244,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
                 //Console.WriteLine("Error: " + ex.Message);
             }
             finally
@@ -272,7 +272,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
                 //Console.WriteLine("Error: " + ex.Message);
             }
             finally
@@ -281,9 +281,9 @@ namespace DataLayer
             }
             return Detained;
         }
-        public static async Task<IEnumerable<DetainedLicense>> DetainedLicesesListAsync()
+        public static async Task<IEnumerable<DetainedLicense_View>> DetainedLicesesListAsync()
         {
-            var dt = new List<DetainedLicense>();
+            var dt = new List<DetainedLicense_View>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -297,23 +297,22 @@ namespace DataLayer
 
                 while (await reader.ReadAsync())
                 {
-                    dt.Add(new DetainedLicense(
+                    dt.Add(new DetainedLicense_View(
                         reader.GetInt32(reader.GetOrdinal("ID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("LicenseID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateOnly.FromDateTime(DateTime.MinValue)
-                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ReleaseDate"))),
-                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("DetainDate"))),
+                        reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                        reader.GetDateTime(reader.GetOrdinal("DetainDate")),
                         reader.GetBoolean(reader.GetOrdinal("isReleased")),
                         reader.GetDecimal(reader.GetOrdinal("FineFees")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleasedByUserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleasedByUserID")),
-                        reader.GetInt32(reader.GetOrdinal("CreatedByUserID"))
+                        reader.GetString(reader.GetOrdinal("NationalID")),
+                         reader.GetString(reader.GetOrdinal("FullName"))
                         ));
                 }
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
                 //Console.WriteLine("Error: " + ex.Message);
             }
             finally

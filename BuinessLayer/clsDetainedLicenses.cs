@@ -9,15 +9,15 @@ namespace BuisnessLayer
     {
         private enMode _Mode = enMode.add;
         public int ID { get; set; }
-        public int ReleaseApplicationID { get; set; }
         public int LicenseID { get; set; }
-        public DateOnly ReleaseDate { get; set; }
-        public DateOnly DetainDate { get; set; }
-        public bool isReleased { get; set; }
+        public DateTime DetainDate { get; set; }
         public decimal FineFees { get; set; }
-        public int ReleasedByUserID { get; set; }
-        public clsUser ReleasedByUserInfo {  get; set; }
         public int CreatedByUserID { get; set; }
+        public bool isReleased { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public int? ReleasedByUserID { get; set; }
+        public int? ReleaseApplicationID { get; set; }
+        public clsUser ReleasedByUserInfo {  get; set; }
         public clsUser CreatedByUserInfo { get; set; }
         public DetainedLicense DetainedLicenseDTO
         {
@@ -34,8 +34,8 @@ namespace BuisnessLayer
             this.LicenseID = -1;
             this.CreatedByUserID = -1;
             this.isReleased =false;
-            this.DetainDate = DateOnly.FromDateTime(DateTime.MinValue);
-            this.ReleaseDate = DateOnly.FromDateTime(DateTime.MinValue);
+            this.DetainDate = DateTime.MinValue;
+            this.ReleaseDate = null;
             this.ReleasedByUserID = -1;
             this.FineFees = -1;
             this.ReleaseApplicationID = -1;
@@ -53,7 +53,9 @@ namespace BuisnessLayer
             this.ReleaseDate = license.ReleaseDate;
             this.ReleasedByUserID = license.ReleasedByUserID;
             this.FineFees = license.FineFees;
-            this.ReleasedByUserInfo = clsUser.Find(ReleasedByUserID);
+            this.ReleasedByUserInfo = 
+                this.ReleasedByUserID != null ? clsUser.Find(license.ReleasedByUserID.Value) : null;
+           
             this.CreatedByUserInfo = clsUser.Find(CreatedByUserID);
             this._Mode = enMode.update;
         }
@@ -103,7 +105,7 @@ namespace BuisnessLayer
             bool result = await DetainedLicenses_Data.isLicenseDetainedAsync(LicenseID);
             return result;
         }
-        public static async Task<IEnumerable<DetainedLicense>> ListAsync()
+        public static async Task<IEnumerable<DetainedLicense_View>> ListAsync()
         {
             return await DetainedLicenses_Data.DetainedLicesesListAsync();
         }
