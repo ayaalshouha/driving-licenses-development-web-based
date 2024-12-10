@@ -12,9 +12,13 @@ form input {
   display: flex;
   justify-content: flex-end;
 }
+table {
+  border-collapse: collapse;
+}
 th,
 td {
   padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 th {
   text-align: center;
@@ -73,8 +77,8 @@ table button {
   background-color: #0056b3;
 }
 
-.prev-btn:disabled,
+/* .prev-btn:disabled,
 .next-btn:disabled {
   background-color: #d6d6d6;
   cursor: not-allowed;
-}
+} */

@@ -9,6 +9,11 @@
       />
     </div>
   </form>
+
+  <div class="add-btn">
+    <button routerLink="" class="button">+ Detain License</button>
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -21,6 +26,7 @@
         <th scope="col">Release App ID</th>
         <th scope="col">Fine Fees</th>
         <th scope="col">Release Date</th>
+        <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -30,18 +36,18 @@
         <td>{{ detain.licenseID }}</td>
         <td>{{ detain.nationalNo }}</td>
         <td>{{ detain.fullName }}</td>
-        <td>{{ detain.detainDate }}</td>
-        <td>{{ app.isReleased }}</td>
+        <td>{{ detain.detainDate | date : "EEE, MMM d, yyyy" }}</td>
+        <td>{{ detain.isReleased ? "YES" : "NO" }}</td>
         <td>{{ detain.releaseApplicationID }}</td>
-        <td>{{ detain.fineFees }}</td>
-        <td>{{ detain.releaseDate }}</td>
+        <td>{{ detain.fineFees | currency }}</td>
+        <td>{{ detain.releaseDate | date : "EEE, MMM d, yyyy" }}</td>
         <td>
-          <button class="button">Release</button>
+          <button [disabled]="detain.isReleased" class="button">Release</button>
         </td>
       </tr>
       } @empty {
       <tr>
-        <td colspan="9" style="text-align: center">
+        <td colspan="10" style="text-align: center">
           No Detained Licenses found
         </td>
       </tr>
@@ -60,7 +66,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize >= list.length"
+      [disabled]="currentPage * pageSize > list.length"
     >
       Next
     </button>

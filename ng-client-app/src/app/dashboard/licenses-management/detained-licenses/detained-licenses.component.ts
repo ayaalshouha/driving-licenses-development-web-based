@@ -3,17 +3,18 @@ import { DetainedLicense } from '../../../models/detained-license.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DetainedLicenseService } from '../../../services/detained-license.service';
 import { tap } from 'rxjs';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-detained-licenses',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
   templateUrl: './detained-licenses.component.html',
   styleUrl: './detained-licenses.component.css',
 })
 export class DetainedLicensesComponent {
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 6;
   list: DetainedLicense[] = [];
   dataDisplayed: DetainedLicense[] = [];
   private destroyRef = inject(DestroyRef);
