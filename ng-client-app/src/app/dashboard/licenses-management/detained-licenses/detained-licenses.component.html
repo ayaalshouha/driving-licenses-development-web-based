@@ -1,1 +1,62 @@
-<p>licenses works!</p>
+<div class="container">
+  <form>
+    <div class="flex-one">
+      <input
+        id="table-filtering-search"
+        type="text"
+        [formControl]="filter"
+        placeholder="Full Text Search"
+      />
+    </div>
+  </form>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">License ID</th>
+        <th scope="col">National ID</th>
+        <th scope="col">Full Name</th>
+        <th scope="col">Detain Date</th>
+        <th scope="col">is Released</th>
+        <th scope="col">Fine Fees</th>
+        <th scope="col">Release Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (detain of dataDesplayed; track $index) {
+      <tr>
+        <td>{{ detain. }}</td>
+        <td>{{ detain. }}</td>
+        <td>{{ detain.fullName }}</td>
+        <td>{{ app.nationalID }}</td>
+        <td>{{ detain.date }}</td>
+        <td>{{ detain.activeLicenses }}</td>
+        <td>
+          <button class="button">Release</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="9" style="text-align: center">No applications found</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button
+      class="prev-btn"
+      (click)="onPrevious()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="next-btn"
+      (click)="onNext()"
+      [disabled]="currentPage * pageSize >= drivers.length"
+    >
+      Next
+    </button>
+  </div>
+</div>
