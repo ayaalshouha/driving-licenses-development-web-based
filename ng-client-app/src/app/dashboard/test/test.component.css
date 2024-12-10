@@ -1,12 +1,10 @@
 svg {
   margin: 20px;
 }
-
-.container {
+.wrapper {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 40px;
   flex-wrap: wrap;
 }
-

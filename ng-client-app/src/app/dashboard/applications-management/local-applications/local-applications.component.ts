@@ -1,15 +1,7 @@
-import {
-  COMPILER_OPTIONS,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
-import { AsyncPipe } from '@angular/common';
 import { LocalApplicationService } from '../../../services/local-application.service';
 
 @Component({
@@ -35,12 +27,12 @@ export class LocalApplicationsComponent implements OnInit {
       .pipe(
         tap((response) => {
           this.applications = response;
+          this.updateDisplayedData(0);
         })
       )
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
-    this.updateDisplayedData(0);
   }
 
   updateDisplayedData(startIndex: number = 0) {
