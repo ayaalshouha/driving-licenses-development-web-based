@@ -20,8 +20,8 @@ export class LocalApplicationService {
     );
   }
 
-  getAll(): Observable<LocalApplicationView> {
-    return this.http.get<LocalApplicationView>(
+  getAll(): Observable<LocalApplicationView[]> {
+    return this.http.get<LocalApplicationView[]>(
       LOCAL_APPLICATION_API_ENDPOINT.all
     );
   }

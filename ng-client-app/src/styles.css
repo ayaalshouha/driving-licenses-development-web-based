@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/dist/css/bootstrap.min.css";
-
+/* @import "bootstrap/dist/css/bootstrap.min.css"; */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -21,6 +20,7 @@ body {
   --light-color: #f1f2f7;
   --hover-color: #707fdd;
   --bg-hover-color: #e4e7f6;
+  --bg-light-color: #f8f9fa;
   --special-color: #f99c30;
   --secondary-special-color: #2fbfde;
   --border-radius: 8px;

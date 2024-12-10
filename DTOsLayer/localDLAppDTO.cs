@@ -32,6 +32,7 @@ namespace DTOsLayer
         public LocalDLApp_View(int id, string nationalID , string Class,string fullname, DateOnly date, int passedtest, string status)
         {
             this.ID = id;
+            this.NationalID = nationalID;
             this.Class = Class;
             this.FullName = fullname;
             this.Date = date; 
