@@ -12,9 +12,9 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public class CountryController : Controller
+    public class countryController : Controller
     {
-        [HttpGet("All", Name = "GetCountries")]
+        [HttpGet("coutries", Name = "GetCountries")]
         public ActionResult<IEnumerable<string>> AllTypes()
         {
             var list =  clsCountries.GetAllCountries();

@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class DetainedLicenseController : Controller
+    public class detainedLicenseController : Controller
     {
         private clsDetainedLicenses AssignDataToDetainApp(DetainedLicense newDetain, int ID = -1)
         {
@@ -37,7 +37,7 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpGet("All", Name = "AllDetainedLicenses")]
+        [HttpGet("detained-licenses", Name = "AllDetainedLicenses")]
         public async Task<ActionResult<IEnumerable<DetainedLicense_View>>> getAll()
         {
             var appsList = await clsDetainedLicenses.ListAsync();
@@ -48,7 +48,7 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpGet("Read", Name = "ReadDetainByID")]
+        [HttpGet("{id}", Name = "ReadDetainByID")]
         public async Task<ActionResult<DetainedLicense>> Read(int detainID)
         {
             if (!int.TryParse(detainID.ToString(), out _) || Int32.IsNegative(detainID))
@@ -63,7 +63,7 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpGet("ReadByLicenseID", Name = "ReadDetainByLicenseID")]
+        [HttpGet("by-license-id/{license-id}", Name = "ReadDetainByLicenseID")]
         public async Task<ActionResult<DetainedLicense>> ReadByLicenseID(int licenseID)
         {
             if (!int.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
@@ -81,7 +81,7 @@ namespace api_layer.Controllers
             return Ok(detain.DetainedLicenseDTO);
         }
 
-        [HttpPost("Create", Name = "CreateDetain")]
+        [HttpPost("", Name = "CreateDetain")]
         public async Task<ActionResult<DetainedLicense>> Create(DetainedLicense newDetain)
         {
             if (newDetain == null)
@@ -99,7 +99,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Detain" });
         }
 
-        [HttpPut("Update", Name = "UpdateDetain")]
+        [HttpPut("{id}", Name = "UpdateDetain")]
         public async Task<ActionResult<DetainedLicense>> Update(int detainID, DetainedLicense newDetain)
         {
             if (newDetain == null)
@@ -121,7 +121,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Detain" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteDetain")]
+        [HttpDelete("{id}", Name = "DeleteDetain")]
         public async Task<ActionResult> Delete(int detainID)
         {
             if (!Int32.TryParse(detainID.ToString(), out _) || Int32.IsNegative(detainID))

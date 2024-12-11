@@ -12,7 +12,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class AppointmentController : Controller
+    public class appointmentController : Controller
     {
         private clsAppointment AssignDataToAppointment(Appointment newAppointment, int ID = -1)
         {
@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return appointment;
         }
 
-        [HttpGet("Read", Name = "ReadAppointmentByID")]
+        [HttpGet("{id}", Name = "ReadAppointmentByID")]
         public async Task<ActionResult<Appointment>> Read(int appointmentID)
         {
             if (!int.TryParse(appointmentID.ToString(), out _) || Int32.IsNegative(appointmentID))
@@ -50,7 +50,7 @@ namespace api_layer.Controllers
             return Ok(appointment.AppointementDTO);
         }
 
-        [HttpPost("Create", Name = "CreateAppointment")]
+        [HttpPost("", Name = "CreateAppointment")]
         public async Task<ActionResult<Appointment>> Create(Appointment newAppointment)
         {
             if (newAppointment == null)
@@ -68,7 +68,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Appointment" });
         }
 
-        [HttpPut("Update", Name = "UpdateAppointment")]
+        [HttpPut("{id}", Name = "UpdateAppointment")]
         public async Task<ActionResult<Appointment>> Update(int AppointmentID, Appointment newAppointment)
         {
             if (newAppointment == null)
@@ -90,7 +90,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Appointment" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteAppointment")]
+        [HttpDelete("{id}", Name = "DeleteAppointment")]
         public async Task<ActionResult> Delete(int AppointemntID)
         {
             if (!Int32.TryParse(AppointemntID.ToString(), out _) || Int32.IsNegative(AppointemntID))
@@ -110,7 +110,7 @@ namespace api_layer.Controllers
                 return NotFound("Appointment Not Found");
         }
 
-        [HttpGet("isThereAnyActiveAppointemnts", Name = "FindActiveAppointemnts")]
+        [HttpGet("active-appointments-exist", Name = "FindActiveAppointemnts")]
         public async Task<ActionResult<bool>> isThereAnyActiveAppointemnts(int LocalApplicationID, enTestType TestType)
         {
             var localappID = await clsLocalDrivingLicenses.isExistAsync(LocalApplicationID);
@@ -124,7 +124,7 @@ namespace api_layer.Controllers
             }
         }
 
-        [HttpGet("ReadAppointmentsPerTestType", Name = "AllAppointmentsPerTestType")]
+        [HttpGet("appointments/by-test-type", Name = "AllAppointmentsPerTestType")]
         public async Task<ActionResult<bool>> AllAppointmentsPerTestType(int LocalApplicationID, enTestType TestType)
         {
             var localappID = await clsLocalDrivingLicenses.isExistAsync(LocalApplicationID);

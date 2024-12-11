@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class DriverController : Controller
+    public class driverController : Controller
     {
         private clsDrviers AssignDataToDriver(Driver newDriver, int ID = -1)
         {
@@ -32,7 +32,7 @@ namespace api_layer.Controllers
             return driver;
         }
 
-        [HttpGet("All", Name = "AllDrivers")]
+        [HttpGet("drivers", Name = "AllDrivers")]
         public async Task<ActionResult<IEnumerable<Driver_View>>> getAll()
         {
             var driversList = await clsDrviers.ListAsync();
@@ -42,21 +42,21 @@ namespace api_layer.Controllers
             return Ok(driversList);
         }
 
-        [HttpGet("Read", Name = "ReadDriverByID")]
-        public async Task<ActionResult<Driver>> Read(int DriverID)
+        [HttpGet("{id}", Name = "ReadDriverByID")]
+        public async Task<ActionResult<Driver>> Read(int id)
         {
-            if (!int.TryParse(DriverID.ToString(), out _) || Int32.IsNegative(DriverID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid LicenseID ID Number");
 
-            var driver = await clsDrviers.FindAsync(DriverID);
+            var driver = await clsDrviers.FindAsync(id);
 
             if (driver == null)
-                return NotFound($"Driver With ID {DriverID} Not Found");
+                return NotFound($"Driver With ID {id} Not Found");
 
             return Ok(driver.DriverDTO);
         }
 
-        [HttpPost("Create", Name ="CreateDriver")]
+        [HttpPost("", Name ="CreateDriver")]
         public async Task<ActionResult<Driver>> Create(Driver newDriver)
         {
             if (newDriver == null)
@@ -74,21 +74,21 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Driver" });
         }
 
-        [HttpPut("Update", Name ="UpdateDriver")]
-        public async Task<ActionResult<Driver>> Update(int DriverID, Driver newDriver)
+        [HttpPut("{id}", Name ="UpdateDriver")]
+        public async Task<ActionResult<Driver>> Update(int id,Driver newDriver)
         {
             if (newDriver == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(DriverID.ToString(), out _) || Int32.IsNegative(DriverID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsDrviers.isExistAsync(DriverID);
+            bool isExist = await clsDrviers.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("Driver NOT Found");
 
-            clsDrviers driver = AssignDataToDriver(newDriver, DriverID);
+            clsDrviers driver = AssignDataToDriver(newDriver, id);
 
             if (driver != null && await driver.SaveAsync())
                 return Ok(driver.DriverDTO);
@@ -96,19 +96,19 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Driver" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteDriver")]
-        public async Task<ActionResult> Delete(int DriverID)
+        [HttpDelete("{id}", Name = "DeleteDriver")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(DriverID.ToString(), out _) || Int32.IsNegative(DriverID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsDrviers.isExistAsync(DriverID);
+            bool isExist = await clsDrviers.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsDrviers.DeleteAsync(DriverID);
+                bool isDeleted = await clsDrviers.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Driver with ID {DriverID} Deletted Successfully");
+                    return Ok($"Driver with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Driver" });
             }
@@ -116,14 +116,14 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
 
-        [HttpGet("AllLocalActiveLicenses", Name = "DriverLocalLicenses")]
-        public async Task<ActionResult<IEnumerable<ActiveLicense>>> LocalActiveLicenses(int DriverID)
+        [HttpGet("local-active-licenses/{id}", Name = "DriverLocalLicenses")]
+        public async Task<ActionResult<IEnumerable<ActiveLicense>>> LocalActiveLicenses(int id)
         {
-            bool isExist = await clsDrviers.isExistAsync(DriverID);
+            bool isExist = await clsDrviers.isExistAsync(id);
 
             if (isExist)
             {
-                var licenseslist = await clsDrviers.getLocalLicensesAsync(DriverID);
+                var licenseslist = await clsDrviers.getLocalLicensesAsync(id);
                 if (licenseslist.Count() <= 0)
                     return NotFound("No Active Local Licenses Found");
 
