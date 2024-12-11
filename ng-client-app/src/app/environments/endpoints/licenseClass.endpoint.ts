@@ -1,6 +1,6 @@
 import { environment } from '../environment';
 
 export const LICENSE_CLASS_API_ENDPOINT = {
-  read: `${environment.apiBaseUrl}/LicenseClass/Read?classID=`,
-  allClasses: `${environment.apiBaseUrl}/LicenseClass/All`,
+  allClasses: `${environment.apiBaseUrl}/licenseClass/license-classes`,
+  read: `${environment.apiBaseUrl}/licenseClass/`,
 };

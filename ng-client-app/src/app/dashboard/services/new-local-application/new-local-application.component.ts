@@ -31,7 +31,6 @@ import {
   NotificationService,
 } from '../../../services/notification.service';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import { sign } from 'crypto';
 
 @Component({
   selector: 'app-new-local-application',

@@ -20,24 +20,16 @@ export class LoginService {
 
   //check if username and passowrd BOTH match database
   isCorrect(username: string, password: string): Observable<boolean> {
-    const params = new HttpParams()
-      .set('username', username)
-      .set('password', password);
-
-    return this.httpClient.get<boolean>(`${LOGIN_API_ENDPOINTS.isCorrect}`, {
-      params,
-    });
+    return this.httpClient.get<boolean>(
+      `${LOGIN_API_ENDPOINTS.isCorrect(username, password)}`
+    );
   }
 
   //check if entered user is active
   isActive(username: string, password: string): Observable<boolean> {
-    const params = new HttpParams()
-      .set('username', username)
-      .set('password', password);
-
-    return this.httpClient.get<boolean>(`${LOGIN_API_ENDPOINTS.isUserActive}`, {
-      params,
-    });
+    return this.httpClient.get<boolean>(
+      `${LOGIN_API_ENDPOINTS.isUserActive(username, password)}`
+    );
   }
   //save login record in database
   saveLogin(userID: number) {

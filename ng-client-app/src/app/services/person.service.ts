@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PERSON_API_ENDPOINTS } from '../environments/endpoints/person.endpoints';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Person } from '../models/person.model';
 @Injectable({
   providedIn: 'root',

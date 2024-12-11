@@ -14,7 +14,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public class countryController : Controller
     {
-        [HttpGet("coutries", Name = "GetCountries")]
+        [HttpGet("countries", Name = "GetCountries")]
         public ActionResult<IEnumerable<string>> AllTypes()
         {
             var list =  clsCountries.GetAllCountries();

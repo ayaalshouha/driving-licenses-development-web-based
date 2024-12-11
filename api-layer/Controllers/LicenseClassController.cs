@@ -33,7 +33,7 @@ namespace api_layer.Controllers
             return licenseClasse;
         }
 
-        [HttpGet("", Name = "GetLicenseClasses")]
+        [HttpGet("license-classes", Name = "GetLicenseClasses")]
         public async Task<ActionResult<IEnumerable<LicenseClass>>> AllTypes()
         {
             var classesList = await clsLicenseClasses.ListAsync();
