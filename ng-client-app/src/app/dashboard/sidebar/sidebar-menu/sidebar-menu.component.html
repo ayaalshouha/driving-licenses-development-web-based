@@ -127,14 +127,6 @@
           <span>Manage Local Applications</span>
         </a>
       </li>
-      <li>
-        <a
-          routerLink="applications-management/international-applications"
-          routerLinkActive="active"
-        >
-          <span>Manage International Apps</span>
-        </a>
-      </li>
     </ul>
     }
 
@@ -163,6 +155,11 @@
     @if(menuOpen['licenses']()){
     <ul class="submenu">
       <li>
+        <a routerLink="licenses-management/drivers" routerLinkActive="active">
+          <span>Manage Drivers</span>
+        </a>
+      </li>
+      <li>
         <a
           routerLink="licenses-management/detaiend-licenses"
           routerLinkActive="active"
@@ -171,8 +168,11 @@
         </a>
       </li>
       <li>
-        <a routerLink="licenses-management/drivers" routerLinkActive="active">
-          <span>Manage Drivers</span>
+        <a
+          routerLink="licenses-management/international-licenses"
+          routerLinkActive="active"
+        >
+          <span>Manage International Licenses</span>
         </a>
       </li>
     </ul>
