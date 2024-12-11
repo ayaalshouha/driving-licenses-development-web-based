@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PERSON_API_ENDPOINTS } from '../environments/endpoints/person.endpoints';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Person } from '../models/person.model';
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ export class PersonService {
 
   isNationalNoExist(national_no: string): Observable<boolean> {
     return this.http.get<boolean>(
-      `${PERSON_API_ENDPOINTS.isExistByNationalNo}${national_no}`
+      `${PERSON_API_ENDPOINTS.isExistNationalNo(national_no)}`
     );
   }
 

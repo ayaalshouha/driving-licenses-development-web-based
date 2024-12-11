@@ -1,10 +1,11 @@
 import { environment } from '../environment';
 export const PERSON_API_ENDPOINTS = {
-  all: `${environment.apiBaseUrl}/Person/All`,
-  read: `${environment.apiBaseUrl}/Person/Read?ID=`,
-  create: `${environment.apiBaseUrl}/Person/Create`,
-  update: `${environment.apiBaseUrl}/Person/Update?ID=`,
-  delete: `${environment.apiBaseUrl}/Person/Delete?ID=`,
-  isExist: `${environment.apiBaseUrl}/Person/isExistByID?ID=`,
-  isExistByNationalNo: `${environment.apiBaseUrl}/Person/isExistByNationalNo?NationalNumber=`,
+  all: `${environment.apiBaseUrl}/person/people`,
+  read: `${environment.apiBaseUrl}/person`,
+  create: `${environment.apiBaseUrl}/person`,
+  update: `${environment.apiBaseUrl}/person`,
+  delete: `${environment.apiBaseUrl}/person`,
+  isExist: (id: number) => `${environment.apiBaseUrl}/person/${id}/is-exist`,
+  isExistNationalNo: (nationalNo: string) =>
+    `${environment.apiBaseUrl}/Person/${nationalNo}/is-exist`,
 };
