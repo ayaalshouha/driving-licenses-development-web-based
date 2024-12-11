@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, Inject, OnInit } from '@angular/core';
-import { Driver } from '../../../models/driver.model';
+import { Driver_View } from '../../../models/driver.model';
 import { DriverService } from '../../../services/driver.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
@@ -13,8 +13,8 @@ import { tap } from 'rxjs';
 export class DriversComponent implements OnInit {
   currentPage = 1;
   pageSize = 5;
-  drivers: Driver[] = [];
-  dataDisplayed: Driver[] = [];
+  drivers: Driver_View[] = [];
+  dataDisplayed: Driver_View[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 

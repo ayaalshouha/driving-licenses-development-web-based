@@ -1,7 +1,13 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CurrentUserService } from '../../../services/current-user.service';
-type MenuKeys = 'services' | 'apps' | 'licenses' | 'system' | 'new-app';
+type MenuKeys =
+  | 'services'
+  | 'apps'
+  | 'licenses'
+  | 'system'
+  | 'new-app'
+  | 'appointments';
 
 @Component({
   selector: 'app-sidebar-menu',
@@ -18,6 +24,7 @@ export class SidebarMenuComponent {
     licenses: signal(false),
     system: signal(false),
     'new-app': signal(false),
+    appointments: signal(false),
   };
   constructor(private currentUserService: CurrentUserService) {}
   private isParentOrChild(menuKey: MenuKeys, targetMenu: MenuKeys): boolean {
@@ -27,6 +34,7 @@ export class SidebarMenuComponent {
       licenses: [],
       system: [],
       'new-app': [],
+      appointments: [],
     };
     return (
       hierarchy[targetMenu]?.includes(menuKey) ||
