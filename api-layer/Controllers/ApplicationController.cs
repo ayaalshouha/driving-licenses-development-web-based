@@ -2,6 +2,7 @@
 using BuisnessLayer;
 using DTOsLayer;
 using static System.Net.Mime.MediaTypeNames;
+using System;
 
 namespace api_layer.Controllers
 {
@@ -38,15 +39,15 @@ namespace api_layer.Controllers
         }
      
         [HttpGet("{id}", Name = "ReadApplicationByID")]
-        public async Task<ActionResult<_Application>> Read(int ApplicationID)
+        public async Task<ActionResult<_Application>> Read(int id)
         {
-            if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Application ID Number");
 
-            _Application app = await clsApplication.FindDTOAsync(ApplicationID);
+            _Application app = await clsApplication.FindDTOAsync(id);
 
             if (app == null)
-                return NotFound($"Application With ID {ApplicationID} Not Found");
+                return NotFound($"Application With ID {id} Not Found");
 
             return Ok(app);
         }
@@ -70,20 +71,20 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateApplication")]
-        public async Task<ActionResult<_Application>> Update(int ApplicationID, _Application newApp)
+        public async Task<ActionResult<_Application>> Update(int id, _Application newApp)
         {
             if (newApp == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplication.isExistAsync(ApplicationID);
+            bool isExist = await clsApplication.isExistAsync(id);
             
             if (!isExist)
                 return NotFound("Application NOT Found");
 
-            clsApplication app = await AssignDataToApp(newApp, ApplicationID);
+            clsApplication app = await AssignDataToApp(newApp, id);
 
             if (app != null && await app.SaveAsync())
                 return Ok(app.applicationDTO);
@@ -92,18 +93,18 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteApplication")]
-        public async Task<ActionResult> Delete(int ApplicationID)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplication.isExistAsync(ApplicationID);
+            bool isExist = await clsApplication.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsApplication.DeleteAsync(ApplicationID);
+                bool isDeleted = await clsApplication.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Application with ID {ApplicationID} Deletted Successfully");
+                    return Ok($"Application with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Application" });
             }
@@ -124,9 +125,9 @@ namespace api_layer.Controllers
         //}
 
         [HttpPatch("complete/{id}", Name = "CompleteApplication")]
-        public async Task<ActionResult<bool>> SetCompleted(int ApplicationID)
+        public async Task<ActionResult<bool>> SetCompleted(int id)
         {
-            clsApplication app = await clsApplication.FindAsync(ApplicationID);
+            clsApplication app = await clsApplication.FindAsync(id);
             if (app == null)
                 return NotFound("Application Not Founs");
             else
@@ -134,22 +135,22 @@ namespace api_layer.Controllers
         }
 
         [HttpPatch("cancel/{id}", Name = "CancelApplciation")]
-        public async Task<ActionResult<bool>> Cancel(int ApplicationID)
+        public async Task<ActionResult<bool>> Cancel(int id)
         {
-            bool isExist = await clsApplication.isExistAsync(ApplicationID);
+            bool isExist = await clsApplication.isExistAsync(id);
             if (isExist)
-                return Ok(clsApplication.CancelAsync(ApplicationID));
+                return Ok(clsApplication.CancelAsync(id));
             else
                 return NotFound("Application Not Found"); 
         }
 
         [HttpGet("paid-fees/{id}", Name = "GetApplicationPaidFees")]
-        public async Task<ActionResult<decimal>> GetPaidFees(int ApplicationID)
+        public async Task<ActionResult<decimal>> GetPaidFees(int id)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            clsApplication app = await clsApplication.FindAsync(ApplicationID);
+            clsApplication app = await clsApplication.FindAsync(id);
             if (app == null)
                 return NotFound("Application Not Found");
             else

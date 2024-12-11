@@ -49,21 +49,21 @@ namespace api_layer.Controllers
 
 
         [HttpGet("{id}", Name = "ReadDetainByID")]
-        public async Task<ActionResult<DetainedLicense>> Read(int detainID)
+        public async Task<ActionResult<DetainedLicense>> Read(int id)
         {
-            if (!int.TryParse(detainID.ToString(), out _) || Int32.IsNegative(detainID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Detain ID Number");
 
-            var detain = await clsDetainedLicenses.FindAsync(detainID);
+            var detain = await clsDetainedLicenses.FindAsync(id);
 
             if (detain == null)
-                return NotFound($"detain With ID {detainID} Not Found");
+                return NotFound($"detain With ID {id} Not Found");
 
             return Ok(detain.DetainedLicenseDTO);
         }
 
 
-        [HttpGet("by-license-id/{license-id}", Name = "ReadDetainByLicenseID")]
+        [HttpGet("by-license-id/{licenseID}", Name = "ReadDetainByLicenseID")]
         public async Task<ActionResult<DetainedLicense>> ReadByLicenseID(int licenseID)
         {
             if (!int.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
@@ -100,20 +100,20 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateDetain")]
-        public async Task<ActionResult<DetainedLicense>> Update(int detainID, DetainedLicense newDetain)
+        public async Task<ActionResult<DetainedLicense>> Update(int id, DetainedLicense newDetain)
         {
             if (newDetain == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(detainID.ToString(), out _) || Int32.IsNegative(detainID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsDetainedLicenses.isExistAsync(detainID);
+            bool isExist = await clsDetainedLicenses.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("Detain NOT Found");
 
-            clsDetainedLicenses detain = AssignDataToDetainApp(newDetain, detainID);
+            clsDetainedLicenses detain = AssignDataToDetainApp(newDetain, id);
 
             if (detain != null && await detain.SaveAsync())
                 return Ok(detain.DetainedLicenseDTO);
@@ -122,18 +122,18 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteDetain")]
-        public async Task<ActionResult> Delete(int detainID)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(detainID.ToString(), out _) || Int32.IsNegative(detainID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsDetainedLicenses.isExistAsync(detainID);
+            bool isExist = await clsDetainedLicenses.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsDetainedLicenses.DeleteAsync(detainID);
+                bool isDeleted = await clsDetainedLicenses.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Detain with ID {detainID} Deletted Successfully");
+                    return Ok($"Detain with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Detain" });
             }

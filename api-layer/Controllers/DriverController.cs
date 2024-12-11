@@ -133,14 +133,14 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
         
-        [HttpGet("AllInternationalActiveLicenses", Name = "DriverInternationalLicenses")]
-        public async Task<ActionResult<IEnumerable<DriverInterNationalLicense>>> InternationalActiveLicenses(int DriverID)
+        [HttpGet("international-active-licenses/{id}", Name = "DriverInternationalLicenses")]
+        public async Task<ActionResult<IEnumerable<DriverInterNationalLicense>>> InternationalActiveLicenses(int id)
         {
-            bool isExist = await clsDrviers.isExistAsync(DriverID);
+            bool isExist = await clsDrviers.isExistAsync(id);
 
             if (isExist)
             {
-                var licenseslist = await clsDrviers.getInternationalLicenses(DriverID);
+                var licenseslist = await clsDrviers.getInternationalLicenses(id);
                 if (licenseslist.Count() <= 0)
                     return NotFound("No Active International Licenses Found");
 

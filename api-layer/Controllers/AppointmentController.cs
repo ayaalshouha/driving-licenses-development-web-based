@@ -37,15 +37,15 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("{id}", Name = "ReadAppointmentByID")]
-        public async Task<ActionResult<Appointment>> Read(int appointmentID)
+        public async Task<ActionResult<Appointment>> Read(int id)
         {
-            if (!int.TryParse(appointmentID.ToString(), out _) || Int32.IsNegative(appointmentID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Test ID Number");
 
-            var appointment = await clsAppointment.FindAsync(appointmentID);
+            var appointment = await clsAppointment.FindAsync(id);
 
             if (appointment == null)
-                return NotFound($"Appointment With ID {appointmentID} Not Found");
+                return NotFound($"Appointment With ID {id} Not Found");
 
             return Ok(appointment.AppointementDTO);
         }
@@ -69,20 +69,20 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateAppointment")]
-        public async Task<ActionResult<Appointment>> Update(int AppointmentID, Appointment newAppointment)
+        public async Task<ActionResult<Appointment>> Update(int id, Appointment newAppointment)
         {
             if (newAppointment == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(AppointmentID.ToString(), out _) || Int32.IsNegative(AppointmentID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsAppointment.isExistAsync(AppointmentID);
+            bool isExist = await clsAppointment.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("Appointment NOT Found");
 
-            clsAppointment appointment = AssignDataToAppointment(newAppointment, AppointmentID);
+            clsAppointment appointment = AssignDataToAppointment(newAppointment, id);
 
             if (appointment != null && await appointment.SaveAsync())
                 return Ok(appointment.AppointementDTO);
@@ -91,18 +91,18 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteAppointment")]
-        public async Task<ActionResult> Delete(int AppointemntID)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(AppointemntID.ToString(), out _) || Int32.IsNegative(AppointemntID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsAppointment.isExistAsync(AppointemntID);
+            bool isExist = await clsAppointment.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsAppointment.DeleteAsync(AppointemntID);
+                bool isDeleted = await clsAppointment.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Appointment with ID {AppointemntID} Deletted Successfully");
+                    return Ok($"Appointment with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Appointment" });
             }
@@ -110,30 +110,30 @@ namespace api_layer.Controllers
                 return NotFound("Appointment Not Found");
         }
 
-        [HttpGet("active-appointments-exist", Name = "FindActiveAppointemnts")]
-        public async Task<ActionResult<bool>> isThereAnyActiveAppointemnts(int LocalApplicationID, enTestType TestType)
+        [HttpGet("active-appointments-exist/by-test-type/{testType}/local-app/{localAppId}", Name = "FindActiveAppointemnts")]
+        public async Task<ActionResult<bool>> isThereAnyActiveAppointemnts(int localAppId, enTestType testType)
         {
-            var localappID = await clsLocalDrivingLicenses.isExistAsync(LocalApplicationID);
+            var localappID = await clsLocalDrivingLicenses.isExistAsync(localAppId);
 
             if (!localappID)
                 return NotFound($"Local Application ID Not Found");
             else
             {
-                var result = await clsAppointment.isThereAnyActiveAppointments(LocalApplicationID, TestType);
+                var result = await clsAppointment.isThereAnyActiveAppointments(localAppId, testType);
                 return Ok(result);
             }
         }
 
-        [HttpGet("appointments/by-test-type", Name = "AllAppointmentsPerTestType")]
-        public async Task<ActionResult<bool>> AllAppointmentsPerTestType(int LocalApplicationID, enTestType TestType)
+        [HttpGet("appointments/by-test-type/{testType}/local-app/{localAppId}", Name = "AllAppointmentsPerTestType")]
+        public async Task<ActionResult<bool>> AllAppointmentsPerTestType(int localAppId, enTestType testType)
         {
-            var localappID = await clsLocalDrivingLicenses.isExistAsync(LocalApplicationID);
+            var localappID = await clsLocalDrivingLicenses.isExistAsync(localAppId);
 
             if (!localappID)
                 return NotFound($"Local Application ID Not Found");
             else
             {
-                var all = clsAppointment.AppointmentsTablePerTestTypeAsync(LocalApplicationID, TestType);
+                var all = clsAppointment.AppointmentsTablePerTestTypeAsync(localAppId, testType);
                 return Ok(all);
             }
         }

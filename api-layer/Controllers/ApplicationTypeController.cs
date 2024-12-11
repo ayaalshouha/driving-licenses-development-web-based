@@ -42,15 +42,15 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("{id}", Name = "ReadApplicationTypeByID")]
-        public async Task<ActionResult<ApplicationType>> Read(int ApplicationID)
+        public async Task<ActionResult<ApplicationType>> Read(int id)
         {
-            if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Application Type ID Number");
 
-            clsApplicationTypes app = await clsApplicationTypes.FindAsync(ApplicationID);
+            clsApplicationTypes app = await clsApplicationTypes.FindAsync(id);
 
             if (app == null)
-                return NotFound($"Application Type With ID {ApplicationID} Not Found");
+                return NotFound($"Application Type With ID {id} Not Found");
 
             return Ok(app.AppTypeDTO);
         }
@@ -70,20 +70,20 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateApplicationType")]
-        public async Task<ActionResult<ApplicationType>> Update(int ApplicationID, ApplicationType newApp)
+        public async Task<ActionResult<ApplicationType>> Update(int id, ApplicationType newApp)
         {
             if (newApp == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)ApplicationID);
+            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)id);
 
             if (!isExist)
                 return NotFound("Application Type NOT Found");
 
-            clsApplicationTypes app = await AssignDataToAppType(newApp, ApplicationID);
+            clsApplicationTypes app = await AssignDataToAppType(newApp, id);
 
             if (app != null && await app.SaveAsync())
                 return Ok(app.AppTypeDTO);
@@ -92,18 +92,18 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteApplicationType")]
-        public async Task<ActionResult> Delete(int ApplicationTypeID)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(ApplicationTypeID.ToString(), out _) || Int32.IsNegative(ApplicationTypeID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)ApplicationTypeID);
+            bool isExist = await clsApplicationTypes.isExistAsync((enApplicationType)id);
 
             if (isExist)
             {
-                bool isDeleted = await clsApplicationTypes.DeleteAsync(ApplicationTypeID);
+                bool isDeleted = await clsApplicationTypes.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Application Type with ID {ApplicationTypeID} Deletted Successfully");
+                    return Ok($"Application Type with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Application Type" });
             }
@@ -112,16 +112,16 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("application-type-fees/{id}", Name = "GetApplicationTypeFees")]
-        public async Task<ActionResult<int>> GetFees(enApplicationType ApplicationTypeID)
+        public async Task<ActionResult<int>> GetFees(enApplicationType id)
         {
 
-            var isExist = await clsApplicationTypes.isExistAsync(ApplicationTypeID);
+            var isExist = await clsApplicationTypes.isExistAsync(id);
             
             if (!isExist)
                 return NotFound("Application Type Not Found");
             else
             {
-                decimal fee = await clsApplicationTypes.FeeAsync(ApplicationTypeID); 
+                decimal fee = await clsApplicationTypes.FeeAsync(id); 
                 return Ok(fee);
             }
         }
