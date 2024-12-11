@@ -1,18 +1,17 @@
 <div class="container">
   <form>
-    <div class="flex-one">
+    <div class="flex">
       <input
         id="table-filtering-search"
         type="text"
         [formControl]="filter"
         placeholder="Full Text Search"
       />
+      <div class="add-btn">
+        <button routerLink="" class="button">+ Detain License</button>
+      </div>
     </div>
   </form>
-
-  <div class="add-btn">
-    <button routerLink="" class="button">+ Detain License</button>
-  </div>
 
   <table>
     <thead>

@@ -12,7 +12,6 @@
   <table>
     <thead>
       <tr>
-        <th scope="col">#</th>
         <th scope="col">ID</th>
         <th scope="col">Person ID</th>
         <th scope="col">Full Name</th>
@@ -25,7 +24,6 @@
     <tbody>
       @for (app of dataDisplayed; track $index) {
       <tr>
-        <td>{{ $index + 1 }}</td>
         <td>{{ app.id }}</td>
         <td>{{ app.personID }}</td>
         <td>{{ app.fullName }}</td>

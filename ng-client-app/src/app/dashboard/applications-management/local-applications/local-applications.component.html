@@ -1,23 +1,21 @@
 <div class="container">
   <form>
-    <div class="flex-one">
+    <div class="flex">
       <input
         id="table-filtering-search"
         type="text"
         [formControl]="filter"
         placeholder="Full Text Search"
       />
+      <div class="add-btn">
+        <button routerLink="" class="button">+ Add New Application</button>
+      </div>
     </div>
   </form>
-
-  <div class="add-btn">
-    <button routerLink="" class="button">+ Add New Application</button>
-  </div>
 
   <table>
     <thead>
       <tr>
-        <th scope="col">#</th>
         <th scope="col">ID</th>
         <th scope="col">National No</th>
         <th scope="col">Full Name</th>
@@ -31,7 +29,6 @@
     <tbody>
       @for (app of dataDisplayed; track $index) {
       <tr>
-        <td>{{ $index + 1 }}</td>
         <td>{{ app.id }}</td>
         <td>{{ app.nationalID }}</td>
         <td>{{ app.fullName }}</td>

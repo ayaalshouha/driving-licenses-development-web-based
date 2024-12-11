@@ -1,1 +1,61 @@
-<p>application-types works!</p>
+<div class="container">
+  <form>
+    <div class="flex">
+      <input
+        id="table-filtering-search"
+        type="text"
+        [formControl]="filter"
+        placeholder="Full Text Search"
+      />
+      <div class="add-btn">
+        <button routerLink="" class="button">+ Add New Type</button>
+      </div>
+    </div>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Type Name</th>
+        <th scope="col">Fee</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (type of dataDisplayed; track $index) {
+      <tr>
+        <td>{{ type.id }}</td>
+        <td>{{ type.typeTitle }}</td>
+        <td>{{ type.typeFee | currency }}</td>
+        <td>
+          <button class="button">Edit</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="4" style="text-align: center">
+          No Application Types found
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button
+      class="prev-btn"
+      (click)="onPrevious()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="next-btn"
+      (click)="onNext()"
+      [disabled]="currentPage * pageSize >= types.length"
+    >
+      Next
+    </button>
+  </div>
+</div>
