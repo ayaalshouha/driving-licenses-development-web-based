@@ -3,6 +3,7 @@ import { TestComponent } from '../dashboard/test/test.component';
 import { services_routes } from './services.routes';
 import { app_management_routes } from './application-management.routes';
 import { licenses_management_routes } from './licenses-management.routes';
+import { system_routes } from './system.routes';
 
 export const dashboard_routes: Routes = [
   {
@@ -25,5 +26,9 @@ export const dashboard_routes: Routes = [
   {
     path: 'licenses-management',
     children: licenses_management_routes,
+  },
+  {
+    path: 'system',
+    children: system_routes,
   },
 ];
