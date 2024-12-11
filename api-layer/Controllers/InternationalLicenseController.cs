@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class InternationalLicenseController : Controller
+    public class internationalLicenseController : Controller
     {
         private static clsInternational_DL AssignDataToApp(InternationalLicense newLicenses, int ID = -1)
         {
@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return license;
         }
 
-        [HttpGet("All", Name = "AllInternationalLicenses")]
+        [HttpGet("international-licenses", Name = "AllInternationalLicenses")]
         public async Task<ActionResult<IEnumerable<InternationalLicense>>> getAll()
         {
             var licensesList = await clsInternational_DL.ListAsync();
@@ -46,22 +46,22 @@ namespace api_layer.Controllers
             return Ok(licensesList);
         }
 
-        [HttpGet("Read", Name = "ReadInternationalLicenseByID")]
-        public async Task<ActionResult<InternationalLicense>> Read(int licenseID)
+        [HttpGet("{id}", Name = "ReadInternationalLicenseByID")]
+        public async Task<ActionResult<InternationalLicense>> Read(int id)
         {
-            if (!int.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Application ID Number");
 
-            clsInternational_DL license = await clsInternational_DL.FindAsync(licenseID);
+            clsInternational_DL license = await clsInternational_DL.FindAsync(id);
 
             if (license == null)
-                return NotFound($"International License With ID {licenseID} Not Found");
+                return NotFound($"International License With ID {id} Not Found");
 
             return Ok(license.internationalLicenseDTO);
         }
 
 
-        [HttpPost("Create", Name = "CreateInternationaLicense")]
+        [HttpPost("", Name = "CreateInternationaLicense")]
         public async Task<ActionResult<_Application>> Create(InternationalLicense newLicense)
         {
             if (newLicense == null)
@@ -85,21 +85,21 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpPut("Update", Name = "UpdateInternationalLicense")]
-        public async Task<ActionResult<_Application>> Update(int licenseID, InternationalLicense newLicense)
+        [HttpPut("{id}", Name = "UpdateInternationalLicense")]
+        public async Task<ActionResult<_Application>> Update(int id, InternationalLicense newLicense)
         {
             if ( newLicense == null)
                return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsInternational_DL.isExistAsync(licenseID);
+            bool isExist = await clsInternational_DL.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("International License NOT Found");
 
-            clsInternational_DL license =  AssignDataToApp(newLicense, licenseID);
+            clsInternational_DL license =  AssignDataToApp(newLicense, id);
 
             if (license != null && await license.SaveAsync())
                 return Ok(license.internationalLicenseDTO);
@@ -108,19 +108,19 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpDelete("Delete", Name = "DeleteInternationaLicense")]
-        public async Task<ActionResult> Delete(int licenseID)
+        [HttpDelete("{id}", Name = "DeleteInternationaLicense")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsInternational_DL.isExistAsync(licenseID);
+            bool isExist = await clsInternational_DL.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsInternational_DL.DeleteAsync(licenseID);
+                bool isDeleted = await clsInternational_DL.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"International License with ID {licenseID} Deletted Successfully");
+                    return Ok($"International License with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting International License" });
             }

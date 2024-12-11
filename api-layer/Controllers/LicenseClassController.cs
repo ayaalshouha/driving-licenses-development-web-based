@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class LicenseClassController : Controller
+    public class licenseClassController : Controller
     {
         private static async Task<clsLicenseClasses> AssignDataToClass(LicenseClass newClass, int ID = -1)
         {
@@ -33,7 +33,7 @@ namespace api_layer.Controllers
             return licenseClasse;
         }
 
-        [HttpGet("All", Name = "GetLicenseClasses")]
+        [HttpGet("", Name = "GetLicenseClasses")]
         public async Task<ActionResult<IEnumerable<LicenseClass>>> AllTypes()
         {
             var classesList = await clsLicenseClasses.ListAsync();
@@ -44,13 +44,13 @@ namespace api_layer.Controllers
                 return Ok(classesList);
         }
 
-        [HttpGet("Read", Name = "ReadLicenseClassByID")]
-        public async Task<ActionResult<LicenseClass>> Read(int classID)
+        [HttpGet("{id}", Name = "ReadLicenseClassByID")]
+        public async Task<ActionResult<LicenseClass>> Read(int id)
         {
-            if (!int.TryParse(classID.ToString(), out _) || Int32.IsNegative(classID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License Class ID Number");
 
-            clsLicenseClasses class_ = await clsLicenseClasses.FindAsync(classID);
+            clsLicenseClasses class_ = await clsLicenseClasses.FindAsync(id);
 
             if (class_ == null)
                 return NotFound($"License Class With ID {class_} Not Found");
@@ -58,7 +58,7 @@ namespace api_layer.Controllers
             return Ok(class_.licenseDTO);
         }
 
-        [HttpPost("Create", Name = "CreateLicenseClass")]
+        [HttpPost("", Name = "CreateLicenseClass")]
         public async Task<ActionResult<LicenseClass>> Create(LicenseClass newClass)
         {
             if (newClass == null)
@@ -72,21 +72,21 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating License Class" });
         }
 
-        [HttpPut("Update", Name = "UpdateLicenseClass")]
-        public async Task<ActionResult<LicenseClass>> Update(int classID, LicenseClass newClass)
+        [HttpPut("{id}", Name = "UpdateLicenseClass")]
+        public async Task<ActionResult<LicenseClass>> Update(int id, LicenseClass newClass)
         {
             if (newClass == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(classID.ToString(), out _) || Int32.IsNegative(classID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLicenseClasses.isExistAsync(classID);
+            bool isExist = await clsLicenseClasses.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("License Class NOT Found");
 
-            clsLicenseClasses class_ = await AssignDataToClass(newClass, classID);
+            clsLicenseClasses class_ = await AssignDataToClass(newClass, id);
 
             if (class_ != null && await class_.SaveAsync())
                 return Ok(class_.licenseDTO);
@@ -94,19 +94,19 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating License Class" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteLicenseClass")]
-        public async Task<ActionResult> Delete(int classID)
+        [HttpDelete("{id}", Name = "DeleteLicenseClass")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(classID.ToString(), out _) || Int32.IsNegative(classID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLicenseClasses.isExistAsync(classID);
+            bool isExist = await clsLicenseClasses.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsLicenseClasses.DeleteAsync(classID);
+                bool isDeleted = await clsLicenseClasses.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"License Class with ID {classID} Deletted Successfully");
+                    return Ok($"License Class with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting License Class" });
             }
@@ -114,7 +114,7 @@ namespace api_layer.Controllers
                 return NotFound("License Class Not Found");
         }
 
-        [HttpGet("ClassesNames", Name = "GetClassesNames")]
+        [HttpGet("classes-name", Name = "GetClassesNames")]
         public async Task<ActionResult<IEnumerable<string>>> ClassesName()
         {
             var classesList = await clsLicenseClasses.ClassesNames();
