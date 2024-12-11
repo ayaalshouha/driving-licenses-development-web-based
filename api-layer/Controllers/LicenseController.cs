@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class LicenseController : Controller
+    public class licenseController : Controller
     {
         private clsLicenses AssignDataToLicense(_License newLicense, int ID = -1)
         {
@@ -38,7 +38,7 @@ namespace api_layer.Controllers
             return license;
         }
 
-        [HttpGet("All", Name ="AllLicenses")]
+        [HttpGet("licenses", Name ="AllLicenses")]
         public async Task<ActionResult<IEnumerable<_License>>> getAll()
         {
             var licensesList = await clsLicenses.ListAsync();
@@ -48,21 +48,21 @@ namespace api_layer.Controllers
             return Ok(licensesList);
         }
 
-        [HttpGet("Read", Name = "ReadLicenseByID")]
-        public async Task<ActionResult<_License>> GetByID(int LicenseID)
+        [HttpGet("{id}", Name = "ReadLicenseByID")]
+        public async Task<ActionResult<_License>> GetByID(int id)
         {
-            if (!int.TryParse(LicenseID.ToString(), out _) || Int32.IsNegative(LicenseID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid LicenseID ID Number");
 
-            var license = await clsLicenses.FindAsync(LicenseID);
+            var license = await clsLicenses.FindAsync(id);
 
             if (license == null)
-                return NotFound($"License With ID {LicenseID} Not Found");
+                return NotFound($"License With ID {id} Not Found");
 
             return Ok(license.licenseDTO);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("")]
         public async Task<ActionResult<_License>> Create(_License newLicense)
         {
             if (newLicense == null)
@@ -80,21 +80,21 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating License" });
         }
 
-        [HttpPut("Update")]
-        public async Task<ActionResult<_License>> Update(int LicenseID, _License newLicense)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<_License>> Update(int id, _License newLicense)
         {
             if (newLicense == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(LicenseID.ToString(), out _) || Int32.IsNegative(LicenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLicenses.isExistAsync(LicenseID);
+            bool isExist = await clsLicenses.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("License NOT Found");
 
-            clsLicenses license =  AssignDataToLicense(newLicense, LicenseID);
+            clsLicenses license =  AssignDataToLicense(newLicense, id);
 
             if (license != null && await license.SaveAsync())
                 return Ok(license.licenseDTO);
@@ -102,17 +102,17 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating License" });
         }
 
-        [HttpDelete("Delete")]
-        public async Task<ActionResult> Delete(int LicenseID)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(LicenseID.ToString(), out _) || Int32.IsNegative(LicenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLicenses.isExistAsync(LicenseID);
+            bool isExist = await clsLicenses.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsLicenses.DeleteAsync(LicenseID);
+                bool isDeleted = await clsLicenses.DeleteAsync(id);
                 if (isDeleted)
                     return Ok("License with ID {ID} Deletted Successfully");
                 else
@@ -122,13 +122,13 @@ namespace api_layer.Controllers
                 return NotFound("License Not Found");
         }
 
-        [HttpGet("Deactivate")]
-        public async Task<ActionResult<bool>> DeactivateLicense(int licenseID)
+        [HttpPatch("deactivate/{id}")]
+        public async Task<ActionResult<bool>> DeactivateLicense(int id)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid license ID");
                 
-            clsLicenses license = await clsLicenses.FindAsync(licenseID);
+            clsLicenses license = await clsLicenses.FindAsync(id);
 
             if (license != null && !license.isActive)
             {
@@ -139,13 +139,13 @@ namespace api_layer.Controllers
             return NotFound("License Not Found");
         }
 
-        [HttpGet("Activate")]
-        public async Task<ActionResult<bool>> ActivateLicense(int licenseID)
+        [HttpPatch("activate/{id}")]
+        public async Task<ActionResult<bool>> ActivateLicense(int id)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid license ID");
 
-            clsLicenses license = await clsLicenses.FindAsync(licenseID);
+            clsLicenses license = await clsLicenses.FindAsync(id);
 
             if (license != null && license.isActive)
             {
@@ -156,78 +156,79 @@ namespace api_layer.Controllers
             return NotFound("License Not Found");
         }
 
-        [HttpGet("LostReplacement")]
-        public async Task<ActionResult<_License>> LostReplacement(int licenseID, int UserID)
+        [HttpGet("lost-replacement/{id}/by-user-id/{userId}")]
+        public async Task<ActionResult<_License>> LostReplacement(int id, int userId)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License ID");
 
-            var license = await clsLicenses.FindAsync(licenseID);
+            var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReplaceAsync(enIssueReason.LostReplacement, UserID);
+                var result = license.ReplaceAsync(enIssueReason.LostReplacement, userId);
                 return Ok(result);
             }
             else
                 return NotFound("License Not Found");
         }
 
-        [HttpGet("DamagedReplacement")]
-        public async Task<ActionResult<_License>> DamagedReplacement(int licenseID, int UserID)
+        [HttpGet("damaged-replacement/{id}/by-user-id/{userId}")]
+        public async Task<ActionResult<_License>> DamagedReplacement(int id, int userId)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License ID");
 
-            var license = await clsLicenses.FindAsync(licenseID);
+            var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReplaceAsync(enIssueReason.DamagedReplacement, UserID);
+                var result = license.ReplaceAsync(enIssueReason.DamagedReplacement, userId);
                 return Ok(result);
             }
             else
                 return NotFound("License Not Found");
         }
-        [HttpGet("Detain")]
-        public async Task<ActionResult<int>> Detain(int licenseID,decimal fee, int UserID)
+        
+        [HttpPatch("detain/{id}/fees/{fee}/by-user-id/{userId}")]
+        public async Task<ActionResult<int>> Detain(int id, decimal fee, int userId)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License ID");
 
-            var license = await clsLicenses.FindAsync(licenseID);
+            var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.DetainAsync(fee, UserID);
+                var result = license.DetainAsync(fee, userId);
                 return Ok(result);
             }
             else
                 return NotFound("License Not Found");
         }
             
-        [HttpGet("Release")]
-        public async Task<ActionResult<bool>> Release(int licenseID, int UserID)
+        [HttpPatch("release/{id}/by-user-id/{userId}")]
+        public async Task<ActionResult<bool>> Release(int id, int userId)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License ID");
 
-            var license = await clsLicenses.FindAsync(licenseID);
+            var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReleaseLicenseAsync(UserID);
+                var result = license.ReleaseLicenseAsync(userId);
                 return Ok(result);
             }
             else
                 return NotFound("License Not Found");
         }
-        [HttpGet("isDetained")]
-        public async Task<ActionResult<bool>> isDetained(int licenseID)
+        [HttpGet("is-detained/{id}")]
+        public async Task<ActionResult<bool>> isDetained(int id)
         {
-            if (!Int32.TryParse(licenseID.ToString(), out _) || Int32.IsNegative(licenseID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid License ID");
 
-            var found = await clsLicenses.isExistAsync(licenseID);
+            var found = await clsLicenses.isExistAsync(id);
             if (found)
             {
-                bool result = await clsDetainedLicenses.isLicenseDetainedAsync(licenseID);
+                bool result = await clsDetainedLicenses.isLicenseDetainedAsync(id);
                 return Ok(result);
             }
             else
