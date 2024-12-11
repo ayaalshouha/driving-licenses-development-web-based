@@ -11,9 +11,9 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class LoginController : Controller
+    public class loginController : Controller
     {
-        [HttpGet("isActive", Name = "isActive")]
+        [HttpGet("{username}/{password}/is-active", Name = "isActive")]
         public ActionResult<bool> isActive(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) {
@@ -23,7 +23,7 @@ namespace api_layer.Controllers
             return clsUser.Authintication(username, password);
         }
 
-        [HttpPost("Create", Name = "CreateRecord")]
+        [HttpPost("", Name = "CreateRecord")]
         public ActionResult<bool> Create(int UserID)
         {
             if (!Int32.TryParse(UserID.ToString(), out _) || Int32.IsNegative(UserID))
@@ -37,7 +37,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error saving login record" });
         }
 
-        [HttpGet("isExistByUsername", Name = "isUserExistByUsername")]
+        [HttpGet("{username}/is-exist", Name = "isUserExistByUsername")]
         public async Task<ActionResult<bool>> isExist(string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -46,7 +46,7 @@ namespace api_layer.Controllers
             return await clsUser.isExistAsync(username);
         }
 
-        [HttpGet("isExist", Name = "isUserExist")]
+        [HttpGet("{username}/{password}/is-exist", Name = "isUserExist")]
         public async Task<ActionResult<bool>> isExist(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))

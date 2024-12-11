@@ -80,10 +80,10 @@ namespace BuisnessLayer
         {
             return await Local_DL_Data.DeleteAsync(localAppID);
         }
-        public async Task<bool> isRepeatedClassAsync(int personID)
-        {
-            return await Local_DL_Data.isRepeatedClassAsync(personID, this.LicenseClassID); 
-        }
+        //public async Task<bool> isRepeatedClassAsync(int personID)
+        //{
+        //    return await Local_DL_Data.isRepeatedClassAsync(personID, this.LicenseClassID); 
+        //}
         public static async Task<IEnumerable<LocalDLApp_View>> ListAsync()
         {
             return await Local_DL_Data.LocalApplicationsViewAsync();

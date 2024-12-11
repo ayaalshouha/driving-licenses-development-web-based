@@ -32,21 +32,21 @@ namespace api_layer.Controllers
             return test ;
         }
 
-        [HttpGet("Read", Name = "ReadTestByID")]
-        public async Task<ActionResult<Test>> Read(int testID)
+        [HttpGet("{id}", Name = "ReadTestByID")]
+        public async Task<ActionResult<Test>> Read(int id)
         {
-            if (!int.TryParse(testID.ToString(), out _) || Int32.IsNegative(testID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Test ID Number");
 
-            var test = await clsTests.FindAsync(testID);
+            var test = await clsTests.FindAsync(id);
 
             if (test == null)
-                return NotFound($"Test With ID {testID} Not Found");
+                return NotFound($"Test With ID {id} Not Found");
 
             return Ok(test.testDTO);
         }
 
-        [HttpPost("Create", Name = "CreateTest")]
+        [HttpPost("", Name = "CreateTest")]
         public async Task<ActionResult<Test>> Create(Test newTest)
         {
             if (newTest == null)
@@ -64,21 +64,21 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Test" });
         }
 
-        [HttpPut("Update", Name = "UpdateTest")]
-        public async Task<ActionResult<Test>> Update(int TestID, Test newTest)
+        [HttpPut("{id}", Name = "UpdateTest")]
+        public async Task<ActionResult<Test>> Update(int id, Test newTest)
         {
             if (newTest == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(TestID.ToString(), out _) || Int32.IsNegative(TestID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsTests.isExistAsync(TestID);
+            bool isExist = await clsTests.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("Test NOT Found");
 
-            clsTests test = AssignDataToTest(newTest, TestID);
+            clsTests test = AssignDataToTest(newTest, id);
 
             if (test != null && await test.SaveAsync())
                 return Ok(test.testDTO);
@@ -86,19 +86,19 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Test" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteTest")]
-        public async Task<ActionResult> Delete(int TestID)
+        [HttpDelete("{id}", Name = "DeleteTest")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(TestID.ToString(), out _) || Int32.IsNegative(TestID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsTests.isExistAsync(TestID);
+            bool isExist = await clsTests.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsTests.DeleteAsync(TestID);
+                bool isDeleted = await clsTests.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Test with ID {TestID} Deletted Successfully");
+                    return Ok($"Test with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Test" });
             }
@@ -106,10 +106,10 @@ namespace api_layer.Controllers
                 return NotFound("Test Not Found");
         }
 
-        [HttpGet("Find", Name = "ReadByPersonAndLicenseClass")]
-        public async Task<ActionResult<Test>> FindByPersonAndLicenseClass(int personID, int LicenseCLassID, enTestType TestType)
+        [HttpGet("test-by/test-type/{id}/{personId}/{licenseClass} ", Name = "ReadByPersonAndLicenseClass")]
+        public async Task<ActionResult<Test>> FindByPersonAndLicenseClass(int personId, int licenseClass, enTestType id)
         {
-             var test = await clsTests.FindTestByPersonIDAndLicenseClassAsync(personID, LicenseCLassID, TestType);
+             var test = await clsTests.FindTestByPersonIDAndLicenseClassAsync(personId, licenseClass, id);
 
             if (test == null)
                 return NotFound($"Test Not Found");

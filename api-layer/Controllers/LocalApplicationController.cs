@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DTOsLayer;
 using BuisnessLayer;
+using System;
 
 namespace api_layer.Controllers
 {
@@ -11,7 +12,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class LocalApplicationController : Controller
+    public class localApplicationController : Controller
     {
         private clsLocalDrivingLicenses AssignDataToApplication(LocalDLApp newLocalApp, int ID = -1)
         {
@@ -30,7 +31,7 @@ namespace api_layer.Controllers
             return application;
         }
 
-        [HttpGet("All", Name = "AllLocalLicensesApplications")]
+        [HttpGet("local-applications", Name = "AllLocalLicensesApplications")]
         public async Task<ActionResult<IEnumerable<LocalDLApp_View>>> getAll()
         {
             var appsList = await clsLocalDrivingLicenses.ListAsync();
@@ -40,22 +41,22 @@ namespace api_layer.Controllers
             return Ok(appsList);
         }
        
-        [HttpGet("Read", Name = "ReadLocalApplicationByID")]
-        public async Task<ActionResult<LocalDLApp>> Read(int ApplicationID)
+        [HttpGet("{id}", Name = "ReadLocalApplicationByID")]
+        public async Task<ActionResult<LocalDLApp>> Read(int id)
         {
-            if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid Local Driving License Application ID Number");
 
-            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
 
             if (app == null)
-                return NotFound($"Local Driving License Application With ID {ApplicationID} Not Found");
+                return NotFound($"Local Driving License Application With ID {id} Not Found");
 
             return Ok(app.LocalDLAppDTO);
         }
 
 
-        [HttpPost("Create", Name = "CreateLocalApplication")]
+        [HttpPost("", Name = "CreateLocalApplication")]
         public async Task<ActionResult<LocalDLApp>> Create(LocalDLApp newApp)
         {
             if (newApp == null)
@@ -74,21 +75,21 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpPut("Update", Name = "UpdateLocalApplication")]
-        public async Task<ActionResult<LocalDLApp>> Update(int ApplicationID, LocalDLApp newApp)
+        [HttpPut("{id}", Name = "UpdateLocalApplication")]
+        public async Task<ActionResult<LocalDLApp>> Update(int id, LocalDLApp newApp)
         {
             if (newApp == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLocalDrivingLicenses.isExistAsync(ApplicationID);
+            bool isExist = await clsLocalDrivingLicenses.isExistAsync(id);
 
             if (!isExist)
                 return NotFound("Application NOT Found");
 
-            clsLocalDrivingLicenses app = AssignDataToApplication(newApp, ApplicationID);
+            clsLocalDrivingLicenses app = AssignDataToApplication(newApp, id);
 
             if (app != null && await app.SaveAsync())
                 return Ok(app.LocalDLAppDTO);
@@ -96,19 +97,19 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Application" });
         }
 
-        [HttpDelete("Delete", Name = "DleteLocalApplication")]
-        public async Task<ActionResult> Delete(int ApplicationID)
+        [HttpDelete("{id}", Name = "DleteLocalApplication")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsLocalDrivingLicenses.isExistAsync(ApplicationID);
+            bool isExist = await clsLocalDrivingLicenses.isExistAsync(id);
 
             if (isExist)
             {
-                bool isDeleted = await clsLocalDrivingLicenses.DeleteAsync(ApplicationID);
+                bool isDeleted = await clsLocalDrivingLicenses.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Application with ID {ApplicationID} Deletted Successfully");
+                    return Ok($"Application with ID {id} Deletted Successfully");
                 else
                     return StatusCode(500, new { Message = "Error Deletting Application" });
             }
@@ -117,20 +118,20 @@ namespace api_layer.Controllers
         }
 
 
-        [HttpGet("isRepeatedClass", Name = "isRepeatedClass")]
-        public async Task<ActionResult<bool>> isRepeatedClass(int localAppID, int personID)
-        {
-            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(localAppID);
-            if (app != null)
-                return NotFound($"Local Driving License Application Not Found");
+        //[HttpGet("{id}/class-exist/person-id/{personID}", Name = "isRepeatedClass")]
+        //public async Task<ActionResult<bool>> isRepeatedClass(int id, int personID)
+        //{
+        //    clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
+        //    if (app != null)
+        //        return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await app.isRepeatedClassAsync(personID));
-        }
+        //    return Ok(await app.isRepeatedClassAsync(personID));
+        //}
 
-        [HttpGet("isAllTestsPassed", Name = "isAllTestsPassed")]
-        public async Task<ActionResult<bool>> isAllTestsPassed(int localAppID)
+        [HttpGet("{id}/does-passed-all-tests", Name = "isAllTestsPassed")]
+        public async Task<ActionResult<bool>> isAllTestsPassed(int id)
         {
-            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(localAppID);
+            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
@@ -138,69 +139,69 @@ namespace api_layer.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getPassedTestCount", Name = "PassedTestCount")]
-        public async Task<ActionResult<int>> getPassedTestCount(int ApplicationID)
+        [HttpGet("{id}/passed-test-count", Name = "PassedTestCount")]
+        public async Task<ActionResult<int>> getPassedTestCount(int id)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            var isExist = await clsLocalDrivingLicenses.isExistAsync(ApplicationID); 
+            var isExist = await clsLocalDrivingLicenses.isExistAsync(id); 
 
             if (!isExist)
                 return NotFound("Application Not Found");
             
-            int passedTest = await clsLocalDrivingLicenses.PassedTestAsync(ApplicationID);
+            int passedTest = await clsLocalDrivingLicenses.PassedTestAsync(id);
             return Ok(passedTest);
         }
 
 
-        [HttpGet("isTestPassed", Name = "isTestPassed")]
-        public async Task<ActionResult<bool>> isTestPassed(int localAppID, enTestType TestTypeID)
+        [HttpGet("{id}/is-test-passed/test-type/{testType}", Name = "isTestPassed")]
+        public async Task<ActionResult<bool>> isTestPassed(int id, enTestType testType)
         {
-            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(localAppID);
+            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await app.isTestPassedAsync(TestTypeID));
+            return Ok(await app.isTestPassedAsync(testType));
         }
 
-        [HttpGet("isCancelled", Name = "isCancelled")]
-        public async Task<ActionResult<bool>> isCancelled(int localAppID)
+        [HttpGet("{id}/canceled", Name = "isCancelled")]
+        public async Task<ActionResult<bool>> isCancelled(int id)
         {
-            var isExist = await clsLocalDrivingLicenses.isExistAsync(localAppID);
+            var isExist = await clsLocalDrivingLicenses.isExistAsync(id);
             if(!isExist)
                 return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await clsLocalDrivingLicenses.DoesItCancelledAsync(localAppID));
+            return Ok(await clsLocalDrivingLicenses.DoesItCancelledAsync(id));
         }
 
-        [HttpGet("isCompleted", Name = "isCompleted")]
-        public async Task<ActionResult<bool>> isCompleted(int localAppID)
+        [HttpGet("{id}/completed", Name = "isCompleted")]
+        public async Task<ActionResult<bool>> isCompleted(int id)
         {
-            var isExist = await clsLocalDrivingLicenses.isExistAsync(localAppID);
+            var isExist = await clsLocalDrivingLicenses.isExistAsync(id);
             if (!isExist)
                 return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await clsLocalDrivingLicenses.DoesItCompletedAsync(localAppID));
+            return Ok(await clsLocalDrivingLicenses.DoesItCompletedAsync(id));
         }
 
-        [HttpGet("isLicenseIssued", Name = "isLicenseIssued")]
-        public async Task<ActionResult<bool>> isLicenseIssued(int localAppID)
+        [HttpGet("{id}/license-issued", Name = "isLicenseIssued")]
+        public async Task<ActionResult<bool>> isLicenseIssued(int id)
         {
-            var app = await clsLocalDrivingLicenses.FindAsync(localAppID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
             return Ok(await app.isLicenseIssuedAsync());
         }
 
-        [HttpGet("ReadLicenseID", Name = "ReadLicenseID")]
-        public async Task<ActionResult<int>> ReadLicenseID(int ApplicationID)
+        [HttpGet("{id}/license-id", Name = "ReadLicenseID")]
+        public async Task<ActionResult<int>> ReadLicenseID(int id)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            var app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
 
             if (app == null)
                 return NotFound("Local Driving License Application Not Found");
@@ -213,63 +214,63 @@ namespace api_layer.Controllers
                 return NotFound("NO active license issued");
         }
 
-        [HttpGet("LastTestPerTestType", Name = "LastTestPerTestType")]
-        public async Task<ActionResult<clsTests>> LastTestPerTestType(int ApplicationID, enTestType TestTypeID)
+        [HttpGet("{id}/last-test-per-test-type/test-type/{testId}", Name = "LastTestPerTestType")]
+        public async Task<ActionResult<clsTests>> LastTestPerTestType(int id, enTestType testId)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            var app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
 
             if (app == null)
                 return NotFound("Local Driving License Application Not Found");
 
-            var lastTest = await app.GetLastTestPerTestTypeAsync(TestTypeID);
+            var lastTest = await app.GetLastTestPerTestTypeAsync(testId);
             return Ok(lastTest);
         }
 
-        [HttpGet("isTestAttended", Name = "isTestAttended")]
-        public async Task<ActionResult<bool>> isTestAttended(int localAppID, enTestType TestTypeID)
+        [HttpGet("{id}/is-test-attended/{testId}", Name = "isTestAttended")]
+        public async Task<ActionResult<bool>> isTestAttended(int id, enTestType testId)
         {
-            var app = await clsLocalDrivingLicenses.FindAsync(localAppID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound($"Local Driving License Application Not Found");
 
-            return Ok(await app.DoesAttendTestTypeAsync(TestTypeID));
+            return Ok(await app.DoesAttendTestTypeAsync(testId));
         }
-
-        [HttpGet("SetCompleted", Name = "CompleteLocalApplication")]
-        public async Task<ActionResult<bool>> SetCompleted(int ApplicationID)
+ 
+        [HttpPatch("{id}/complete", Name = "CompleteLocalApplication")]
+        public async Task<ActionResult<bool>> SetCompleted(int id)
         {
-            var app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound("Local Driving License Application Not Founs");
             else
                 return Ok(app.setCompletedAsync());
         }
 
-        [HttpGet("Cancel", Name = "CancelLocalApplciation")]
-        public async Task<ActionResult<bool>> Cancel(int ApplicationID)
+        [HttpPatch("{id}/cancel", Name = "CancelLocalApplciation")]
+        public async Task<ActionResult<bool>> Cancel(int id)
         {
-            var app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
             if (app == null)
                 return NotFound("Local Driving License Application Not Founs");
             else
                 return Ok(app.setCancelledAsync());
         }
 
-        [HttpGet("IssueFirstTimeLicense", Name = "IssueFirstTimeLicense")]
-        public async Task<ActionResult<int>> IssueFirstTimeLicense(int ApplicationID, int CreatedByUserID, string Notes )
+        [HttpGet("{id}/issue-license/notes/{notes}/by-user-id/{userId}", Name = "IssueFirstTimeLicense")]
+        public async Task<ActionResult<int>> IssueFirstTimeLicense(int id, int userId, string notes)
         {
-            if (!Int32.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            var app = await clsLocalDrivingLicenses.FindAsync(ApplicationID);
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
 
             if (app == null)
                 return NotFound("Local Driving License Application Not Found");
 
-            int licenseID = await app.IssueLicenseForTheFirstTime(CreatedByUserID, Notes);
+            int licenseID = await app.IssueLicenseForTheFirstTime(userId, notes);
 
             if (licenseID > 0)
                 return Ok(licenseID);

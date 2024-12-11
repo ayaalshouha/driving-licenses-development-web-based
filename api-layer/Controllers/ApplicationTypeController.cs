@@ -111,7 +111,7 @@ namespace api_layer.Controllers
                 return NotFound("Application Type Not Found");
         }
 
-        [HttpGet("application-type-fees/{id}", Name = "GetApplicationTypeFees")]
+        [HttpGet("{id}/application-type-fees", Name = "GetApplicationTypeFees")]
         public async Task<ActionResult<int>> GetFees(enApplicationType id)
         {
 

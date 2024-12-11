@@ -14,7 +14,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-    public class UserController : ControllerBase
+    public class userController : ControllerBase
     {
         private clsUser assignDataToUser(User newUser, int ID = -1)
         {
@@ -36,7 +36,7 @@ namespace api_layer.Controllers
             return user;
         }
 
-        [HttpGet("All", Name = "AllUsers")]
+        [HttpGet("users", Name = "AllUsers")]
         public async Task<ActionResult<IEnumerable<UserSummery>>> getAll()
         {
             var usersList = await clsUser.UsersListAsync();
@@ -46,20 +46,20 @@ namespace api_layer.Controllers
             return Ok(usersList);
         }
 
-        [HttpGet("Read", Name= "ReadUserByID")]
-        public async Task<ActionResult<User>> Read(int ID)
+        [HttpGet("{id}", Name= "ReadUserByID")]
+        public async Task<ActionResult<User>> Read(int id)
         {
-            if (!int.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID Number");
 
-            User user = await clsUser.FindUserDTOAsync(ID);
+            User user = await clsUser.FindUserDTOAsync(id);
 
             if (user == null)
-                return NotFound($"User With ID {ID} Not Found");
+                return NotFound($"User With ID {id} Not Found");
 
             return Ok(user);
         }
-        [HttpGet("ReadByUsername", Name = "ReadUserByUsername")]
+        [HttpGet("user:{username}", Name = "ReadUserByUsername")]
         public async Task<ActionResult<User>> Read(string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -74,7 +74,7 @@ namespace api_layer.Controllers
             return Ok(user.UserDTO);
         }
 
-        [HttpPost("Create", Name = "CreateUser")]
+        [HttpPost("", Name = "CreateUser")]
         public async Task<ActionResult<User>> Create(User newUser)
         {
             if (newUser == null)
@@ -92,13 +92,13 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating User" });
         }
 
-        [HttpPut("Update", Name ="UpdateUser")]
-        public async Task<ActionResult<User>> Update(int ID, User newUser)
+        [HttpPut("{id}", Name ="UpdateUser")]
+        public async Task<ActionResult<User>> Update(int id, User newUser)
         {
             if (newUser == null)
                 return BadRequest("invalid object data");
 
-            clsUser user = assignDataToUser(newUser, ID);
+            clsUser user = assignDataToUser(newUser, id);
 
             if (user != null && await user.SaveAsync())
                 return Ok(user.UserDTO);
@@ -106,31 +106,31 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating User" });
         }
 
-        [HttpDelete("Delete", Name = "DeleteUser")]
-        public async Task<ActionResult> Delete(int ID)
+        [HttpDelete("{id}", Name = "DeleteUser")]
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!Int32.TryParse(ID.ToString(), out _) || Int32.IsNegative(ID))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsUser.isExistAsync(ID); 
+            bool isExist = await clsUser.isExistAsync(id); 
 
             if (!isExist)
-                return NotFound($"User with ID {ID} NOT Found");
+                return NotFound($"User with ID {id} NOT Found");
 
-            bool isDeleted = await clsUser.DeleteAsync(ID); 
+            bool isDeleted = await clsUser.DeleteAsync(id); 
             if (isDeleted)
                 return Ok("User with ID {ID} Deletted Successfully");
             else
                 return StatusCode(500, new { Message = "Error Deletting Person" });
         }
 
-        [HttpGet("isExistByID", Name = "isUserExistByID")]
-        public async Task<ActionResult<bool>> isExist(int ID)
+        [HttpGet("{id}/existance", Name = "isUserExistByID")]
+        public async Task<ActionResult<bool>> isExist(int id)
         {
-            if (ID < 0)
+            if (id < 0)
                 return BadRequest("Invalid ID");
 
-            return await clsUser.isExistAsync(ID);
+            return await clsUser.isExistAsync(id);
         }
 
         

@@ -116,7 +116,7 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
 
-        [HttpGet("local-active-licenses/{id}", Name = "DriverLocalLicenses")]
+        [HttpGet("{id}/local-active-licenses", Name = "DriverLocalLicenses")]
         public async Task<ActionResult<IEnumerable<ActiveLicense>>> LocalActiveLicenses(int id)
         {
             bool isExist = await clsDrviers.isExistAsync(id);
@@ -133,7 +133,7 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
         
-        [HttpGet("international-active-licenses/{id}", Name = "DriverInternationalLicenses")]
+        [HttpGet("{id}/international-active-licenses", Name = "DriverInternationalLicenses")]
         public async Task<ActionResult<IEnumerable<DriverInterNationalLicense>>> InternationalActiveLicenses(int id)
         {
             bool isExist = await clsDrviers.isExistAsync(id);

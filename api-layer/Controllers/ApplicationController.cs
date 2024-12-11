@@ -124,7 +124,7 @@ namespace api_layer.Controllers
         //    return Ok(await clsApplication.isClassExistAsync(PersonID, ClassID));
         //}
 
-        [HttpPatch("complete/{id}", Name = "CompleteApplication")]
+        [HttpPatch("{id}/complete", Name = "CompleteApplication")]
         public async Task<ActionResult<bool>> SetCompleted(int id)
         {
             clsApplication app = await clsApplication.FindAsync(id);
@@ -134,7 +134,7 @@ namespace api_layer.Controllers
                 return Ok(app.setCompletedAsync());
         }
 
-        [HttpPatch("cancel/{id}", Name = "CancelApplciation")]
+        [HttpPatch("{id}/cancel", Name = "CancelApplciation")]
         public async Task<ActionResult<bool>> Cancel(int id)
         {
             bool isExist = await clsApplication.isExistAsync(id);
@@ -144,7 +144,7 @@ namespace api_layer.Controllers
                 return NotFound("Application Not Found"); 
         }
 
-        [HttpGet("paid-fees/{id}", Name = "GetApplicationPaidFees")]
+        [HttpGet("{id}/paid-fees", Name = "GetApplicationPaidFees")]
         public async Task<ActionResult<decimal>> GetPaidFees(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))

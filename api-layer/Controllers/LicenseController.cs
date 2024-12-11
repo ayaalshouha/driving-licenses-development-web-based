@@ -122,7 +122,7 @@ namespace api_layer.Controllers
                 return NotFound("License Not Found");
         }
 
-        [HttpPatch("deactivate/{id}")]
+        [HttpPatch("{id}/deactivate")]
         public async Task<ActionResult<bool>> DeactivateLicense(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -139,7 +139,7 @@ namespace api_layer.Controllers
             return NotFound("License Not Found");
         }
 
-        [HttpPatch("activate/{id}")]
+        [HttpPatch("{id}/activate")]
         public async Task<ActionResult<bool>> ActivateLicense(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -156,7 +156,7 @@ namespace api_layer.Controllers
             return NotFound("License Not Found");
         }
 
-        [HttpGet("lost-replacement/{id}/by-user-id/{userId}")]
+        [HttpGet("{id}/lost-replacement/by-user-id/{userId}")]
         public async Task<ActionResult<_License>> LostReplacement(int id, int userId)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -172,7 +172,7 @@ namespace api_layer.Controllers
                 return NotFound("License Not Found");
         }
 
-        [HttpGet("damaged-replacement/{id}/by-user-id/{userId}")]
+        [HttpGet("{id}/damaged-replacement/by-user-id/{userId}")]
         public async Task<ActionResult<_License>> DamagedReplacement(int id, int userId)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -188,7 +188,7 @@ namespace api_layer.Controllers
                 return NotFound("License Not Found");
         }
         
-        [HttpPatch("detain/{id}/fees/{fee}/by-user-id/{userId}")]
+        [HttpPatch("{id}/detain/fees/{fee}/by-user-id/{userId}")]
         public async Task<ActionResult<int>> Detain(int id, decimal fee, int userId)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -204,7 +204,7 @@ namespace api_layer.Controllers
                 return NotFound("License Not Found");
         }
             
-        [HttpPatch("release/{id}/by-user-id/{userId}")]
+        [HttpPatch("{id}/release/by-user-id/{userId}")]
         public async Task<ActionResult<bool>> Release(int id, int userId)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -219,7 +219,7 @@ namespace api_layer.Controllers
             else
                 return NotFound("License Not Found");
         }
-        [HttpGet("is-detained/{id}")]
+        [HttpGet("{id}/is-detained")]
         public async Task<ActionResult<bool>> isDetained(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
