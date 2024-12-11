@@ -1,8 +1,10 @@
 import { environment } from '../environment';
 
 export const LOGIN_API_ENDPOINTS = {
-  isUsernameExist: `${environment.apiBaseUrl}/Login/isExistByUsername?username=`,
-  isCorrect: `${environment.apiBaseUrl}/Login/isExist`,
-  isUserActive: `${environment.apiBaseUrl}/Login/isActive`,
-  saveLogin: `${environment.apiBaseUrl}/Login/Create?UserID=`,
+  isUserActive: (username: string, password: string) =>
+    `${environment.apiBaseUrl}/login/${username}/${password}/is-active`,
+  isUsernameExist: (username: string) =>
+    `${environment.apiBaseUrl}/login/${username}/is-exist`,
+  isCorrect: (id: number) => `${environment.apiBaseUrl}/login/${id}/is-exist`,
+  saveLogin: `${environment.apiBaseUrl}/login/`,
 };

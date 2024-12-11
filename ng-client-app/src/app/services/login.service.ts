@@ -12,9 +12,7 @@ export class LoginService {
   isExist(username: string): Observable<boolean> {
     return (
       this.httpClient
-        .get<{ exist: boolean }>(
-          `${LOGIN_API_ENDPOINTS.isUsernameExist}${username}`
-        )
+        .get<{ exist: boolean }>(LOGIN_API_ENDPOINTS.isUsernameExist(username))
         // Return true if the username exists
         .pipe(map((response) => response.exist))
     );

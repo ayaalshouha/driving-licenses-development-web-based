@@ -23,13 +23,13 @@ namespace api_layer.Controllers
             return clsUser.Authintication(username, password);
         }
 
-        [HttpPost("", Name = "CreateRecord")]
-        public ActionResult<bool> Create(int UserID)
+        [HttpPost("{userId}", Name = "CreateRecord")]
+        public ActionResult<bool> Create(int userId)
         {
-            if (!Int32.TryParse(UserID.ToString(), out _) || Int32.IsNegative(UserID))
+            if (!Int32.TryParse(userId.ToString(), out _) || Int32.IsNegative(userId))
                 return BadRequest("Invalid UserID");
 
-            bool isSaved = clsUser.SaveLogin(UserID); 
+            bool isSaved = clsUser.SaveLogin(userId); 
 
             if (isSaved)
                 return Ok();
