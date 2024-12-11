@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class ApplicationTypeController : Controller
+    public class applicationTypeController : Controller
     {
         private static async Task<clsApplicationTypes> AssignDataToAppType(ApplicationType newApp, int ID = -1)
         {
@@ -30,7 +30,7 @@ namespace api_layer.Controllers
             return application;
         }
              
-        [HttpGet("All", Name = "GetApplicationTypes")]
+        [HttpGet("application-types", Name = "GetApplicationTypes")]
         public async Task<ActionResult<IEnumerable<ApplicationType>>> AllTypes()
         {
             var typesList = await clsApplicationTypes.getAllTypesAsync();
@@ -41,7 +41,7 @@ namespace api_layer.Controllers
                 return Ok(typesList);
         }
 
-        [HttpGet("Read", Name = "ReadApplicationTypeByID")]
+        [HttpGet("{id}", Name = "ReadApplicationTypeByID")]
         public async Task<ActionResult<ApplicationType>> Read(int ApplicationID)
         {
             if (!int.TryParse(ApplicationID.ToString(), out _) || Int32.IsNegative(ApplicationID))
@@ -55,7 +55,7 @@ namespace api_layer.Controllers
             return Ok(app.AppTypeDTO);
         }
        
-        [HttpPost("Create", Name = "CreateApplicationType")]
+        [HttpPost("", Name = "CreateApplicationType")]
         public async Task<ActionResult<ApplicationType>> Create(ApplicationType newApp)
         {
             if (newApp == null)
@@ -69,7 +69,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Creating Application" });
         }
 
-        [HttpPut("Update", Name = "UpdateApplicationType")]
+        [HttpPut("{id}", Name = "UpdateApplicationType")]
         public async Task<ActionResult<ApplicationType>> Update(int ApplicationID, ApplicationType newApp)
         {
             if (newApp == null)
@@ -91,7 +91,7 @@ namespace api_layer.Controllers
                 return StatusCode(500, new { message = "Error Updating Application Type" });
         }
 
-        [HttpDelete("Delete", Name = "DleteApplicationType")]
+        [HttpDelete("{id}", Name = "DleteApplicationType")]
         public async Task<ActionResult> Delete(int ApplicationTypeID)
         {
             if (!Int32.TryParse(ApplicationTypeID.ToString(), out _) || Int32.IsNegative(ApplicationTypeID))
@@ -111,7 +111,7 @@ namespace api_layer.Controllers
                 return NotFound("Application Type Not Found");
         }
 
-        [HttpGet("ApplicationTypeFees", Name = "GetApplicationTypeFees")]
+        [HttpGet("application-type-fees/{id}", Name = "GetApplicationTypeFees")]
         public async Task<ActionResult<int>> GetFees(enApplicationType ApplicationTypeID)
         {
 
