@@ -2,10 +2,9 @@
   <form>
     <div class="flex-one">
       <input
-        id="table-filtering-search"
         type="text"
         [formControl]="filter"
-        placeholder="Full Text Search"
+        placeholder="Full Text Search..."
       />
     </div>
   </form>
@@ -22,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (app of dataDisplayed; track $index) {
+      @for (app of displayedData; track $index) {
       <tr>
         <td>{{ app.id }}</td>
         <td>{{ app.personID }}</td>
@@ -53,7 +52,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize >= drivers.length"
+      [disabled]="currentPage * pageSize >= filteredDrivers.length"
     >
       Next
     </button>

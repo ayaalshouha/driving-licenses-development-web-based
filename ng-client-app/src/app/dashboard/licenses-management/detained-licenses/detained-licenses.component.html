@@ -29,7 +29,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (detain of dataDisplayed; track $index) {
+      @for (detain of displayedData; track $index) {
       <tr>
         <td>{{ detain.id }}</td>
         <td>{{ detain.licenseID }}</td>
@@ -65,7 +65,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize > list.length"
+      [disabled]="currentPage * pageSize > filteredList.length"
     >
       Next
     </button>

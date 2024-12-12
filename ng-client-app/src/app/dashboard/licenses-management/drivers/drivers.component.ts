@@ -14,7 +14,8 @@ export class DriversComponent implements OnInit {
   currentPage = 1;
   pageSize = 5;
   drivers: Driver_View[] = [];
-  dataDisplayed: Driver_View[] = [];
+  filteredDrivers: Driver_View[] = [];
+  displayedData: Driver_View[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 
@@ -26,26 +27,45 @@ export class DriversComponent implements OnInit {
       .pipe(
         tap((response) => {
           this.drivers = response;
-          this.updateDisplayedData(0);
+          this.filteredDrivers = response;
+          this.updateDisplayedData();
         })
       )
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+
+    this.filter.valueChanges
+      .pipe(tap((response) => this.applyFilter(response)))
+      .subscribe();
   }
 
-  updateDisplayedData(startIndex: number = 0) {
+  applyFilter(value: string) {
+    const lowerCaseValue = value;
+    this.filteredDrivers = this.drivers.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(lowerCaseValue)
+      )
+    );
+    this.currentPage = 1;
+    this.updateDisplayedData();
+  }
+
+  updateDisplayedData() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.dataDisplayed = this.drivers.slice(startIndex, endIndex);
+    this.displayedData = this.filteredDrivers.slice(startIndex, endIndex);
   }
   onNext() {
     if (this.currentPage * this.pageSize < this.drivers.length) {
       this.currentPage++;
-      this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+      this.updateDisplayedData();
     }
   }
   onPrevious() {
-    this.currentPage--;
-    this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+    if ((this, this.currentPage > 1)) {
+      this.currentPage--;
+      this.updateDisplayedData();
+    }
   }
 }

@@ -40,7 +40,6 @@ export class LocalApplicationsComponent implements OnInit {
       .pipe(
         tap((value) => {
           this.applyFilter(value);
-          this.updateDisplayedData();
         })
       )
       .subscribe();
