@@ -2,10 +2,9 @@
   <form>
     <div class="flex">
       <input
-        id="table-filtering-search"
         type="text"
         [formControl]="filter"
-        placeholder="Full Text Search"
+        placeholder="Full Text Search..."
       />
       <div class="add-btn">
         <button routerLink="" class="button">+ Add New License</button>
@@ -27,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (app of dataDisplayed; track $index) {
+      @for (app of displayedData; track $index) {
       <tr>
         <td>{{ app.id }}</td>
         <td>{{ app.applicationID }}</td>
@@ -59,7 +58,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize >= licenses.length"
+      [disabled]="currentPage * pageSize >= filteredLicenses.length"
     >
       Next
     </button>

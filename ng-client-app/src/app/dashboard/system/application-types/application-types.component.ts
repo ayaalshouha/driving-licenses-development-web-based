@@ -16,7 +16,8 @@ export class ApplicationTypesComponent implements OnInit {
   currentPage = 1;
   pageSize = 7;
   types: ApplicationType[] = [];
-  dataDisplayed: ApplicationType[] = [];
+  filteredTypes: ApplicationType[] = [];
+  displayedData: ApplicationType[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 
@@ -28,26 +29,43 @@ export class ApplicationTypesComponent implements OnInit {
       .pipe(
         tap((response) => {
           this.types = response;
-          this.updateDisplayedData(0);
+          this.filteredTypes = response;
+          this.updateDisplayedData();
         })
       )
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.filter.valueChanges
+      .pipe(tap((response) => this.applyFilter(response)))
+      .subscribe();
   }
 
-  updateDisplayedData(startIndex: number = 0) {
+  applyFilter(value: string) {
+    const lowerCaseValue = value;
+    this.filteredTypes = this.types.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(lowerCaseValue)
+      )
+    );
+    this.currentPage = 1;
+    this.updateDisplayedData();
+  }
+  updateDisplayedData() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.dataDisplayed = this.types.slice(startIndex, endIndex);
+    this.displayedData = this.filteredTypes.slice(startIndex, endIndex);
   }
   onNext() {
     if (this.currentPage * this.pageSize < this.types.length) {
       this.currentPage++;
-      this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+      this.updateDisplayedData();
     }
   }
   onPrevious() {
-    this.currentPage--;
-    this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+    if ((this, this.currentPage > 1)) {
+      this.currentPage--;
+      this.updateDisplayedData();
+    }
   }
 }

@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (type of dataDisplayed; track $index) {
+      @for (type of displayedData; track $index) {
       <tr>
         <td>{{ type.id }}</td>
         <td>{{ type.typeTitle }}</td>
@@ -53,7 +53,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize >= types.length"
+      [disabled]="currentPage * pageSize >= filteredTypes.length"
     >
       Next
     </button>

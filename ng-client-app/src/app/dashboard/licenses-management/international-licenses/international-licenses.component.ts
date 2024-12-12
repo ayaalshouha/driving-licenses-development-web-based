@@ -16,7 +16,8 @@ export class InternationalLicensesComponent {
   currentPage = 1;
   pageSize = 5;
   licenses: InternationalLicense[] = [];
-  dataDisplayed: InternationalLicense[] = [];
+  filteredLicenses: InternationalLicense[] = [];
+  displayedData: InternationalLicense[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 
@@ -30,26 +31,44 @@ export class InternationalLicensesComponent {
       .pipe(
         tap((response) => {
           this.licenses = response;
-          this.updateDisplayedData(0);
+          this.filteredLicenses = response;
+          this.updateDisplayedData();
         })
       )
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
 
-  updateDisplayedData(startIndex: number = 0) {
-    const endIndex = startIndex + this.pageSize;
-    this.dataDisplayed = this.licenses.slice(startIndex, endIndex);
+    this.filter.valueChanges
+    .pipe(tap((response) => this.applyFilter(response)))
+    .subscribe();
+}
+
+applyFilter(value: string) {
+  const lowerCaseValue = value;
+  this.filteredLicenses = this.licenses.filter((item) =>
+    Object.values(item).some((val) =>
+      String(val).toLowerCase().includes(lowerCaseValue)
+    )
+  );
+  this.currentPage = 1;
+  this.updateDisplayedData();
+}
+updateDisplayedData() {
+  const startIndex = (this.currentPage - 1) * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.displayedData = this.filteredLicenses.slice(startIndex, endIndex);
+}
+onNext() {
+  if (this.currentPage * this.pageSize < this.licenses.length) {
+    this.currentPage++;
+    this.updateDisplayedData();
   }
-  onNext() {
-    if (this.currentPage * this.pageSize < this.licenses.length) {
-      this.currentPage++;
-      this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
-    }
-  }
-  onPrevious() {
+}
+onPrevious() {
+  if ((this, this.currentPage > 1)) {
     this.currentPage--;
-    this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+    this.updateDisplayedData();
   }
+}
 }
