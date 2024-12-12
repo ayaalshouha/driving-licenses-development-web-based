@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
+import { LowerCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-local-applications',
@@ -15,7 +16,8 @@ export class LocalApplicationsComponent implements OnInit {
   currentPage = 1;
   pageSize = 5;
   applications: LocalApplicationView[] = [];
-  dataDisplayed: LocalApplicationView[] = [];
+  filteredApplications: LocalApplicationView[] = [];
+  displayedData: LocalApplicationView[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 
@@ -27,26 +29,50 @@ export class LocalApplicationsComponent implements OnInit {
       .pipe(
         tap((response) => {
           this.applications = response;
-          this.updateDisplayedData(0);
+          this.filteredApplications = response;
+          this.updateDisplayedData();
         })
       )
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.filter.valueChanges
+      .pipe(
+        tap((value) => {
+          this.applyFilter(value);
+          this.updateDisplayedData();
+        })
+      )
+      .subscribe();
   }
 
-  updateDisplayedData(startIndex: number = 0) {
+  applyFilter(value: string) {
+    const lowerCaseFilter = value.toLowerCase();
+    this.filteredApplications = this.applications.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(lowerCaseFilter)
+      )
+    );
+    console.log('filtered applications', this.filteredApplications);
+    this.currentPage = 1;
+    this.updateDisplayedData();
+  }
+
+  updateDisplayedData() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.dataDisplayed = this.applications.slice(startIndex, endIndex);
+    this.displayedData = this.filteredApplications.slice(startIndex, endIndex);
   }
   onNext() {
-    if (this.currentPage * this.pageSize < this.applications.length) {
+    if (this.currentPage * this.pageSize < this.filteredApplications.length) {
       this.currentPage++;
-      this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+      this.updateDisplayedData();
     }
   }
   onPrevious() {
-    this.currentPage--;
-    this.updateDisplayedData((this.currentPage - 1) * this.pageSize);
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateDisplayedData();
+    }
   }
 }

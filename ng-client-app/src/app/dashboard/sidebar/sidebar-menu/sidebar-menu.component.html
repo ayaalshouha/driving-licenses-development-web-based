@@ -118,14 +118,16 @@
       </button>
     </li>
 
-  <!-- appointments submenu0 -->
-   @if(menuOpen['appointments']()){
+    <!-- appointments submenu0 -->
+    @if(menuOpen['appointments']()){
     <ul class="submenu">
       <li>
-        <a
-          routerLink=""
-          routerLinkActive="active"
-        >
+        <a routerLink="" routerLinkActive="active">
+          <span>Manage Appointments</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="" routerLinkActive="active">
           <span>Make Appointment</span>
         </a>
       </li>
