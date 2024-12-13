@@ -70,9 +70,9 @@ namespace DataLayer
                 {
                     return new DetainedLicense(
                         reader.GetInt32(reader.GetOrdinal("ID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? null : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("LicenseID")),
-                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? DateTime.MinValue
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? null
                         : reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
                         reader.GetDateTime(reader.GetOrdinal("DetainDate")),
                         reader.GetBoolean(reader.GetOrdinal("isReleased")),
@@ -299,9 +299,10 @@ namespace DataLayer
                 {
                     dt.Add(new DetainedLicense_View(
                         reader.GetInt32(reader.GetOrdinal("ID")),
-                        reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
+                        reader.IsDBNull(reader.GetOrdinal("ReleaseApplicationID")) ? null : reader.GetInt32(reader.GetOrdinal("ReleaseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("LicenseID")),
-                        reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                         reader.IsDBNull(reader.GetOrdinal("ReleaseDate")) ? null
+                        : reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
                         reader.GetDateTime(reader.GetOrdinal("DetainDate")),
                         reader.GetBoolean(reader.GetOrdinal("isReleased")),
                         reader.GetDecimal(reader.GetOrdinal("FineFees")),

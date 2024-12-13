@@ -28,6 +28,10 @@ export const dashboard_routes: Routes = [
     children: licenses_management_routes,
   },
   {
+    path: 'appointments',
+    children: [],
+  },
+  {
     path: 'system',
     children: system_routes,
   },
