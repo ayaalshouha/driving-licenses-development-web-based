@@ -122,13 +122,16 @@
     @if(menuOpen['appointments']()){
     <ul class="submenu">
       <li>
-        <a routerLink="" routerLinkActive="active">
-          <span>Manage Appointments</span>
+        <a routerLink="appointments/make-appointment" routerLinkActive="active">
+          <span>Make Appointment</span>
         </a>
       </li>
       <li>
-        <a routerLink="" routerLinkActive="active">
-          <span>Make Appointment</span>
+        <a
+          routerLink="appointments/manage-appointments"
+          routerLinkActive="active"
+        >
+          <span>Manage Appointments</span>
         </a>
       </li>
     </ul>
