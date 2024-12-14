@@ -1,1 +1,94 @@
-<p>make-appointment works!</p>
+<form action="">
+  <div class="flex">
+    <input
+      type="text"
+      [formControl]="filter"
+      placeholder="Enter Application ID..."
+    />
+    <div class="add-btn">
+      <button routerLink="" class="button">Search</button>
+    </div>
+  </div>
+</form>
+
+<form [formGroup]="application_info">
+  <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
+  <fieldset>
+    <legend>Application Info</legend>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="first-name">Applicant full name</label>
+        <input
+          type="text"
+          name="applicant-name"
+          id="first-name"
+          formControlName="applicantName"
+        />
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="second-name">Application Type</label>
+          <input
+            type="text"
+            name="application-type"
+            id="application-type"
+            formControlName="applicationType"
+          />
+        </div>
+        <div class="control">
+          <label for="class-name">Class name</label>
+          <input
+            type="text"
+            name="class-name"
+            id="class-name"
+            formControlName="className"
+          />
+        </div>
+      </div>
+
+      <div class="control">
+        <label for="status">Status</label>
+        <input type="text" name="status" id="status" formControlName="status" />
+      </div>
+    </div>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="passed-test"># of Passed test</label>
+        <input
+          type="text"
+          name="passed-test"
+          id="passed-test"
+          inputmode="numeric"
+          formControlName="passedTest "
+        />
+      </div>
+
+      <div class="control">
+        <label for="date">Date</label>
+        <input type="text" name="date" id="date" formControlName="date" />
+      </div>
+      <div class="control">
+        <label for="fee">Appliction Fee</label>
+        <input type="text" name="fee" id="fee" formControlName="fee" />
+      </div>
+    </div>
+
+    <div class="control-row">
+      <div class="control">
+        <label for="test_type">Test Type</label>
+        <select name="test_type" id="test_type" formControlName="testType">
+          <option value="" disabled selected>--select a test type--</option>
+          <!-- @if(countries){ @for(country of countries; track $index) {
+          <option [value]="country">{{ country }}</option>
+          } } -->
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="button">Schadule</button>
+    </div>
+  </fieldset>
+</form>

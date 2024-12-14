@@ -9,11 +9,11 @@ namespace DTOsLayer
     public class Appointement_
     {
         public int ID { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public decimal PaidFees { get; set; }
         public bool isLocked { get; set; }
 
-        public Appointement_(int id, DateOnly date, decimal fees, bool islocked)
+        public Appointement_(int id, DateTime date, decimal fees, bool islocked)
         {
             this.Date= date;
             this.ID = id;
@@ -27,7 +27,7 @@ namespace DTOsLayer
         public int TestType { get; set; }
         public int LocalLicenseApplicationID { get; set; }
 
-        public Appointment_Veiw(int testtype,int locallicenseid, int id, DateOnly date, decimal fees, bool islocked)
+        public Appointment_Veiw(int testtype,int locallicenseid, int id, DateTime date, decimal fees, bool islocked)
             : base(id, date, fees, islocked)
         {
             this.TestType = testtype;
@@ -42,9 +42,9 @@ namespace DTOsLayer
     public class Appointment : Appointment_Veiw
     {
         public int CreatedByUserID { get; set; }
-        public int RetakeTestID { get; set; }
+        public int? RetakeTestID { get; set; }
 
-        public Appointment(int createdby, int retaketestid, int testtype, int locallicenseid, int id, DateOnly date, decimal fees, bool islocked) 
+        public Appointment(int createdby, int? retaketestid, int testtype, int locallicenseid, int id, DateTime date, decimal fees, bool islocked) 
             : base(testtype, locallicenseid, id, date, fees, islocked)
         {
             this.RetakeTestID = retaketestid;

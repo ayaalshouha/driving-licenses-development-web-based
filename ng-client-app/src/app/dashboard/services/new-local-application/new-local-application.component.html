@@ -146,9 +146,14 @@
 
     <div class="actions">
       <a href="#" onclick="event.preventDefault();">Already exist person?</a>
-      <div class="actions-btn">
-        <button type="reset">Reset</button>
-        <button type="submit" name="submit" id="submit" class="apply">
+      <div class="actions">
+        <button type="reset" class="button button-secondary">Reset</button>
+        <button
+          type="submit"
+          name="submit"
+          id="submit"
+          class="button button-primary"
+        >
           Apply
         </button>
         @if(isDialogVisible()){

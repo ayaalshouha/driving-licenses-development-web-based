@@ -11,13 +11,13 @@ namespace BuisnessLayer
     {
         public enMode _Mode = enMode.add;
         public int ID { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public enTestType TestType { get; set; }
         public decimal PaidFees { get; set; }
         public bool isLocked { get; set; }
         public int CreatedByUserID { get; set; }
         public int LocalLicenseApplicationID { get; set; }
-        public int RetakeTestApplicationID { set; get; }
+        public int? RetakeTestApplicationID { set; get; }
         public clsApplication RetakeTestInfo {  get; set; }
         public int TestID
         {
@@ -37,7 +37,7 @@ namespace BuisnessLayer
         public clsAppointment()
         {
             this.ID = -1;
-            this.Date = DateOnly.FromDateTime(DateTime.Now);
+            this.Date = DateTime.Now;
             this.TestType = 0;
             this.PaidFees = -1;
             this.isLocked = false;

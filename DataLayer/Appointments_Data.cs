@@ -30,7 +30,7 @@ namespace DataLayer
                         reader.GetInt32(reader.GetOrdinal("TestTypeID")),
                         reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
                         reader.GetInt32(reader.GetOrdinal("ID")),
-                        DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                        reader.GetDateTime(reader.GetOrdinal("Date")),
                         reader.GetDecimal(reader.GetOrdinal("PaidFees")),
                         reader.GetBoolean(reader.GetOrdinal("isLocked"))
                    ); 
@@ -66,7 +66,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
                 Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.LocalLicenseApplicationID);
-                if(appointment.RetakeTestID == -1)
+                if(appointment.RetakeTestID == null)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestApplicationID", DBNull.Value);
                 }
@@ -213,10 +213,10 @@ namespace DataLayer
                 if (await reader.ReadAsync())
                 {
                     table.Add(new Appointement_(
-                         reader.GetInt32(reader.GetOrdinal("ID")),
-                            DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
-                            reader.GetDecimal(reader.GetOrdinal("PaidFees")),
-                            reader.GetBoolean(reader.GetOrdinal("isLocked"))
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.GetDateTime(reader.GetOrdinal("Date")),
+                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                        reader.GetBoolean(reader.GetOrdinal("isLocked"))
                         ));
                 }
                 reader.Close();

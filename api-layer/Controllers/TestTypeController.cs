@@ -44,12 +44,10 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("{id}", Name = "ReadTestTypeByID")]
-        public async Task<ActionResult<TestType>> Read(int id)
+        public async Task<ActionResult<TestType>> Read(enTestType id)
         {
-            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
-                return BadRequest("Invalid Test Type ID Number");
 
-            clsTestTypes type = await clsTestTypes.FindAsync(id);
+            clsTestTypes type = await clsTestTypes.FindAsync((int)id);
 
             if (type == null)
                 return NotFound($"Test Type With ID {id} Not Found");
@@ -72,20 +70,18 @@ namespace api_layer.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateTestType")]
-        public async Task<ActionResult<TestType>> Update(int id, TestType newType)
+        public async Task<ActionResult<TestType>> Update(enTestType id, TestType newType)
         {
             if (newType == null)
                 return BadRequest("invalid object data");
 
-            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
-                return BadRequest("Invalid ID");
-
-            bool isExist = await clsTestTypes.isExistAsync(id);
+           
+            bool isExist = await clsTestTypes.isExistAsync((int)id);
 
             if (!isExist)
                 return NotFound("Test Type NOT Found");
 
-            clsTestTypes type =  AssignDataToTypeType(newType, id);
+            clsTestTypes type =  AssignDataToTypeType(newType, (int)id);
 
             if (type != null && await type.SaveAsync())
                 return Ok(type.TestTypeDTO);
@@ -94,16 +90,16 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteTestType")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(enTestType id)
         {
-            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative((int)id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsTestTypes.isExistAsync(id);
+            bool isExist = await clsTestTypes.isExistAsync((int)id);
 
             if (isExist)
             {
-                bool isDeleted = await clsTestTypes.DeleteAsync(id);
+                bool isDeleted = await clsTestTypes.DeleteAsync((int)id);
                 if (isDeleted)
                     return Ok($"Test Type with ID {id} Deletted Successfully");
                 else
