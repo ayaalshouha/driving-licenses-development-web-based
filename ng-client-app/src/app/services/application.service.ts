@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Application } from '../models/application.model';
 import { APPLICATION_API_ENDPOINT } from '../environments/endpoints/application.endpoints';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +20,8 @@ export class ApplicationService {
       );
   }
   read(ID: number): Observable<Application> {
-    return this.http.get<Application>(
-      `${APPLICATION_API_ENDPOINT.read}${ID}`
-    );
+    return this.http
+      .get<Application>(`${APPLICATION_API_ENDPOINT.read}${ID}`)
+      .pipe(tap((res) => console.log('this is returned main app ' + res)));
   }
 }

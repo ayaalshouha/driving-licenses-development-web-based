@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient; 
 using DTOsLayer;
+using System.Reflection.PortableExecutable;
 
 namespace DataLayer
 {
@@ -21,7 +22,7 @@ namespace DataLayer
                             while (await Reader.ReadAsync())
                             {
                                 return new Person(
-                                      Reader.GetInt32(Reader.GetOrdinal("ID")),
+                                    Reader.GetInt32(Reader.GetOrdinal("ID")),
                                     Reader.GetString(Reader.GetOrdinal("FirstName")),
                                     Reader.GetString(Reader.GetOrdinal("SecondName")),
                                     Reader.GetString(Reader.GetOrdinal("ThirdName")),
@@ -30,10 +31,7 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-
-                                    Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
-                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
-
+                                    DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))).ToString("yyyy-MM-dd"),
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -86,9 +84,7 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("Address")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-
-                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
-                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
+                                     DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))).ToString("yyyy-MM-dd"),
                                     Reader.IsDBNull(Reader.GetOrdinal("ProfilePicture")) ? string.Empty : Reader.GetString(Reader.GetOrdinal("ProfilePicture")),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetBoolean(Reader.GetOrdinal("Gender")) ? "Male" : "Female",
@@ -363,8 +359,7 @@ namespace DataLayer
                                     Reader.GetString(Reader.GetOrdinal("NationalID")),
                                     Reader.GetString(Reader.GetOrdinal("Email")),
                                     Reader.GetString(Reader.GetOrdinal("PhoneNumber")),
-                                     Reader.IsDBNull(Reader.GetOrdinal("BirthDate")) ? string.Empty
-                                    : Reader.GetString(Reader.GetOrdinal("BirthDate")),
+                                    DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("BirthDate"))).ToString("yyyy-MM-dd"),
                                     Reader.GetString(Reader.GetOrdinal("Nationality")),
                                     Reader.GetString(Reader.GetOrdinal("Gender"))
                                     ));

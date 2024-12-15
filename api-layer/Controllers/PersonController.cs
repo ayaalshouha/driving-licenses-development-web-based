@@ -139,5 +139,14 @@ namespace api_layer.Controllers
             return await clsPerson.isExistAsync(nationalNo);
         }
 
+        [HttpGet("{id}/full-name", Name = "personFullName")]
+        public async Task<ActionResult<string>> FullName(int id)
+        {
+            if (!int.TryParse(id.ToString(), out int result) || Int32.IsNegative(id))
+                return BadRequest("Invalid ID Number");
+
+            return await clsPerson.getFullName(id);
+        }
+
     }
 }

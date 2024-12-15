@@ -1,7 +1,3 @@
-import { PersonService } from '../services/person.service';
-import { tap } from 'rxjs';
-import { DestroyRef, inject } from '@angular/core';
-
 export interface Application {
   id: number;
   personID: number;
@@ -25,23 +21,4 @@ export enum enApplicationType {
   'Replacement for Lost Driving License',
   'Replacement for Damaged Driving License',
   'Release Detained Driving License',
-}
-
-export class ApplicantName {
-  applicantName = '';
-  private destroyRef = inject(DestroyRef);
-  private personSerive = inject(PersonService);
-  constructor(ID: number) {
-    const subscription = this.personSerive
-      .read(ID)
-      .pipe(
-        tap(
-          (response) =>
-            (this.applicantName = `${response.firstName} ${response.secondName} ${response.thirdName} ${response.lastName}`)
-        )
-      )
-      .subscribe();
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
 }

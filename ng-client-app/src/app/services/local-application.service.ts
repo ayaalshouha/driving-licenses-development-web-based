@@ -5,7 +5,7 @@ import {
   LocalApplicationView,
 } from '../models/local-application.model';
 import { LOCAL_APPLICATION_API_ENDPOINT } from '../environments/endpoints/local-application.endpoints';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,14 +27,14 @@ export class LocalApplicationService {
   }
 
   read(ID: number): Observable<LocalApplication> {
-    return this.http.get<LocalApplication>(
-      `${LOCAL_APPLICATION_API_ENDPOINT.read}${ID}`
-    );
+    return this.http
+      .get<LocalApplication>(`${LOCAL_APPLICATION_API_ENDPOINT.read} ${ID}`)
+      .pipe(tap((res) => console.log('reading local app + ' + res.id)));
   }
 
   passedTestCount(id: number): Observable<number> {
-    return this.http.get<number>(
-      LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id)
-    );
+    return this.http
+      .get<number>(LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id))
+      .pipe(tap((res) => console.log('reading passed tests  + ' + res)));
   }
 }

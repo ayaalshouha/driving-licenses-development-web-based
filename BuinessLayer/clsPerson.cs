@@ -187,6 +187,10 @@ namespace BuisnessLayer
         {
             return await PersonData.isExistAsync(NationalNumber);
         }
+        public static async Task<string> getFullName(int perosnID)
+        {
+            return await PersonData.GetFullNameOfApplicantAsync(perosnID);
+        }
         public static async Task<IEnumerable<Person_View>> ListAsync()
         {
             return await PersonData.ListAsync();

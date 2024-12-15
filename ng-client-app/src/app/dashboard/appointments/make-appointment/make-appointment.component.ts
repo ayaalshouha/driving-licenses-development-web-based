@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,13 +8,20 @@ import {
 } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import { concatMap, switchMap, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  forkJoin,
+  of,
+  pipe,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   LocalApplication,
   TestCount,
 } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
-import { ApplicationType } from '../../../models/application-type.model';
 import {
   ApplicantName,
   Application,
@@ -23,8 +30,9 @@ import {
 } from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
 import { PersonService } from '../../../services/person.service';
-import { stat } from 'fs';
 import { enLicenseClass } from '../../../models/license-class.model';
+import { fork } from 'child_process';
+import { pid } from 'process';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -37,10 +45,12 @@ export class MakeAppointmentComponent {
   current_main_application: Application | null = null;
   testTypes: TestType[] = [];
   private destroRef = inject(DestroyRef);
+
   constructor(
     private testTypeService: TestTypesService,
     private applicationService: LocalApplicationService,
-    private mainAppService: ApplicationService
+    private mainAppService: ApplicationService,
+    private personService: PersonService
   ) {
     const subscription = this.testTypeService
       .all()
@@ -59,7 +69,6 @@ export class MakeAppointmentComponent {
   current_date = new Date();
   application_info = new FormGroup({
     applicantName: new FormControl('', {}),
-
     applicationType: new FormControl('', {}),
     className: new FormControl('', {}),
     status: new FormControl('', {}),
@@ -69,6 +78,22 @@ export class MakeAppointmentComponent {
     testType: new FormControl('', {}),
     schaduledDate: new FormControl(),
   });
+
+  updateForm(
+    mainApp: Application,
+    applicantName: string,
+    testCount: number
+  ): void {
+    this.application_info.patchValue({
+      applicantName,
+      passedTest: `${testCount}/3`,
+      status: enApplicationStatus[mainApp.status],
+      applicationType: enApplicationType[mainApp.type],
+      fee: mainApp.paidFees.toPrecision(),
+      className: enLicenseClass[this.current_local_application!.licenseClassID],
+      date: mainApp.date.toISOString(),
+    });
+  }
 
   onSearch() {
     const aplicationID: number = +this.filter.value!;
@@ -82,43 +107,48 @@ export class MakeAppointmentComponent {
           }
           return this.mainAppService.read(response.applicationID);
         }),
-        tap((response) => {
-          this.current_main_application = response;
-          if (!response.id) {
-            throw new Error('Invalid Application Data');
-          } else {
-            const fullName = new ApplicantName(
-              this.current_main_application.personID
-            ).applicantName;
-            const testCount = new TestCount(this.current_local_application!.id)
-              .passedTestCount;
+        tap((mainApp) => (this.current_main_application = mainApp)),
+        switchMap((mainApp) => {
+          return forkJoin({
+            applicantName: this.personService.getFullName(mainApp.personID),
+            testCount: this.applicationService
+              .passedTestCount(this.current_local_application!.id)
+              .pipe(catchError(() => of(-1))),
+            status: of(enApplicationStatus[mainApp.status]),
 
-            this.application_info.controls.applicantName.setValue(fullName);
-            this.application_info.controls.passedTest.setValue(
-              `${testCount}/3`
-            );
-            this.application_info.controls.status.setValue(
-              enApplicationStatus[this.current_main_application.status]
-            );
-            this.application_info.controls.applicationType.setValue(
-              enApplicationType[this.current_main_application.type]
-            );
-            this.application_info.controls.fee.setValue(
-              this.current_main_application.paidFees.toPrecision()
-            );
-            this.application_info.controls.className.setValue(
+            applicationType: of(enApplicationType[mainApp.type]),
+            fee: of(mainApp.paidFees.toPrecision()),
+            className: of(
               enLicenseClass[this.current_local_application!.licenseClassID]
-            );
-            this.application_info.controls.date.setValue(
-              this.current_main_application.date.toISOString()
-            );
-          }
+            ),
+            date: of(mainApp.date.toISOString()),
+          });
         })
       )
       .subscribe({
+        next: (data) => {
+          this.application_info.controls.applicantName.setValue(
+            data.applicantName
+          );
+          this.application_info.controls.passedTest.setValue(
+            `${data.testCount}/3`
+          );
+          this.application_info.controls.fee.setValue(data.fee);
+          this.application_info.controls.date.setValue(data.date);
+          this.application_info.controls.status.setValue(data.status);
+          this.application_info.controls.className.setValue(data.className);
+          this.application_info.controls.testType.setValue(
+            data.applicationType
+          );
+        },
         error: (err) => {
-          console.log('error fetching data ' + err.message);
+          console.log('Error fetching data: ' + err.message);
+        },
+        complete: () => {
+          console.log('Data fetching sequence completed');
         },
       });
+
+    this.destroRef.onDestroy(() => subscription.unsubscribe());
   }
 }

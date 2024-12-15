@@ -19,7 +19,11 @@ export class PersonService {
     return this.http.post<Person>(PERSON_API_ENDPOINTS.create, new_person);
   }
 
-  read(ID: number):Observable<Person> {
+  read(ID: number): Observable<Person> {
     return this.http.get<Person>(`${PERSON_API_ENDPOINTS.read}${ID}`);
+  }
+
+  getFullName(ID: number): Observable<string> {
+    return this.http.get<string>(`${PERSON_API_ENDPOINTS.fullName(ID)}`);
   }
 }

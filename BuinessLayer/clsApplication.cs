@@ -94,8 +94,9 @@ namespace BuisnessLayer
         }     
         public  async Task<string> ApplicantFullNameAsync()
         {
-            return await ApplicationData.GetFullNameOfApplicantAsync(this.PersonID); 
+            return await PersonData.GetFullNameOfApplicantAsync(this.PersonID); 
         }
+
 
         //Create sync version of async method
         public string ApplicantFullName
