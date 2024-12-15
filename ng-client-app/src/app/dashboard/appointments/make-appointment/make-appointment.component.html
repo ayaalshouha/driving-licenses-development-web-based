@@ -80,9 +80,9 @@
         <label for="test_type">Test Type</label>
         <select name="test_type" id="test_type" formControlName="testType">
           <option value="" disabled selected>--select a test type--</option>
-          <!-- @if(countries){ @for(country of countries; track $index) {
-          <option [value]="country">{{ country }}</option>
-          } } -->
+          @if(testTypes){ @for(type of testTypes; track $index) {
+          <option [value]="type.id">{{ type.typeTitle }}</option>
+          } }
         </select>
       </div>
     </div>
