@@ -9,8 +9,6 @@ import { Person } from '../models/person.model';
 export class PersonService {
   constructor(private http: HttpClient) {}
 
-  readUser(ID: number) {}
-
   isNationalNoExist(national_no: string): Observable<boolean> {
     return this.http.get<boolean>(
       `${PERSON_API_ENDPOINTS.isExistNationalNo(national_no)}`
@@ -19,5 +17,9 @@ export class PersonService {
 
   create(new_person: Person): Observable<Person> {
     return this.http.post<Person>(PERSON_API_ENDPOINTS.create, new_person);
+  }
+
+  read(ID: number):Observable<Person> {
+    return this.http.get<Person>(`${PERSON_API_ENDPOINTS.read}${ID}`);
   }
 }

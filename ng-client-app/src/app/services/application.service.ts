@@ -12,11 +12,16 @@ export class ApplicationService {
 
   create(new_application: Application): Observable<Application> {
     return this.http
-      .post<Application>(APPLICATION_API_ENDPOINT.create, new_application )
+      .post<Application>(APPLICATION_API_ENDPOINT.create, new_application)
       .pipe(
         map((res) => {
           return res;
         })
       );
+  }
+  read(ID: number): Observable<Application> {
+    return this.http.get<Application>(
+      `${APPLICATION_API_ENDPOINT.read}${ID}`
+    );
   }
 }

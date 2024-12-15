@@ -25,4 +25,10 @@ export class LocalApplicationService {
       LOCAL_APPLICATION_API_ENDPOINT.all
     );
   }
+
+  read(ID: number): Observable<LocalApplication> {
+    return this.http.get<LocalApplication>(
+      `${LOCAL_APPLICATION_API_ENDPOINT.read}${ID}`
+    );
+  }
 }
