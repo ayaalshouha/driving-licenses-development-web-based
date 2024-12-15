@@ -7,6 +7,6 @@ export const PERSON_API_ENDPOINTS = {
   delete: `${environment.apiBaseUrl}/person/`,
   isExist: (id: number) => `${environment.apiBaseUrl}/person/${id}/is-exist`,
   isExistNationalNo: (nationalNo: string) =>
-    `${environment.apiBaseUrl}/Person/No:${nationalNo}/is-exist`,
-  fullName: (id: number) => `${environment.apiBaseUrl}/${id}/full-name`,
+    `${environment.apiBaseUrl}/person/No:${nationalNo}/is-exist`,
+  fullName: (id: number) => `${environment.apiBaseUrl}/person/${id}/full-name`,
 };

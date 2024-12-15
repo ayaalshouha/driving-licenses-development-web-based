@@ -8,22 +8,10 @@ import {
 } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import {
-  catchError,
-  concatMap,
-  forkJoin,
-  of,
-  pipe,
-  switchMap,
-  tap,
-} from 'rxjs';
-import {
-  LocalApplication,
-  TestCount,
-} from '../../../models/local-application.model';
+import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
+import { LocalApplication } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import {
-  ApplicantName,
   Application,
   enApplicationStatus,
   enApplicationType,
@@ -31,8 +19,7 @@ import {
 import { ApplicationService } from '../../../services/application.service';
 import { PersonService } from '../../../services/person.service';
 import { enLicenseClass } from '../../../models/license-class.model';
-import { fork } from 'child_process';
-import { pid } from 'process';
+import test from 'node:test';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -73,27 +60,11 @@ export class MakeAppointmentComponent {
     className: new FormControl('', {}),
     status: new FormControl('', {}),
     fee: new FormControl('', {}),
-    date: new FormControl('', {}),
+    date: new FormControl(new Date(), {}),
     passedTest: new FormControl('0', {}),
     testType: new FormControl('', {}),
     schaduledDate: new FormControl(),
   });
-
-  updateForm(
-    mainApp: Application,
-    applicantName: string,
-    testCount: number
-  ): void {
-    this.application_info.patchValue({
-      applicantName,
-      passedTest: `${testCount}/3`,
-      status: enApplicationStatus[mainApp.status],
-      applicationType: enApplicationType[mainApp.type],
-      fee: mainApp.paidFees.toPrecision(),
-      className: enLicenseClass[this.current_local_application!.licenseClassID],
-      date: mainApp.date.toISOString(),
-    });
-  }
 
   onSearch() {
     const aplicationID: number = +this.filter.value!;
@@ -109,20 +80,30 @@ export class MakeAppointmentComponent {
         }),
         tap((mainApp) => (this.current_main_application = mainApp)),
         switchMap((mainApp) => {
-          return forkJoin({
-            applicantName: this.personService.getFullName(mainApp.personID),
-            testCount: this.applicationService
-              .passedTestCount(this.current_local_application!.id)
-              .pipe(catchError(() => of(-1))),
-            status: of(enApplicationStatus[mainApp.status]),
-
-            applicationType: of(enApplicationType[mainApp.type]),
-            fee: of(mainApp.paidFees.toPrecision()),
-            className: of(
-              enLicenseClass[this.current_local_application!.licenseClassID]
-            ),
-            date: of(mainApp.date.toISOString()),
-          });
+          return this.personService.getFullName(mainApp.personID).pipe(
+            switchMap((applicantName) => {
+              return this.applicationService
+                .passedTestCount(this.current_local_application!.id)
+                .pipe(
+                  catchError(() => of(-1)),
+                  switchMap((testCount) => {
+                    return forkJoin({
+                      applicantName: of(applicantName),
+                      testCount: of(testCount),
+                      status: of(enApplicationStatus[mainApp.status]),
+                      applicationType: of(enApplicationType[mainApp.type]),
+                      fee: of(mainApp.paidFees.toPrecision()),
+                      className: of(
+                        enLicenseClass[
+                          this.current_local_application!.licenseClassID
+                        ]
+                      ),
+                      date: of(mainApp.date),
+                    });
+                  })
+                );
+            })
+          );
         })
       )
       .subscribe({

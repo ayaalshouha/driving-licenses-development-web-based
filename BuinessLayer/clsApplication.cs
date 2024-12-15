@@ -97,7 +97,6 @@ namespace BuisnessLayer
             return await PersonData.GetFullNameOfApplicantAsync(this.PersonID); 
         }
 
-
         //Create sync version of async method
         public string ApplicantFullName
         {

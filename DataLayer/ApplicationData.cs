@@ -295,33 +295,7 @@ namespace DataLayer
             }
             return (RowAffected > 0);
         }
-        public static async Task<string> GetFullNameOfApplicantAsync(int personID)
-        {
-            string name = "";
-            try
-            {
-                using (var Connection = new SqlConnection(DataSettings.ConnectionString))
-                {
-                    string Query = @"SELECT Name From FullNames WHERE PersonID = @personID;";
-                    using (var command = new SqlCommand(Query, Connection))
-                    {
-                        command.Parameters.AddWithValue("@personID", personID);
-                        Connection.Open();
-                        object result = await command.ExecuteScalarAsync();
-                        if (result != null)
-                        {
-                            name = result.ToString();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
-            }
-            return name; 
-        }
+        
 
     }
 }

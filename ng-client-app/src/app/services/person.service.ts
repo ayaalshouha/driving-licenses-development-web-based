@@ -24,6 +24,6 @@ export class PersonService {
   }
 
   getFullName(ID: number): Observable<string> {
-    return this.http.get<string>(`${PERSON_API_ENDPOINTS.fullName(ID)}`);
+    return this.http.get<string>(PERSON_API_ENDPOINTS.fullName(ID));
   }
 }
