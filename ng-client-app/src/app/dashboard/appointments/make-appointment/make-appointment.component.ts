@@ -9,11 +9,20 @@ import {
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
 import { concatMap, switchMap, tap, throwError } from 'rxjs';
-import { LocalApplication } from '../../../models/local-application.model';
+import {
+  LocalApplication,
+  TestCount,
+} from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import { ApplicationType } from '../../../models/application-type.model';
-import { Application } from '../../../models/application.model';
+import {
+  ApplicantName,
+  Application,
+  ApplicationStatus,
+} from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
+import { PersonService } from '../../../services/person.service';
+import { stat } from 'fs';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -48,6 +57,7 @@ export class MakeAppointmentComponent {
   current_date = new Date();
   application_info = new FormGroup({
     applicantName: new FormControl('', {}),
+
     applicationType: new FormControl('', {}),
     className: new FormControl('', {}),
     status: new FormControl('', {}),
@@ -61,10 +71,6 @@ export class MakeAppointmentComponent {
   onSearch() {
     if (this.filter.valid) {
       const aplicationID: number = +this.filter.value!;
-      const licenseClass = '';
-      const applicantName = '';
-      const status = 1;
-
       const subscription = this.applicationService
         .read(aplicationID)
         .pipe(
@@ -76,8 +82,24 @@ export class MakeAppointmentComponent {
             return this.mainAppService.read(response.applicationID);
           }),
           concatMap((response) => {
-            this.application_info.controls.className.value =
-              this.current_local_application?.licenseClassID;
+            if (!response.id) {
+              throw new Error('Invalid Application Data');
+            } else {
+              const fullName = new ApplicantName(response.personID)
+                .applicantName;
+              const testCount = new TestCount(
+                this.current_local_application!.id
+              );
+              const status =
+                this.current_main_application!.status === 1
+                  ? ApplicationStatus.New
+                  : this.current_main_application!.status === 2
+                  ? ApplicationStatus.Cancelled
+                  : ApplicationStatus.Completed;
+              this.application_info.controls.applicantName.value = fullName;
+              this.application_info.controls.passedTest.value = testCount;
+              this.application_info.controls.status.value = this.current_main_application?.status;
+            }
           })
         )
         .subscribe();

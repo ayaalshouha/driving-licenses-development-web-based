@@ -5,25 +5,34 @@ import { DestroyRef, inject } from '@angular/core';
 export interface Application {
   id: number;
   personID: number;
-  status: 1 | 2 | 3;
-  type: number;
+  status: enApplicationStatus;
+  type: enApplicationType;
   date: Date;
   paidFees: number;
   lastStatusDate: Date;
   createdByUserID: number;
 }
 
-export enum ApplicationStatus {
+export enum enApplicationStatus {
   'New' = 1,
   'Cancelled',
   'Completed',
 }
 
+export enum enApplicationType {
+  'New Local Driving License Services' = 1,
+  'Renew Driving License Service',
+  'Replacement for Lost Driving License',
+  'Replacement for Damaged Driving License',
+  'Release Detained Driving License',
+}
+
 export class ApplicantName {
   applicantName = '';
   private destroyRef = inject(DestroyRef);
-  constructor(ID: number, private personSerice: PersonService) {
-    const subscription = this.personSerice
+  private personSerive = inject(PersonService);
+  constructor(ID: number) {
+    const subscription = this.personSerive
       .read(ID)
       .pipe(
         tap(

@@ -31,4 +31,10 @@ export class LocalApplicationService {
       `${LOCAL_APPLICATION_API_ENDPOINT.read}${ID}`
     );
   }
+
+  passedTestCount(id: number): Observable<number> {
+    return this.http.get<number>(
+      LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id)
+    );
+  }
 }
