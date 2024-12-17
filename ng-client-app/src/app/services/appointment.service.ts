@@ -7,7 +7,7 @@ import { Appointment } from '../models/appointment.model';
 @Injectable({
   providedIn: 'root',
 })
-export class ApplicationService {
+export class AppointmentService {
   constructor(private http: HttpClient) {}
 
   create(new_appointment: Appointment): Observable<Appointment> {

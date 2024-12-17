@@ -44,6 +44,7 @@ export class MakeAppointmentComponent {
   private destroy$ = new Subject<void>();
 
   constructor(
+    private apppointmentService:
     private testTypeService: TestTypesService,
     private applicationService: LocalApplicationService,
     private mainAppService: ApplicationService,
@@ -164,7 +165,7 @@ export class MakeAppointmentComponent {
       return;
     }
     //check if there is an ACTIVE (NOT LOCKED) appointment for the same test type
-    
+
     //is appointment locked with pass or fail result
     // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
 
