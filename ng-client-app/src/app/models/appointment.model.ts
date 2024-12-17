@@ -6,7 +6,7 @@ export interface Appointment {
   testType: number;
   localLicenseApplicationID: number;
   createdByUserID: number;
-  retakeTestID: number; 
+  retakeTestID: number | null;
 }
 
 export interface Appointment_View {

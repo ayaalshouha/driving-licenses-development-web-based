@@ -21,4 +21,5 @@ export enum enApplicationType {
   'Replacement for Lost Driving License',
   'Replacement for Damaged Driving License',
   'Release Detained Driving License',
+  'Retake Test',
 }

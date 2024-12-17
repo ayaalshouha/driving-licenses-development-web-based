@@ -3,7 +3,16 @@ import { Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import { forkJoin, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  forkJoin,
+  pipe,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 import { LocalApplication } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import {
@@ -19,6 +28,8 @@ import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { subscribe } from 'diagnostics_channel';
+import { ApplicationTypes } from '../../../models/application-type.model';
+import { nextTick } from 'process';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -182,11 +193,79 @@ export class MakeAppointmentComponent {
                 )
             );
           }
+          return this.applicationService
+            .isTestAttended(
+              this.current_local_application()!.id,
+              this.testTypeID()!
+            )
+            .pipe(
+              switchMap((isTestAttended) => {
+                if (isTestAttended) {
+                  // test attended  means that appointment will have a retake test ID
+                  const new_application: Application = {
+                    id: 0,
+                    personID: this.current_main_application()!.personID,
+                    paidFees:
+                      ApplicationTypes[enApplicationType['Retake Test']]
+                        .typeFee,
+                    date: this.current_date,
+                    lastStatusDate: this.current_date,
+                    status: enApplicationStatus.New,
+                    type: enApplicationType['Retake Test'],
+                    // dynamically add current user ID
+                    createdByUserID: 3,
+                  };
+                  return this.mainAppService.create(new_application).pipe(
+                    tap((new_app) => {
+                      if (new_app.id) {
+                        //this is the retake test ID for new appointment
+                        const new_appointment: Appointment = {
+                          createdByUserID: 3,
+                          id: 0,
+                          isLocked: false,
+                          date: this.appointmentDate.value!,
+                          paidFees: this.testTypes[this.testTypeID()!].fees,
+                          localLicenseApplicationID:
+                            this.current_local_application()!.id,
+                          retakeTestID: new_app.id,
+                          testType: this.testTypeID()!,
+                        };
+
+                        return this.apppointmentService
+                          .create(new_appointment)
+                          .pipe(
+                            tap(() => {}),
+                            catchError(
+                              (err) => 'error creating retake appoitnemnt'
+                            )
+                          );
+                      }
+                    })
+                  );
+                } else {
+                  // otherwise its a new appoitnment with null retakeTestID
+                  const new_appointment: Appointment = {
+                    createdByUserID: 3,
+                    id: 0,
+                    isLocked: false,
+                    date: this.appointmentDate.value!,
+                    paidFees: this.testTypes[this.testTypeID()!].fees,
+                    localLicenseApplicationID:
+                      this.current_local_application()!.id,
+                    testType: this.testTypeID()!,
+                  };
+                  return this.apppointmentService.create(new_appointment).pipe(
+                    tap(() => {}),
+                    catchError((err) => 'error creating new appoitnemnt')
+                  );
+                }
+              })
+            );
         }),
         takeUntil(this.destroy$)
       ),
       subscribe();
-      
+
     //is appointment locked with pass or fail result
     // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
 
