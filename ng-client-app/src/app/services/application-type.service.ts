@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApplicationType } from '../models/application-type.model';
 import { APPLICATION_TYPE_API_ENDPOINT } from '../environments/endpoints/application-type.endpoints';
 

@@ -13,11 +13,9 @@ export class TestTypesService {
   all(): Observable<TestType[]> {
     return this.http.get<TestType[]>(TEST_TYPE_API_ENDPOINT.all);
   }
-  // getFees(type_id: number) {
-  //   return this.http.get<Observable<number>>(
-  //     `${APPLICATION_TYPE_API_ENDPOINT.fees}${type_id}`
-  //   );
-  // }
+  getFees(type_id: number) {
+    return this.http.get<Observable<number>>(TEST_TYPE_API_ENDPOINT.fee(type_id));
+  }
 
   // getApplicationTypeById(id: number): Observable<ApplicationType> {
   //   return this.http.get<ApplicationType>(`${this.apiUrl}/${id}`);

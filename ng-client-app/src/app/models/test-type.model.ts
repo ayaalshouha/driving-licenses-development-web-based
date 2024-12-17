@@ -4,5 +4,3 @@ export interface TestType {
   fees: number;
   description: string;
 }
-
-export enum enTestType  {'Vision Test' , ''}

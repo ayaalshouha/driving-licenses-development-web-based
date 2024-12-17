@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PERSON_API_ENDPOINTS } from '../environments/endpoints/person.endpoints';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Person } from '../models/person.model';
 @Injectable({
   providedIn: 'root',
@@ -24,6 +24,8 @@ export class PersonService {
   }
 
   getFullName(ID: number): Observable<string> {
-    return this.http.get<string>(PERSON_API_ENDPOINTS.fullName(ID));
+    return this.http.get<string>(PERSON_API_ENDPOINTS.fullName(ID), {
+      responseType: 'text' as 'json',
+    });
   }
 }

@@ -27,14 +27,14 @@ export class LocalApplicationService {
   }
 
   read(ID: number): Observable<LocalApplication> {
-    return this.http
-      .get<LocalApplication>(`${LOCAL_APPLICATION_API_ENDPOINT.read} ${ID}`)
-      .pipe(tap((res) => console.log('reading local app + ' + res.id)));
+    return this.http.get<LocalApplication>(
+      `${LOCAL_APPLICATION_API_ENDPOINT.read}${ID}`
+    );
   }
 
   passedTestCount(id: number): Observable<number> {
-    return this.http
-      .get<number>(LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id))
-      .pipe(tap((res) => console.log('reading passed tests  + ' + res)));
+    return this.http.get<number>(
+      LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id)
+    );
   }
 }

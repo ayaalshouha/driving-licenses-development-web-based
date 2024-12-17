@@ -83,5 +83,10 @@ namespace BuisnessLayer
         {
             return await TestTypesData.DeleteAsync(id);
         }
+        public static async Task<decimal> FeeAsync(int ID)
+        {
+            decimal fee = await TestTypesData.GetFee(ID);
+            return fee;
+        }
     }
 }

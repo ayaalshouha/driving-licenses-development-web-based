@@ -47,7 +47,6 @@ namespace DataLayer
            
             return null;
         }
-
         public static async Task<int> AddAsync(TestType type)
         {
             int newID = 0;
@@ -138,7 +137,6 @@ namespace DataLayer
             }
             return table;
         }
-
         public static async Task<bool> isExistAsync(int typeID)
         {
             bool isFound = false;
@@ -184,6 +182,41 @@ namespace DataLayer
                 Connection.Close();
             }
             return RowAffected > 0;
+        }       
+        public static async Task<decimal> GetFee(int typeID)
+        {
+            decimal fee = 0;
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"SELECT Fees From TestTypes 
+                        WHERE ID = @typeID;";
+
+
+                var Command = new SqlCommand(Query, Connection);
+
+                Command.Parameters.AddWithValue("@typeID", typeID);
+
+                Connection.Open();
+                object result = await Command.ExecuteScalarAsync();
+
+                if (result != null && decimal.TryParse(result.ToString(), out decimal result_))
+                {
+                    fee = result_;
+                }
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
+            return fee;
         }
+    
     }
 }

@@ -6,6 +6,10 @@ form,
 fieldset {
   padding: 10px;
 }
+
+.container {
+  gap: 15px;
+}
 .control-row {
   display: flex;
   justify-content: flex-start;
@@ -13,9 +17,27 @@ fieldset {
   gap: 8px;
 }
 .control {
-  margin-bottom: 10px;
-  width: 200px;
+  margin-bottom: 0;
+  width: fit-content;
 }
+.control p,
+select,
+input {
+  font-weight: bold;
+  background-color: white;
+  color: var(--text-color);
+  min-width: 300px;
+  width: fit-content;
+  padding: 8px;
+  border: 1px solid var(--text-color);
+  border-radius: 5px;
+}
+.control select,
+input {
+  font-weight: normal;
+  color: black;
+}
+
 .control label {
   display: block;
   font-size: 0.6rem;

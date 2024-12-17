@@ -109,5 +109,11 @@ namespace api_layer.Controllers
                 return NotFound("Application Type Not Found");
         }
 
+        [HttpGet("{id}/fee", Name = "GetTestTypeFee")]
+        public async Task<ActionResult<decimal>> GetPaidFees(enTestType id)
+        {
+            decimal fee = await clsTestTypes.FeeAsync((int)id);
+            return Ok(fee);
+        }
     }
 }

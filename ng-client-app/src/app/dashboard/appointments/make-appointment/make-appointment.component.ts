@@ -1,14 +1,9 @@
-import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
+import { forkJoin, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { LocalApplication } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import {
@@ -19,19 +14,28 @@ import {
 import { ApplicationService } from '../../../services/application.service';
 import { PersonService } from '../../../services/person.service';
 import { enLicenseClass } from '../../../models/license-class.model';
-import test from 'node:test';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
   templateUrl: './make-appointment.component.html',
   styleUrl: './make-appointment.component.css',
 })
 export class MakeAppointmentComponent {
   current_local_application: LocalApplication | null = null;
   current_main_application: Application | null = null;
+  applicantName = signal<string>('');
+  testCount = signal<number>(0);
+  applicationType = signal<string | undefined>(undefined);
+  applicationStatus = signal<string | undefined>(undefined);
+  licenseClass = signal<string | undefined>(undefined);
+  testTypeFee = signal<number | undefined>(undefined);
+  filter = new FormControl('', {
+    validators: [Validators.required, Validators.min(1)],
+  });
+  current_date = new Date();
   testTypes: TestType[] = [];
-  private destroRef = inject(DestroyRef);
+  private destroy$ = new Subject<void>();
 
   constructor(
     private testTypeService: TestTypesService,
@@ -39,97 +43,79 @@ export class MakeAppointmentComponent {
     private mainAppService: ApplicationService,
     private personService: PersonService
   ) {
-    const subscription = this.testTypeService
+    this.testTypeService
       .all()
       .pipe(
         tap((response) => {
           this.testTypes = response;
-        })
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe();
-
-    this.destroRef.onDestroy(() => subscription.unsubscribe());
   }
-  filter = new FormControl('', {
-    validators: [Validators.required, Validators.min(1)],
-  });
-  current_date = new Date();
-  application_info = new FormGroup({
-    applicantName: new FormControl('', {}),
-    applicationType: new FormControl('', {}),
-    className: new FormControl('', {}),
-    status: new FormControl('', {}),
-    fee: new FormControl('', {}),
-    date: new FormControl(new Date(), {}),
-    passedTest: new FormControl('0', {}),
-    testType: new FormControl('', {}),
-    schaduledDate: new FormControl(),
-  });
 
   onSearch() {
-    const aplicationID: number = +this.filter.value!;
-    const subscription = this.applicationService
-      .read(aplicationID)
+    const applicationID: number = +this.filter.value!;
+
+    this.applicationService
+      .read(applicationID)
       .pipe(
-        tap((response) => (this.current_local_application = response)),
-        switchMap((response) => {
-          if (!response.id) {
-            throw new Error('Invalid Local Application Data');
-          }
-          return this.mainAppService.read(response.applicationID);
-        }),
-        tap((mainApp) => (this.current_main_application = mainApp)),
-        switchMap((mainApp) => {
-          return this.personService.getFullName(mainApp.personID).pipe(
-            switchMap((applicantName) => {
-              return this.applicationService
-                .passedTestCount(this.current_local_application!.id)
-                .pipe(
-                  catchError(() => of(-1)),
-                  switchMap((testCount) => {
-                    return forkJoin({
-                      applicantName: of(applicantName),
-                      testCount: of(testCount),
-                      status: of(enApplicationStatus[mainApp.status]),
-                      applicationType: of(enApplicationType[mainApp.type]),
-                      fee: of(mainApp.paidFees.toPrecision()),
-                      className: of(
-                        enLicenseClass[
-                          this.current_local_application!.licenseClassID
-                        ]
-                      ),
-                      date: of(mainApp.date),
-                    });
-                  })
+        switchMap((localApp) => {
+          if (!localApp.id)
+            return throwError(
+              () => new Error('Invalid Local Application Data')
+            );
+          this.current_local_application = localApp;
+
+          return this.mainAppService.read(localApp.applicationID).pipe(
+            switchMap((mainApp) => {
+              if (!mainApp.id)
+                return throwError(
+                  () => new Error('Invalid Main Application Data')
                 );
+              this.current_main_application = mainApp;
+
+              this.applicationStatus.set(
+                enApplicationStatus[this.current_main_application.status]
+              );
+
+              this.applicationType.set(
+                enApplicationType[this.current_main_application.type]
+              );
+              this.licenseClass.set(
+                enLicenseClass[this.current_local_application!.licenseClassID]
+              );
+
+              return forkJoin({
+                passedTest: this.applicationService.passedTestCount(
+                  localApp.id
+                ),
+                applicantFullName: this.personService.getFullName(
+                  mainApp.personID
+                ),
+              });
             })
           );
-        })
+        }),
+        takeUntil(this.destroy$) // Automatic cleanup
       )
       .subscribe({
-        next: (data) => {
-          this.application_info.controls.applicantName.setValue(
-            data.applicantName
-          );
-          this.application_info.controls.passedTest.setValue(
-            `${data.testCount}/3`
-          );
-          this.application_info.controls.fee.setValue(data.fee);
-          this.application_info.controls.date.setValue(data.date);
-          this.application_info.controls.status.setValue(data.status);
-          this.application_info.controls.className.setValue(data.className);
-          this.application_info.controls.testType.setValue(
-            data.applicationType
-          );
+        next: ({ passedTest, applicantFullName }) => {
+          this.testCount.set(passedTest);
+          this.applicantName.set(applicantFullName);
+          console.log('Passed Test Count: ' + this.testCount());
         },
         error: (err) => {
-          console.log('Error fetching data: ' + err.message);
+          console.error('Error fetching data:', err.message);
         },
         complete: () => {
           console.log('Data fetching sequence completed');
         },
       });
+  }
 
-    this.destroRef.onDestroy(() => subscription.unsubscribe());
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
