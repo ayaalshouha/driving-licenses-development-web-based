@@ -37,4 +37,10 @@ export class LocalApplicationService {
       LOCAL_APPLICATION_API_ENDPOINT.passedTestCount(id)
     );
   }
+
+  isTestAttended(id: number, testID: number): Observable<boolean> {
+    return this.http.get<boolean>(
+      LOCAL_APPLICATION_API_ENDPOINT.isTestAttended(id, testID)
+    );
+  }
 }

@@ -6,4 +6,6 @@ export const LOCAL_APPLICATION_API_ENDPOINT = {
   read: `${environment.apiBaseUrl}/localApplication/`,
   passedTestCount: (id: number) =>
     `${environment.apiBaseUrl}/localApplication/${id}/passed-test-count`,
+  isTestAttended: (id: number, testID: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/is-test-attended/${testID}`,
 };

@@ -17,6 +17,8 @@ import { enLicenseClass } from '../../../models/license-class.model';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
+import { AppointmentService } from '../../../services/appointment.service';
+import { subscribe } from 'diagnostics_channel';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -44,7 +46,7 @@ export class MakeAppointmentComponent {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private apppointmentService:
+    private apppointmentService: AppointmentService,
     private testTypeService: TestTypesService,
     private applicationService: LocalApplicationService,
     private mainAppService: ApplicationService,
@@ -165,7 +167,26 @@ export class MakeAppointmentComponent {
       return;
     }
     //check if there is an ACTIVE (NOT LOCKED) appointment for the same test type
-
+    this.apppointmentService
+      .isThereAnActiveAppointment(
+        this.testTypeID()!,
+        this.current_local_application()!.id
+      )
+      .pipe(
+        tap((appointment_found) => {
+          if (appointment_found) {
+            return throwError(
+              () =>
+                new Error(
+                  'Person already schaduled an appointment with same test type!'
+                )
+            );
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
+      subscribe();
+      
     //is appointment locked with pass or fail result
     // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
 

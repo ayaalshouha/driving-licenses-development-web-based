@@ -229,6 +229,7 @@ namespace api_layer.Controllers
             return Ok(lastTest);
         }
 
+        
         [HttpGet("{id}/is-test-attended/{testId}", Name = "isTestAttended")]
         public async Task<ActionResult<bool>> isTestAttended(int id, enTestType testId)
         {
