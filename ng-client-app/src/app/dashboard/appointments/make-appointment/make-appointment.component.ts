@@ -22,10 +22,10 @@ import { enLicenseClass } from '../../../models/license-class.model';
   styleUrl: './make-appointment.component.css',
 })
 export class MakeAppointmentComponent {
-  current_local_application: LocalApplication | null = null;
-  current_main_application: Application | null = null;
-  applicantName = signal<string>('');
-  testCount = signal<number>(0);
+  current_local_application = signal<LocalApplication | null>(null);
+  current_main_application = signal<Application | null>(null);
+  applicantName = signal<string | undefined>(undefined);
+  testCount = signal<number | undefined>(undefined);
   applicationType = signal<string | undefined>(undefined);
   applicationStatus = signal<string | undefined>(undefined);
   licenseClass = signal<string | undefined>(undefined);
@@ -65,7 +65,7 @@ export class MakeAppointmentComponent {
             return throwError(
               () => new Error('Invalid Local Application Data')
             );
-          this.current_local_application = localApp;
+          this.current_local_application.set(localApp);
 
           return this.mainAppService.read(localApp.applicationID).pipe(
             switchMap((mainApp) => {
@@ -73,17 +73,17 @@ export class MakeAppointmentComponent {
                 return throwError(
                   () => new Error('Invalid Main Application Data')
                 );
-              this.current_main_application = mainApp;
+              this.current_main_application.set(mainApp);
 
               this.applicationStatus.set(
-                enApplicationStatus[this.current_main_application.status]
+                enApplicationStatus[this.current_main_application()!.status]
               );
 
               this.applicationType.set(
-                enApplicationType[this.current_main_application.type]
+                enApplicationType[this.current_main_application()!.type]
               );
               this.licenseClass.set(
-                enLicenseClass[this.current_local_application!.licenseClassID]
+                enLicenseClass[this.current_local_application()!.licenseClassID]
               );
 
               return forkJoin({
@@ -113,7 +113,16 @@ export class MakeAppointmentComponent {
         },
       });
   }
-
+  onReset() {
+    this.current_local_application.set(null);
+    this.current_main_application.set(null);
+    this.applicantName.set(undefined);
+    this.licenseClass.set(undefined);
+    this.applicationStatus.set(undefined);
+    this.applicationType.set(undefined);
+    this.testCount.set(undefined);
+    this.testTypeFee.set(undefined);
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

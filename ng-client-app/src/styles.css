@@ -108,7 +108,7 @@ p.inline-error {
 }
 .button-secondary {
   background-color: #f8f9fa;
-  color: var(--special-color);
+  color: var(--hover-color);
 }
 .button:hover {
   opacity: 0.8;

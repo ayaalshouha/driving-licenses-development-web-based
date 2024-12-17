@@ -4,17 +4,18 @@ form {
 }
 form,
 fieldset {
-  padding: 10px;
+  padding: 20px;
 }
 
 .container {
-  gap: 15px;
+  gap: 30px;
 }
 .control-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 8px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 .control {
   margin-bottom: 0;
@@ -23,19 +24,18 @@ fieldset {
 .control p,
 select,
 input {
-  font-weight: bold;
   background-color: white;
-  color: var(--text-color);
+  color: black;
   min-width: 300px;
   width: fit-content;
   padding: 8px;
   border: 1px solid var(--text-color);
   border-radius: 5px;
+  height: 35px;
 }
 .control select,
 input {
   font-weight: normal;
-  color: black;
 }
 
 .control label {
@@ -56,6 +56,9 @@ select {
   -o-border-radius: 5px;
 }
 
+.border-color .control label {
+  color: #f84e2c;
+}
 .actions {
   display: flex;
   justify-content: flex-end;

@@ -15,47 +15,57 @@
 </form>
 
 <div class="container">
-  <div class="control-row">
-    <div class="control">
-      <label for="full-name">Applicant full name:</label>
-      <p name="" id="full-name">{{ applicantName() || "undefiend" }}</p>
+  <fieldset>
+    <legend>Application Info</legend>
+    <div class="control-row">
+      <div class="control">
+        <label for="full-name">Applicant full name</label>
+        <p id="full-name">
+          {{ applicantName() != undefined ? applicantName() : "undefiend" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="type">Application type</label>
+        <p id="type">
+          {{ applicationType() != undefined ? applicationType() : "undefiend" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="class-name">Class</label>
+        <p id="class-name">
+          {{ licenseClass() != undefined ? licenseClass() : "undefiend" }}
+        </p>
+      </div>
     </div>
-    <div class="control">
-      <label for="type">Application type</label>
-      <p name="" id="type">
-        {{ applicationType() || "undefiend" }}
-      </p>
+    <div class="control-row">
+      <div class="control">
+        <label for="test-count"># of Passed tests</label>
+        <p  id="test-count">
+          {{ testCount() != undefined ? testCount() : "undefiend" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="status">Status</label>
+        <p  id="status">
+          {{
+            applicationStatus() != undefined ? applicationStatus() : "undefiend"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="date">Application Date</label>
+        <p  id="date">
+          {{
+            current_main_application()?.date != undefined
+              ? (current_main_application()!.date | date)
+              : "undefiend"
+          }}
+        </p>
+      </div>
     </div>
-    <div class="control">
-      <label for="class-name">Class</label>
-      <p name="" id="class-name">
-        {{ licenseClass() || "undefiend" }}
-      </p>
-    </div>
-  </div>
-  <div class="control-row">
-    <div class="control">
-      <label for="test-count"># of Passed tests</label>
-      <p name="" id="test-count">{{ testCount() || "undefiend" }}</p>
-    </div>
-    <div class="control">
-      <label for="status">Status</label>
-      <p name="" id="status">
-        {{ applicationStatus() || "undefiend" }}
-      </p>
-    </div>
-    <div class="control">
-      <label for="date">Application Date</label>
-      <p name="" id="date">
-        {{
-          current_main_application?.date != undefined
-            ? (current_main_application!.date | date)
-            : "undefiend"
-        }}
-      </p>
-    </div>
-  </div>
-  <div class="control-row">
+  </fieldset>
+
+  <div class="control-row border-color">
     <div class="control">
       <label for="fee">Required Fee</label>
       <p id="fee">
@@ -66,7 +76,7 @@
     </div>
     <div class="control">
       <label for="test_type">Test Type</label>
-      <select name="test_type" id="test_type">
+      <select id="test_type">
         <option value="" disabled selected>--select a test type--</option>
         @if(testTypes){ @for(type of testTypes; track $index) {
         <option [value]="type.id">{{ type.typeTitle }}</option>
@@ -75,78 +85,11 @@
     </div>
     <div class="control">
       <label for="schadule-date">Pick a date</label>
-      <input type="date" name="schadule-date" id="schadule-date" />
+      <input type="date"   id="schadule-date" />
     </div>
   </div>
-
   <div class="actions">
+    <button class="button button-secondary" (click)="onReset()">Reset</button>
     <button class="button">Schadule</button>
   </div>
 </div>
-
-<!--
-<form [formGroup]="application_info">
-  <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
-  <fieldset>
-    <legend>Application Info</legend>
-
-    <div class="control-row">
-      <div class="control">
-        <label for="first-name">Applicant full name</label>
-        <input
-          type="text"
-          name="applicant-name"
-          id="first-name"
-          formControlName="applicantName"
-        />
-      </div>
-      <div class="control-row">
-        <div class="control">
-          <label for="second-name">Application Type</label>
-          <input
-            type="text"
-            name="application-type"
-            id="application-type"
-            formControlName="applicationType"
-          />
-        </div>
-        <div class="control">
-          <label for="class-name">Class name</label>
-          <input
-            type="text"
-            name="class-name"
-            id="class-name"
-            formControlName="className"
-          />
-        </div>
-      </div>
-
-      <div class="control">
-        <label for="status">Status</label>
-        <input type="text" name="status" id="status" formControlName="status" />
-      </div>
-    </div>
-
-    <div class="control-row">
-      <div class="control">
-        <label for="passed-test"># of Passed test</label>
-        <input
-          type="text"
-          name="passed-test"
-          id="passed-test"
-          inputmode="numeric"
-          formControlName="passedTest"
-        />
-      </div>
-
-      <div class="control">
-        <label for="date">Date</label>
-        <input type="text" name="date" id="date" formControlName="date" />
-      </div>
-      <div class="control">
-        <label for="fee">Appliction Fee</label>
-        <input type="text" name="fee" id="fee" formControlName="fee" />
-      </div>
-    </div>
-  </fieldset>
-</form> -->
