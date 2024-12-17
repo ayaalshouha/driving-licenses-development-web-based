@@ -11,17 +11,12 @@ export class ApplicationService {
   constructor(private http: HttpClient) {}
 
   create(new_application: Application): Observable<Application> {
-    return this.http
-      .post<Application>(APPLICATION_API_ENDPOINT.create, new_application)
-      .pipe(
-        map((res) => {
-          return res;
-        })
-      );
+    return this.http.post<Application>(
+      APPLICATION_API_ENDPOINT.create,
+      new_application
+    );
   }
   read(ID: number): Observable<Application> {
-    return this.http
-      .get<Application>(`${APPLICATION_API_ENDPOINT.read}${ID}`)
-      .pipe(tap((res) => console.log('this is returned main app ' + res)));
+    return this.http.get<Application>(`${APPLICATION_API_ENDPOINT.read}${ID}`);
   }
 }

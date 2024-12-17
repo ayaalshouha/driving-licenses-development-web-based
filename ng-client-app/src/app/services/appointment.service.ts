@@ -19,4 +19,12 @@ export class ApplicationService {
         })
       );
   }
+  isThereAnActiveAppointment(
+    testType: number,
+    localApp: number
+  ): Observable<boolean> {
+    return this.http.get<boolean>(
+      APPOINTMENT_API_ENDPOINT.active_appointments(testType, localApp)
+    );
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable, Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-type notifyStatus = 'success' | 'failed' | null;
+type notifyStatus = 'success' | 'failed' | 'notification'| null;
 
 export interface NotificationBox {
   message: string;

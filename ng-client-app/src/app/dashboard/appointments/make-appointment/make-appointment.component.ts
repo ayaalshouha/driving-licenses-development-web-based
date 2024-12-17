@@ -14,10 +14,13 @@ import {
 import { ApplicationService } from '../../../services/application.service';
 import { PersonService } from '../../../services/person.service';
 import { enLicenseClass } from '../../../models/license-class.model';
+import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { NotificationService } from '../../../services/notification.service';
+import { Appointment } from '../../../models/appointment.model';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
+  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe, NotificationComponent],
   templateUrl: './make-appointment.component.html',
   styleUrl: './make-appointment.component.css',
 })
@@ -29,9 +32,12 @@ export class MakeAppointmentComponent {
   applicationType = signal<string | undefined>(undefined);
   applicationStatus = signal<string | undefined>(undefined);
   licenseClass = signal<string | undefined>(undefined);
-  testTypeFee = signal<number | undefined>(undefined);
+  testTypeID = signal<number | undefined>(undefined);
   filter = new FormControl('', {
     validators: [Validators.required, Validators.min(1)],
+  });
+  appointmentDate = new FormControl('', {
+    validators: [Validators.required],
   });
   current_date = new Date();
   testTypes: TestType[] = [];
@@ -41,7 +47,8 @@ export class MakeAppointmentComponent {
     private testTypeService: TestTypesService,
     private applicationService: LocalApplicationService,
     private mainAppService: ApplicationService,
-    private personService: PersonService
+    private personService: PersonService,
+    private notificationService: NotificationService
   ) {
     this.testTypeService
       .all()
@@ -52,6 +59,19 @@ export class MakeAppointmentComponent {
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+
+  checkTests() {
+    if (this.testCount() == 3 && this.applicationStatus() == 'Completed') {
+      this.testTypeID.set(undefined);
+      this.notificationService.showMessage({
+        message:
+          'This person is already took the three tests, Check there license in Licenses Management section',
+        status: 'notification',
+      });
+    } else if (this.testCount()! < 3) {
+      this.testTypeID.set(this.testCount()!);
+    }
   }
 
   onSearch() {
@@ -103,7 +123,7 @@ export class MakeAppointmentComponent {
         next: ({ passedTest, applicantFullName }) => {
           this.testCount.set(passedTest);
           this.applicantName.set(applicantFullName);
-          console.log('Passed Test Count: ' + this.testCount());
+          this.checkTests();
         },
         error: (err) => {
           console.error('Error fetching data:', err.message);
@@ -121,7 +141,42 @@ export class MakeAppointmentComponent {
     this.applicationStatus.set(undefined);
     this.applicationType.set(undefined);
     this.testCount.set(undefined);
-    this.testTypeFee.set(undefined);
+  }
+
+  get invalidTestTypeID() {
+    return this.testTypeID() == undefined;
+  }
+
+  onSchadule() {
+    if (this.invalidTestTypeID) {
+      this.notificationService.showMessage({
+        message: 'You can NOT schadule undefiend test!',
+        status: 'failed',
+      });
+      return;
+    }
+
+    if (this.appointmentDate.invalid) {
+      this.notificationService.showMessage({
+        message: 'Invalid date! make sure to pick a date',
+        status: 'failed',
+      });
+      return;
+    }
+    //check if there is an ACTIVE (NOT LOCKED) appointment for the same test type
+    
+    //is appointment locked with pass or fail result
+    // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
+
+    // const new_appointment: Appointment = {
+    //   id: 0,
+    //   localLicenseApplicationID: this.current_local_application()!.id,
+    //   isLocked: false,
+    //   testType: this.testTypeID()!,
+    //   paidFees: this.testTypes[this.testTypeID()!].fees,
+    //   createdByUserID: 3,
+    //   date:
+    // };
   }
   ngOnDestroy() {
     this.destroy$.next();

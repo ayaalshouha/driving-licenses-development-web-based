@@ -1,3 +1,6 @@
+<!-- showign notification if person took all 3 tests already  -->
+<app-notification />
+
 <form action="">
   <div class="flex">
     <input
@@ -40,13 +43,14 @@
     <div class="control-row">
       <div class="control">
         <label for="test-count"># of Passed tests</label>
-        <p  id="test-count">
+        <p id="test-count">
           {{ testCount() != undefined ? testCount() : "undefiend" }}
         </p>
       </div>
+
       <div class="control">
         <label for="status">Status</label>
-        <p  id="status">
+        <p id="status">
           {{
             applicationStatus() != undefined ? applicationStatus() : "undefiend"
           }}
@@ -54,7 +58,7 @@
       </div>
       <div class="control">
         <label for="date">Application Date</label>
-        <p  id="date">
+        <p id="date">
           {{
             current_main_application()?.date != undefined
               ? (current_main_application()!.date | date)
@@ -70,26 +74,34 @@
       <label for="fee">Required Fee</label>
       <p id="fee">
         {{
-          testTypeFee() != undefined ? (testTypeFee() | currency) : "undefiend"
+          testTypeID() != undefined
+            ? testTypes[testTypeID()!].fees
+            : "undefined"
         }}
       </p>
     </div>
     <div class="control">
-      <label for="test_type">Test Type</label>
-      <select id="test_type">
-        <option value="" disabled selected>--select a test type--</option>
-        @if(testTypes){ @for(type of testTypes; track $index) {
-        <option [value]="type.id">{{ type.typeTitle }}</option>
-        } }
-      </select>
+      <label for="test_type">Test Type available based on previous tests</label>
+      <p id="test_type">
+        {{
+          testTypeID() != undefined
+            ? testTypes[testTypeID()!].typeTitle
+            : "undefined"
+        }}
+      </p>
     </div>
     <div class="control">
       <label for="schadule-date">Pick a date</label>
-      <input type="date"   id="schadule-date" />
+      <input
+        type="date"
+        id="schadule-date"
+        [attr.min]="current_date.toISOString().split('T')[0]"
+        [formControl]="appointmentDate"
+      />
     </div>
   </div>
   <div class="actions">
     <button class="button button-secondary" (click)="onReset()">Reset</button>
-    <button class="button">Schadule</button>
+    <button class="button" (click)="onSchadule()">Schadule</button>
   </div>
 </div>
