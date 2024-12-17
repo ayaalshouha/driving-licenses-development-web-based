@@ -223,7 +223,7 @@ export class MakeAppointmentComponent {
                           createdByUserID: 3,
                           id: 0,
                           isLocked: false,
-                          date: this.appointmentDate.value!,
+                          date: new Date(this.appointmentDate.value!),
                           paidFees: this.testTypes[this.testTypeID()!].fees,
                           localLicenseApplicationID:
                             this.current_local_application()!.id,
@@ -236,7 +236,8 @@ export class MakeAppointmentComponent {
                           .pipe(
                             tap(() => {}),
                             catchError(
-                              (err) => 'error creating retake appoitnemnt'
+                              (err) =>
+                                `error creating retake appoitnemnt ${err.message}`
                             )
                           );
                       }
@@ -248,11 +249,12 @@ export class MakeAppointmentComponent {
                     createdByUserID: 3,
                     id: 0,
                     isLocked: false,
-                    date: this.appointmentDate.value!,
+                    date: new Date(this.appointmentDate.value!),
                     paidFees: this.testTypes[this.testTypeID()!].fees,
                     localLicenseApplicationID:
                       this.current_local_application()!.id,
                     testType: this.testTypeID()!,
+                    retakeTestID: null,
                   };
                   return this.apppointmentService.create(new_appointment).pipe(
                     tap(() => {}),
@@ -263,8 +265,8 @@ export class MakeAppointmentComponent {
             );
         }),
         takeUntil(this.destroy$)
-      ),
-      subscribe();
+      )
+      .subscribe();
 
     //is appointment locked with pass or fail result
     // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
