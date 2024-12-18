@@ -2,6 +2,7 @@
 using DTOsLayer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using System.ComponentModel;
 
 namespace api_layer.Controllers
 {
@@ -122,7 +123,7 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("appointments/by-test-type/{testType}/local-app/{localAppId}", Name = "AllAppointmentsPerTestType")]
-        public async Task<ActionResult<bool>> AllAppointmentsPerTestType(int localAppId, enTestType testType)
+        public async Task<ActionResult<IEnumerable<Appointement_>>> AllAppointmentsPerTestType(int localAppId, enTestType testType)
         {
             var localappID = await clsLocalDrivingLicenses.isExistAsync(localAppId);
 
@@ -135,5 +136,14 @@ namespace api_layer.Controllers
             }
         }
 
+        [HttpGet("appointments-view", Name = "AllAppointments")]
+        public async Task<ActionResult<IEnumerable<Appointement_>>> Appointments()
+        {
+            var all = await clsAppointment.Appointments_View();
+            if (all.Count() <= 0)
+                return NotFound("No Appiontments Found");
+            else
+                return Ok(all);
+        }
     }
 }

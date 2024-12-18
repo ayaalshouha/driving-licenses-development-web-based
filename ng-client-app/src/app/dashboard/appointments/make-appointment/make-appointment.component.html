@@ -82,7 +82,9 @@
       <label for="test_type">Test Type available based on previous tests</label>
       <p id="test_type">
         {{
-          testTypeID() != undefined ? testTypes[testTypeID()!].typeTitle : "N/A"
+          testTypeID() != undefined
+            ? testTypes[testTypeID()!].typeTitle
+            : "N/A"
         }}
       </p>
     </div>

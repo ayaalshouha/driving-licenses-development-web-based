@@ -10,10 +10,11 @@ export interface Appointment {
 }
 
 export interface Appointment_View {
+  testType: number;
+  localLicenseApplicationID: number;
+  fullName: string;
   id: number;
   date: Date;
   paidFees: number;
   isLocked: boolean;
-  testType: number;
-  localLicenseApplicationID: number;
 }

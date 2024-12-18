@@ -97,6 +97,10 @@ namespace BuisnessLayer
         {
             return await Appointments_Data.getAppointmentsTablePerTestTypeAsync(LocalDrivingID, (int)TestType); 
         }
+        public static async Task<IEnumerable<Appointement_>> Appointments_View()
+        {
+            return await Appointments_Data.Appointments_View();
+        }
         public static async Task<bool> isThereAnyActiveAppointments(int LocalDrivingID, enTestType TestType)
         {
             return await Appointments_Data.isThereAnyActiveAppointmentsAsync(LocalDrivingID, (int)TestType); 

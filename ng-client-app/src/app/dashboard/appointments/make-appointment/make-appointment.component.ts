@@ -69,6 +69,7 @@ export class MakeAppointmentComponent {
       .pipe(
         tap((response) => {
           this.testTypes = response;
+          // console.log(this.testTypes[2]);
         }),
         takeUntil(this.destroy$)
       )
@@ -147,6 +148,7 @@ export class MakeAppointmentComponent {
         },
       });
   }
+
   onReset() {
     this.current_local_application.set(null);
     this.current_main_application.set(null);
@@ -179,14 +181,14 @@ export class MakeAppointmentComponent {
           throw new Error('Failed to create retake application');
         }
         const new_appointment: Appointment = {
-          createdByUserID: 3,
+          createdByUserID: 3, // Replace with the actual user ID dynamically
           id: 0,
           isLocked: false,
           date: new Date(this.appointmentDate.value!),
           paidFees: this.testTypes[this.testTypeID()!].fees,
           localLicenseApplicationID: this.current_local_application()!.id,
           retakeTestID: newApp.id,
-          testType: this.testTypeID()!,
+          testType: this.testTypeID()! + 1,
         };
 
         return this.apppointmentService.create(new_appointment).pipe(
@@ -208,7 +210,7 @@ export class MakeAppointmentComponent {
       date: new Date(this.appointmentDate.value!),
       paidFees: this.testTypes[this.testTypeID()!].fees,
       localLicenseApplicationID: this.current_local_application()!.id,
-      testType: this.testTypeID()!,
+      testType: this.testTypeID()! + 1,
       retakeTestID: null,
     };
 
@@ -219,6 +221,7 @@ export class MakeAppointmentComponent {
     );
   }
   onSchedule() {
+    console.log(this.testTypeID());
     if (this.invalidTestTypeID) {
       this.notificationService.showMessage({
         message: 'You cannot schedule undefined test!',
@@ -235,9 +238,10 @@ export class MakeAppointmentComponent {
       return;
     }
     //check if there is an ACTIVE (NOT LOCKED) appointment for the same test type
+
     this.apppointmentService
       .isThereAnActiveAppointment(
-        this.testTypeID()!,
+        this.testTypeID()! + 1,
         this.current_local_application()!.id
       )
       .pipe(
@@ -253,7 +257,7 @@ export class MakeAppointmentComponent {
           return this.applicationService
             .isTestAttended(
               this.current_local_application()!.id,
-              this.testTypeID()!
+              this.testTypeID()! + 1
             )
             .pipe(
               switchMap((isTestAttended) => {

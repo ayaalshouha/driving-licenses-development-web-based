@@ -210,7 +210,7 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (await reader.ReadAsync())
+                while (await reader.ReadAsync())
                 {
                     table.Add(new Appointement_(
                         reader.GetInt32(reader.GetOrdinal("ID")),
@@ -223,8 +223,46 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return table;
+        }
+        public static async Task<IEnumerable<Appointment_Veiw>> Appointments_View()
+        {
+            var table = new List<Appointment_Veiw>();
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"select * from Appointments_View;";
+
+                SqlCommand command = new SqlCommand(Query, Connection);
+
+                Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while(await reader.ReadAsync())
+                {
+                    table.Add(new Appointment_Veiw(
+                        reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                        reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
+                        reader.GetString(reader.GetOrdinal("FullName")),
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.GetDateTime(reader.GetOrdinal("Date")),
+                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                        reader.GetBoolean(reader.GetOrdinal("isLocked"))
+                        ));
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {

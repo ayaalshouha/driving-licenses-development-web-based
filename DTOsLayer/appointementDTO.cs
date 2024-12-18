@@ -8,6 +8,7 @@ namespace DTOsLayer
 {
     public class Appointement_
     {
+        //to preview certain local application appointments for certain test type in frontend
         public int ID { get; set; }
         public DateTime Date { get; set; }
         public decimal PaidFees { get; set; }
@@ -26,11 +27,13 @@ namespace DTOsLayer
     {
         public int TestType { get; set; }
         public int LocalLicenseApplicationID { get; set; }
+        public string FullName { get; set; }
 
-        public Appointment_Veiw(int TestType, int LocalLicenseApplicationID, int ID, DateTime Date, decimal PaidFees, bool isLocked)
+        public Appointment_Veiw(int TestType, int LocalLicenseApplicationID,string FullName, int ID, DateTime Date, decimal PaidFees, bool isLocked)
             : base(ID, Date, PaidFees, isLocked)
         {
             this.TestType = TestType;
+            this.FullName = FullName;
             this.LocalLicenseApplicationID = LocalLicenseApplicationID;
             this.isLocked = isLocked;
             this.ID = ID;
@@ -45,7 +48,7 @@ namespace DTOsLayer
         public int? RetakeTestID { get; set; }
 
         public Appointment(int CreatedByUserID, int? RetakeTestID, int TestType, int LocalLicenseApplicationID, int ID, DateTime Date, decimal PaidFees, bool isLocked) 
-            : base(TestType, LocalLicenseApplicationID, ID, Date, PaidFees, isLocked)
+            : base(TestType, LocalLicenseApplicationID,"", ID, Date, PaidFees, isLocked)
         {
             this.ID = ID; 
             this.LocalLicenseApplicationID= LocalLicenseApplicationID;
