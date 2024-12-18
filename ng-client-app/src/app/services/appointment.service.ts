@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { APPOINTMENT_API_ENDPOINT } from '../environments/endpoints/appointment.endpoints';
 import { map, Observable } from 'rxjs';
-import { Appointment } from '../models/appointment.model';
+import { Appointment, Appointment_View } from '../models/appointment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,5 +26,8 @@ export class AppointmentService {
     return this.http.get<boolean>(
       APPOINTMENT_API_ENDPOINT.active_appointments(testType, localApp)
     );
+  }
+  appointments(): Observable<Appointment_View[]> {
+    return this.http.get<Appointment_View[]>(APPOINTMENT_API_ENDPOINT.all);
   }
 }
