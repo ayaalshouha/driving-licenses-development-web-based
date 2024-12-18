@@ -24,19 +24,19 @@
       <div class="control">
         <label for="full-name">Applicant full name</label>
         <p id="full-name">
-          {{ applicantName() != undefined ? applicantName() : "undefiend" }}
+          {{ applicantName() != undefined ? applicantName() : "N/A" }}
         </p>
       </div>
       <div class="control">
         <label for="type">Application type</label>
         <p id="type">
-          {{ applicationType() != undefined ? applicationType() : "undefiend" }}
+          {{ applicationType() != undefined ? applicationType() : "N/A" }}
         </p>
       </div>
       <div class="control">
         <label for="class-name">Class</label>
         <p id="class-name">
-          {{ licenseClass() != undefined ? licenseClass() : "undefiend" }}
+          {{ licenseClass() != undefined ? licenseClass() : "N/A" }}
         </p>
       </div>
     </div>
@@ -44,16 +44,14 @@
       <div class="control">
         <label for="test-count"># of Passed tests</label>
         <p id="test-count">
-          {{ testCount() != undefined ? testCount() : "undefiend" }}
+          {{ testCount() != undefined ? testCount() : "N/A" }}
         </p>
       </div>
 
       <div class="control">
         <label for="status">Status</label>
         <p id="status">
-          {{
-            applicationStatus() != undefined ? applicationStatus() : "undefiend"
-          }}
+          {{ applicationStatus() != undefined ? applicationStatus() : "N/A" }}
         </p>
       </div>
       <div class="control">
@@ -62,7 +60,7 @@
           {{
             current_main_application()?.date != undefined
               ? (current_main_application()!.date | date)
-              : "undefiend"
+              : "N/A"
           }}
         </p>
       </div>
@@ -74,9 +72,9 @@
       <label for="fee">Required Fee</label>
       <p id="fee">
         {{
-          testTypeID() != undefined
-            ? testTypes[testTypeID()!].fees
-            : "undefined"
+          testTypeID() !== undefined && testTypes[testTypeID()!]
+            ? (testTypes[testTypeID()!]!.fees | currency)
+            : "N/A"
         }}
       </p>
     </div>
@@ -84,9 +82,7 @@
       <label for="test_type">Test Type available based on previous tests</label>
       <p id="test_type">
         {{
-          testTypeID() != undefined
-            ? testTypes[testTypeID()!].typeTitle
-            : "undefined"
+          testTypeID() != undefined ? testTypes[testTypeID()!].typeTitle : "N/A"
         }}
       </p>
     </div>

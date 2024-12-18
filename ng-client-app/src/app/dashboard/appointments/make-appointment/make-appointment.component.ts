@@ -257,7 +257,7 @@ export class MakeAppointmentComponent {
             )
             .pipe(
               switchMap((isTestAttended) => {
-                isTestAttended
+                return isTestAttended
                   ? this.CreateRetakeTestAppointment()
                   : this.CreateNewAppointment();
               })
