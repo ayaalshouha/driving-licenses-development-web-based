@@ -56,14 +56,11 @@ namespace api_layer.Controllers
             if (newAppointment == null)
                 return BadRequest("invalid object data");
 
-            bool appointmentFound = await clsAppointment.isExistAsync(newAppointment.ID);
-            if (!appointmentFound)
-                return BadRequest($"Appointment with ID {newAppointment.ID} NOT found, You have to add appointment details first!");
 
             var appointment = AssignDataToAppointment(newAppointment);
 
             if (await appointment.SaveAsync())
-                return CreatedAtRoute("ReadAppointmentByID", new { appointment.ID }, newAppointment);
+                return CreatedAtRoute("ReadAppointmentByID", new { appointment.ID }, appointment);
             else
                 return StatusCode(500, new { message = "Error Creating Appointment" });
         }

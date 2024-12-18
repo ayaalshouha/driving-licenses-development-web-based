@@ -161,10 +161,67 @@ export class MakeAppointmentComponent {
     return this.testTypeID() == undefined;
   }
 
-  onSchadule() {
+  private CreateRetakeTestAppointment() {
+    const new_app: Application = {
+      id: 0,
+      personID: this.current_main_application()!.personID,
+      paidFees: ApplicationTypes[enApplicationType['Retake Test']].typeFee,
+      date: this.current_date,
+      lastStatusDate: this.current_date,
+      status: enApplicationStatus.New,
+      type: enApplicationType['Retake Test'],
+      createdByUserID: 3, // Replace with the actual user ID dynamically
+    };
+
+    return this.mainAppService.create(new_app).pipe(
+      switchMap((newApp) => {
+        if (!newApp) {
+          throw new Error('Failed to create retake application');
+        }
+        const new_appointment: Appointment = {
+          createdByUserID: 3,
+          id: 0,
+          isLocked: false,
+          date: new Date(this.appointmentDate.value!),
+          paidFees: this.testTypes[this.testTypeID()!].fees,
+          localLicenseApplicationID: this.current_local_application()!.id,
+          retakeTestID: newApp.id,
+          testType: this.testTypeID()!,
+        };
+
+        return this.apppointmentService.create(new_appointment).pipe(
+          catchError((err) => {
+            throw new Error(
+              `Error creating retake appointment: ${err.message}`
+            );
+          })
+        );
+      })
+    );
+  }
+
+  private CreateNewAppointment() {
+    const newAppointment: Appointment = {
+      createdByUserID: 3,
+      id: 0,
+      isLocked: false,
+      date: new Date(this.appointmentDate.value!),
+      paidFees: this.testTypes[this.testTypeID()!].fees,
+      localLicenseApplicationID: this.current_local_application()!.id,
+      testType: this.testTypeID()!,
+      retakeTestID: null,
+    };
+
+    return this.apppointmentService.create(newAppointment).pipe(
+      catchError((err) => {
+        throw new Error(`Error creating new appointment: ${err.message}`);
+      })
+    );
+  }
+  onSchedule() {
     if (this.invalidTestTypeID) {
       this.notificationService.showMessage({
-        message: 'You can NOT schadule undefiend test!',
+        message: 'You cannot schedule undefined test!',
         status: 'failed',
       });
       return;
@@ -172,7 +229,7 @@ export class MakeAppointmentComponent {
 
     if (this.appointmentDate.invalid) {
       this.notificationService.showMessage({
-        message: 'Invalid date! make sure to pick a date',
+        message: 'Invalid date! Make sure to pick a date.',
         status: 'failed',
       });
       return;
@@ -184,7 +241,7 @@ export class MakeAppointmentComponent {
         this.current_local_application()!.id
       )
       .pipe(
-        tap((appointment_found) => {
+        switchMap((appointment_found) => {
           if (appointment_found) {
             return throwError(
               () =>
@@ -200,73 +257,32 @@ export class MakeAppointmentComponent {
             )
             .pipe(
               switchMap((isTestAttended) => {
-                if (isTestAttended) {
-                  // test attended  means that appointment will have a retake test ID
-                  const new_application: Application = {
-                    id: 0,
-                    personID: this.current_main_application()!.personID,
-                    paidFees:
-                      ApplicationTypes[enApplicationType['Retake Test']]
-                        .typeFee,
-                    date: this.current_date,
-                    lastStatusDate: this.current_date,
-                    status: enApplicationStatus.New,
-                    type: enApplicationType['Retake Test'],
-                    // dynamically add current user ID
-                    createdByUserID: 3,
-                  };
-                  return this.mainAppService.create(new_application).pipe(
-                    tap((new_app) => {
-                      if (new_app.id) {
-                        //this is the retake test ID for new appointment
-                        const new_appointment: Appointment = {
-                          createdByUserID: 3,
-                          id: 0,
-                          isLocked: false,
-                          date: new Date(this.appointmentDate.value!),
-                          paidFees: this.testTypes[this.testTypeID()!].fees,
-                          localLicenseApplicationID:
-                            this.current_local_application()!.id,
-                          retakeTestID: new_app.id,
-                          testType: this.testTypeID()!,
-                        };
-
-                        return this.apppointmentService
-                          .create(new_appointment)
-                          .pipe(
-                            tap(() => {}),
-                            catchError(
-                              (err) =>
-                                `error creating retake appoitnemnt ${err.message}`
-                            )
-                          );
-                      }
-                    })
-                  );
-                } else {
-                  // otherwise its a new appoitnment with null retakeTestID
-                  const new_appointment: Appointment = {
-                    createdByUserID: 3,
-                    id: 0,
-                    isLocked: false,
-                    date: new Date(this.appointmentDate.value!),
-                    paidFees: this.testTypes[this.testTypeID()!].fees,
-                    localLicenseApplicationID:
-                      this.current_local_application()!.id,
-                    testType: this.testTypeID()!,
-                    retakeTestID: null,
-                  };
-                  return this.apppointmentService.create(new_appointment).pipe(
-                    tap(() => {}),
-                    catchError((err) => 'error creating new appoitnemnt')
-                  );
-                }
+                isTestAttended
+                  ? this.CreateRetakeTestAppointment()
+                  : this.CreateNewAppointment();
               })
             );
         }),
+        catchError((err) => {
+          this.notificationService.showMessage({
+            message: err.message || 'An unexpected error occured!!',
+            status: 'failed',
+          });
+          return [];
+        }),
         takeUntil(this.destroy$)
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.notificationService.showMessage({
+            message: 'Appointment scheduled successfully!',
+            status: 'success',
+          });
+        },
+        error: (err) => {
+          console.error('Error scheduling appointment:', err);
+        },
+      });
 
     //is appointment locked with pass or fail result
     // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test

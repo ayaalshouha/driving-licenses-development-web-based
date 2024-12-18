@@ -13,12 +13,12 @@ namespace DTOsLayer
         public decimal PaidFees { get; set; }
         public bool isLocked { get; set; }
 
-        public Appointement_(int id, DateTime date, decimal fees, bool islocked)
+        public Appointement_(int ID, DateTime Date, decimal PaidFees, bool isLocked)
         {
-            this.Date= date;
-            this.ID = id;
-            this.PaidFees= fees;
-            this.isLocked = islocked;
+            this.Date= Date;
+            this.ID = ID;
+            this.PaidFees= PaidFees;
+            this.isLocked = isLocked;
         }
 
     }
@@ -27,15 +27,15 @@ namespace DTOsLayer
         public int TestType { get; set; }
         public int LocalLicenseApplicationID { get; set; }
 
-        public Appointment_Veiw(int testtype,int locallicenseid, int id, DateTime date, decimal fees, bool islocked)
-            : base(id, date, fees, islocked)
+        public Appointment_Veiw(int TestType, int LocalLicenseApplicationID, int ID, DateTime Date, decimal PaidFees, bool isLocked)
+            : base(ID, Date, PaidFees, isLocked)
         {
-            this.TestType = testtype;
-            this.LocalLicenseApplicationID = locallicenseid;
-            this.isLocked = islocked;
-            this.ID = id;
-            this.PaidFees= fees;
-            this.Date= date;
+            this.TestType = TestType;
+            this.LocalLicenseApplicationID = LocalLicenseApplicationID;
+            this.isLocked = isLocked;
+            this.ID = ID;
+            this.PaidFees= PaidFees;
+            this.Date = Date;
         }
 
     }
@@ -44,17 +44,17 @@ namespace DTOsLayer
         public int CreatedByUserID { get; set; }
         public int? RetakeTestID { get; set; }
 
-        public Appointment(int createdby, int? retaketestid, int testtype, int locallicenseid, int id, DateTime date, decimal fees, bool islocked) 
-            : base(testtype, locallicenseid, id, date, fees, islocked)
+        public Appointment(int CreatedByUserID, int? RetakeTestID, int TestType, int LocalLicenseApplicationID, int ID, DateTime Date, decimal PaidFees, bool isLocked) 
+            : base(TestType, LocalLicenseApplicationID, ID, Date, PaidFees, isLocked)
         {
-            this.RetakeTestID = retaketestid;
-            this.CreatedByUserID = createdby;
-            this.ID = id; 
-            this.PaidFees= fees;
-            this.Date= date;
-            this.isLocked = islocked;
-            this.TestType= testtype;
-            this.LocalLicenseApplicationID= locallicenseid;
+            this.ID = ID; 
+            this.LocalLicenseApplicationID= LocalLicenseApplicationID;
+            this.TestType= TestType;
+            this.PaidFees= PaidFees;
+            this.Date= Date;
+            this.isLocked = isLocked;
+            this.RetakeTestID = RetakeTestID;
+            this.CreatedByUserID = CreatedByUserID;
         }
     }
 
