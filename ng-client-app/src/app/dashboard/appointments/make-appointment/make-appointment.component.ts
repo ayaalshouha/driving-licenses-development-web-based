@@ -231,7 +231,6 @@ export class MakeAppointmentComponent implements OnInit {
     );
   }
   onSchedule() {
-    console.log(this.testTypeID());
     if (this.invalidTestTypeID) {
       this.notificationService.showMessage({
         message: 'You cannot schedule undefined test!',
@@ -247,7 +246,6 @@ export class MakeAppointmentComponent implements OnInit {
       });
       return;
     }
-    //check if there is an ACTIVE (NOT LOCKED) appointment for the same test type
 
     this.apppointmentService
       .isThereAnActiveAppointment(
