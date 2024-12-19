@@ -1,12 +1,11 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
 import {
   catchError,
   forkJoin,
-  pipe,
   Subject,
   switchMap,
   takeUntil,
@@ -27,9 +26,8 @@ import { NotificationComponent } from '../../../shared/notification/notification
 import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
-import { subscribe } from 'diagnostics_channel';
 import { ApplicationTypes } from '../../../models/application-type.model';
-import { nextTick } from 'process';
+import { json } from 'stream/consumers';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -37,7 +35,7 @@ import { nextTick } from 'process';
   templateUrl: './make-appointment.component.html',
   styleUrl: './make-appointment.component.css',
 })
-export class MakeAppointmentComponent {
+export class MakeAppointmentComponent implements OnInit {
   current_local_application = signal<LocalApplication | null>(null);
   current_main_application = signal<Application | null>(null);
   applicantName = signal<string | undefined>(undefined);
@@ -52,6 +50,7 @@ export class MakeAppointmentComponent {
   appointmentDate = new FormControl('', {
     validators: [Validators.required],
   });
+  current_user_id = signal<number>(0);
   current_date = new Date();
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
@@ -74,6 +73,17 @@ export class MakeAppointmentComponent {
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+  ngOnInit(): void {
+    const current_user = localStorage.getItem('current-user');
+    if (current_user) {
+      try {
+        const user = JSON.parse(current_user);
+        this.current_user_id.set(user.id);
+      } catch (error) {
+        console.error('Error parsing user data from local storage:', error);
+      }
+    }
   }
 
   checkTests() {
@@ -172,7 +182,7 @@ export class MakeAppointmentComponent {
       lastStatusDate: this.current_date,
       status: enApplicationStatus.New,
       type: enApplicationType['Retake Test'],
-      createdByUserID: 3, // Replace with the actual user ID dynamically
+      createdByUserID: this.current_user_id(),
     };
 
     return this.mainAppService.create(new_app).pipe(
@@ -181,7 +191,7 @@ export class MakeAppointmentComponent {
           throw new Error('Failed to create retake application');
         }
         const new_appointment: Appointment = {
-          createdByUserID: 3, // Replace with the actual user ID dynamically
+          createdByUserID: this.current_user_id(),
           id: 0,
           isLocked: false,
           date: new Date(this.appointmentDate.value!),
@@ -204,7 +214,7 @@ export class MakeAppointmentComponent {
 
   private CreateNewAppointment() {
     const newAppointment: Appointment = {
-      createdByUserID: 3,
+      createdByUserID: this.current_user_id(),
       id: 0,
       isLocked: false,
       date: new Date(this.appointmentDate.value!),

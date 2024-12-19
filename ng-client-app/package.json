@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ng-client-app": "node dist/ng-client-app/server/server.mjs"
+    "serve:ssr:ng-client-app": "node dist/ng-client-app/server/server.mjs",
+    "clean": "rimraf .angular/cache"
   },
   "private": true,
   "dependencies": {

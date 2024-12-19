@@ -1,12 +1,15 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { tap } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { Appointment_View } from '../../../models/appointment.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppointmentService } from '../../../services/appointment.service';
+import { TestType } from '../../../models/test-type.model';
+import { TestTypesService } from '../../../services/test-type.service';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-manage-appointments',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './manage-appointments.component.html',
   styleUrl: './manage-appointments.component.css',
 })
@@ -18,8 +21,24 @@ export class ManageAppointmentsComponent {
   displayedData: Appointment_View[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
+  testTypes: TestType[] = [];
+  private destroy$ = new Subject<void>();
 
-  constructor(private appointmentService: AppointmentService) {}
+  constructor(
+    private appointmentService: AppointmentService,
+    private testTypeService: TestTypesService
+  ) {
+    this.testTypeService
+      .all()
+      .pipe(
+        tap((response) => {
+          this.testTypes = response;
+          // console.log(this.testTypes[2]);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
+  }
 
   ngOnInit(): void {
     const subscription = this.appointmentService

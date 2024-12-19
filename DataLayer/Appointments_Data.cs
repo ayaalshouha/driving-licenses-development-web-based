@@ -238,7 +238,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"select * from Appointments_View;";
+                string Query = @"select * from Appointments_View order by Date desc;";
 
                 SqlCommand command = new SqlCommand(Query, Connection);
 

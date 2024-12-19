@@ -31,10 +31,11 @@
         <td>{{ app.fullName }}</td>
         <td>{{ app.localLicenseApplicationID }}</td>
         <td>{{ app.isLocked }}</td>
-        <td>{{ app.date }}</td>
-        <td>{{ app.testType }}</td>
+        <td>{{ app.date | date }}</td>
+        <td>{{ testTypes[app.testType - 1].typeTitle }}</td>
         <td class="actions">
-          <button class="button">Edit</button>
+          <button [disabled]="app.isLocked" class="button">Edit</button>
+          <button [disabled]="app.isLocked" class="button">Take Test</button>
         </td>
       </tr>
       } @empty {
@@ -56,7 +57,7 @@
     <button
       class="next-btn"
       (click)="onNext()"
-      [disabled]="currentPage * pageSize >= filteredappointments.length"
+      [disabled]="currentPage * pageSize > filteredappointments.length"
     >
       Next
     </button>

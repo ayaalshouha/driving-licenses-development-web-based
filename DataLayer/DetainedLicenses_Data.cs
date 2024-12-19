@@ -287,7 +287,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"SELECT *  FROM DetainedLicenses_View;";
+                string Query = @"SELECT *  FROM DetainedLicenses_View order by isReleased ASC;";
 
 
                 SqlCommand command = new SqlCommand(Query, Connection);
