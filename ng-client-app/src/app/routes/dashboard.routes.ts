@@ -5,6 +5,7 @@ import { app_management_routes } from './application-management.routes';
 import { licenses_management_routes } from './licenses-management.routes';
 import { system_routes } from './system.routes';
 import { appointments_routes } from './appointments.routes';
+import { TestsManagementComponent } from '../dashboard/tests-management/tests-management.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -19,6 +20,10 @@ export const dashboard_routes: Routes = [
   {
     path: 'services',
     children: services_routes,
+  },
+  {
+    path: 'manage-tests',
+    component: TestsManagementComponent,
   },
   {
     path: 'applications-management',

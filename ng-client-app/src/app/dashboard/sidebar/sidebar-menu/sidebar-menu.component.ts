@@ -6,7 +6,8 @@ type MenuKeys =
   | 'licenses'
   | 'system'
   | 'new-app'
-  | 'appointments';
+  | 'appointments'
+  | 'tests';
 
 @Component({
   selector: 'app-sidebar-menu',
@@ -24,6 +25,7 @@ export class SidebarMenuComponent {
     system: signal(false),
     'new-app': signal(false),
     appointments: signal(false),
+    tests: signal(false),
   };
   constructor() {}
   private isParentOrChild(menuKey: MenuKeys, targetMenu: MenuKeys): boolean {
@@ -34,6 +36,7 @@ export class SidebarMenuComponent {
       system: [],
       'new-app': [],
       appointments: [],
+      tests: [],
     };
     return (
       hierarchy[targetMenu]?.includes(menuKey) ||
