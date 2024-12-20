@@ -265,5 +265,9 @@ namespace BuisnessLayer
         {
             return await LicensesData.LicensesListAsync();
         }
+        public static async Task<int> count()
+        {
+            return await LicensesData.LicensesCount();
+        }
     }
 }

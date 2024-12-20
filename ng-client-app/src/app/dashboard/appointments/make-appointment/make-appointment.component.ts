@@ -27,7 +27,6 @@ import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ApplicationTypes } from '../../../models/application-type.model';
-import { json } from 'stream/consumers';
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -105,21 +104,11 @@ export class MakeAppointmentComponent implements OnInit {
     this.applicationService
       .read(applicationID)
       .pipe(
+        tap((localApp) => this.current_local_application.set(localApp)),
         switchMap((localApp) => {
-          if (!localApp.id)
-            return throwError(
-              () => new Error('Invalid Local Application Data')
-            );
-          this.current_local_application.set(localApp);
-
           return this.mainAppService.read(localApp.applicationID).pipe(
+            tap((mainApp) => this.current_main_application.set(mainApp)),
             switchMap((mainApp) => {
-              if (!mainApp.id)
-                return throwError(
-                  () => new Error('Invalid Main Application Data')
-                );
-              this.current_main_application.set(mainApp);
-
               this.applicationStatus.set(
                 enApplicationStatus[this.current_main_application()!.status]
               );
@@ -151,10 +140,11 @@ export class MakeAppointmentComponent implements OnInit {
           this.checkTests();
         },
         error: (err) => {
-          console.error('Error fetching data:', err.message);
-        },
-        complete: () => {
-          console.log('Data fetching sequence completed');
+          this.notificationService.showMessage({
+            message: err.message,
+            status: 'failed',
+          });
+          this.onReset();
         },
       });
   }

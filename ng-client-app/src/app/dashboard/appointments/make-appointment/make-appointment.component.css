@@ -6,6 +6,9 @@ form,
 fieldset {
   padding: 20px;
 }
+fieldset {
+  border: 2px solid var(--light-color);
+}
 
 .container {
   gap: 30px;
@@ -24,12 +27,11 @@ fieldset {
 .control p,
 select,
 input {
-  background-color: white;
+  background-color: var(--light-color);
   color: black;
   min-width: 300px;
   width: fit-content;
   padding: 8px;
-  border: 1px solid var(--text-color);
   border-radius: 5px;
   height: 35px;
 }

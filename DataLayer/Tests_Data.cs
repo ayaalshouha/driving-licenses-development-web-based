@@ -252,8 +252,7 @@ namespace DataLayer
             }
             return table;
         }
-
-        public static async Task<decimal> TestsCount()
+        public static async Task<int> TestsCount()
         {
             int count = 0;
             try
