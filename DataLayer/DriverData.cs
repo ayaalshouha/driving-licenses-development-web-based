@@ -361,5 +361,34 @@ namespace DataLayer
             }
             return ID;
         }
+
+        public static async Task<decimal> DriversCount()
+        {
+            int count = 0;
+            try
+            {
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"select count(*) from Drivers;";
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+
+                        Connection.Open();
+                        object result = await Command.ExecuteScalarAsync();
+                        if (result != null && int.TryParse(result.ToString(), out int result_))
+                        {
+                            count = result_;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            return count;
+        }
     }
 }

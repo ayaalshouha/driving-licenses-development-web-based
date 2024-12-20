@@ -13,6 +13,11 @@ export class TestService {
   all(): Observable<Test[]> {
     return this.http.get<Test[]>(TESTS_API_ENDPOINTS.all);
   }
+
+  count(){
+    
+  }
+
   // getFees(type_id: number) {
   //   return this.http.get<Observable<number>>(TEST_TYPE_API_ENDPOINT.fee(type_id));
   // }
