@@ -51,7 +51,6 @@ export class TestsManagementComponent {
         String(val).toLowerCase().includes(lowerCaseFilter)
       )
     );
-    console.log('filtered applications', this.filteredTests);
     this.currentPage = 1;
     this.updateDisplayedData();
   }
