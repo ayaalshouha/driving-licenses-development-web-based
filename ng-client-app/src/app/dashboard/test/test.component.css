@@ -8,3 +8,79 @@ svg {
   gap: 40px;
   flex-wrap: wrap;
 }
+
+.section {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px;
+}
+
+div p {
+  font-size: 0.8rem;
+  color: black;
+  text-transform: uppercase;
+}
+
+.shapes {
+  width: 500px;
+  position: relative;
+}
+
+.tests-count,
+.drivers-count,
+.licenses-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  color: var(--light-color);
+
+  span {
+    text-transform: uppercase;
+    font-size: 0.6rem;
+  }
+}
+
+.tests-count {
+  background-color: #8382de;
+  padding: 30px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  top: 3px;
+  left: 6%;
+  font-size: 2rem;
+  z-index: 99;
+}
+
+.drivers-count {
+  background-color: var(--special-color);
+  padding: 50px;
+  border-radius: 50%;
+  top: 45px;
+  left: 25%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  font-size: 2rem;
+}
+
+.licenses-count {
+  background-color: #43c5e1;
+  padding: 40px;
+  border-radius: 50%;
+  top: 110px;
+  left: 0%;
+  z-index: 999;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  font-size: 2rem;
+}
