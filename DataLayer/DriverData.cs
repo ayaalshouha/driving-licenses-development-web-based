@@ -362,7 +362,7 @@ namespace DataLayer
             return ID;
         }
 
-        public static async Task<decimal> DriversCount()
+        public static async Task<int> DriversCount()
         {
             int count = 0;
             try

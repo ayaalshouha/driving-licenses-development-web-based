@@ -93,5 +93,10 @@ namespace BuisnessLayer
         {
             return await Tests_Data.getTestsTableAsync();
         }
+
+        public static async Task<int> count()
+        {
+            return await Tests_Data.TestsCount();
+        }
     }
 }

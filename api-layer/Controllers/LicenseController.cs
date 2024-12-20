@@ -234,5 +234,11 @@ namespace api_layer.Controllers
             else
                 return NotFound("License Not Found");
         }
+        [HttpGet("count", Name = "LicensesCount")]
+        public async Task<ActionResult<int>> count()
+        {
+            int count = await clsLicenses.count();
+            return Ok(count);
+        }
     }
 }

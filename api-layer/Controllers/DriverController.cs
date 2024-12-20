@@ -149,6 +149,12 @@ namespace api_layer.Controllers
             else
                 return NotFound("Driver Not Found");
         }
-
+        
+        [HttpGet("count", Name = "DriversCount")]
+        public async Task<ActionResult<int>> count()
+        {
+            int count = await clsDrviers.count();
+            return Ok(count);
+        }
     }
 }

@@ -128,7 +128,12 @@ namespace api_layer.Controllers
             return Ok(test.testDTO);
         }
 
-
+        [HttpGet("count", Name ="TestCount")]
+        public async Task<ActionResult<int>> count()
+        {
+            int count = await clsTests.count();
+            return Ok(count);
+        }
 
     }
 }

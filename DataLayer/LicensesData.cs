@@ -313,7 +313,7 @@ namespace DataLayer
             }
             return list;
         }
-        public static async Task<decimal> LicensesCount()
+        public static async Task<int> LicensesCount()
         {
             int count = 0;
             try

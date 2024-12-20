@@ -103,5 +103,9 @@ namespace BuisnessLayer
         {
             return await DriverData.isExistAsync(driverid);
         }
+        public static async Task<int> count()
+        {
+            return await DriverData.DriversCount();
+        }
     }
 }
