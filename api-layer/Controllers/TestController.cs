@@ -11,7 +11,7 @@ namespace api_layer.Controllers
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public class TestController : Controller
+    public class testController : Controller
     {
         private clsTests AssignDataToTest(Test newTest, int ID = -1)
         {
@@ -30,6 +30,17 @@ namespace api_layer.Controllers
             test.Notes = newTest.Notes;
             test.CreatedByUserID = newTest.CreatedByUserID;
             return test ;
+        }
+
+        [HttpGet("tests", Name ="getAllTests")] 
+        public async Task<ActionResult<IEnumerable<Test>>> All()
+        {
+            var tests = await clsTests.getAllAsync();
+
+            if (tests.Count() <= 0)
+                return NotFound("No Tests Found");
+            else
+                return Ok(tests);
         }
 
         [HttpGet("{id}", Name = "ReadTestByID")]

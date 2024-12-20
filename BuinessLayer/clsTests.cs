@@ -89,5 +89,9 @@ namespace BuisnessLayer
         {
             return await Tests_Data.DeleteAsync(TestID);
         }
+        public static async Task<IEnumerable<Test>> getAllAsync()
+        {
+            return await Tests_Data.getTestsTableAsync();
+        }
     }
 }
