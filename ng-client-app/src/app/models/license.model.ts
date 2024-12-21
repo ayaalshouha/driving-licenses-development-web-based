@@ -7,7 +7,7 @@ export interface License {
   expDate: Date;
   isActive: boolean;
   paidFees: number;
-  issueReason: enIssueReason;
+  issueReason: number;
   notes: string;
   createdByUserID: number;
 }

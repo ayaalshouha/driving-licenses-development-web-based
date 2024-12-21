@@ -1,1 +1,113 @@
-<p>renew-local-application works!</p>
+<!-- showign notification if person took all 3 tests already  -->
+<app-notification />
+
+<form action="">
+  <div class="flex">
+    <input
+      type="number"
+      [formControl]="filter"
+      placeholder="Enter License ID..."
+    />
+    <div class="add-btn">
+      <button class="button" type="button" (click)="onSearch()">Search</button>
+    </div>
+  </div>
+  @if (filter.touched && filter.invalid) {
+  <p class="error-message">PLEASE ENTER A VALID ID NUMBER</p>
+  }
+</form>
+
+<div class="container">
+  <fieldset>
+    <legend>License Info</legend>
+    <div class="control-row">
+      <div class="control">
+        <label for="full-name">Applicant Name</label>
+        <p id="full-name">
+          {{
+            current_driver() != undefined ? current_driver()!.fullName : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="license-class">License Class</label>
+        <p id="license-class">
+          {{ licenseClass() != undefined ? licenseClass() : "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="issue-reason">Issue Reason</label>
+        <p id="issue-reason">
+          {{ issueReason() != undefined ? issueReason() : "N/A" }}
+        </p>
+      </div>
+    </div>
+    <div class="control-row">
+      <div class="control">
+        <label for="exp-date">Expiration Date</label>
+        <p id="exp-date">
+          {{
+            current_license() != undefined ? current_license()!.expDate : "N/A"
+          }}
+        </p>
+      </div>
+
+      <div class="control">
+        <label for="driver-id">Driver ID</label>
+        <p id="status">
+          {{
+            current_license() != undefined ? current_license()?.driverID : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="active-status">Active Status</label>
+        <p id="active-status">
+          {{
+            current_license() != undefined
+              ? current_license()!.isActive
+                ? "Active"
+                : "Not Active"
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>New license info</legend>
+    <div class="control-row border-color">
+      <div class="control">
+        <label for="fee">Required Fee for license class</label>
+        <p id="fee">
+          {{
+            current_license() !== undefined
+              ? (current_license()!.paidFees | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-id">New license ID</label>
+        <p id="new-id">
+          {{ "N/A" }}
+        </p>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- <div class="control">
+      <label for="test_type">Test Type available based on previous tests</label>
+      <p id="test_type">
+        {{
+          testTypeID() != undefined ? testTypes[testTypeID()!].typeTitle : "N/A"
+        }}
+      </p>
+    </div> -->
+
+  <div class="actions">
+    <button class="button button-secondary" (click)="onReset()">Reset</button>
+    <button class="button" (click)="onRenew()">Renew License</button>
+  </div>
+</div>

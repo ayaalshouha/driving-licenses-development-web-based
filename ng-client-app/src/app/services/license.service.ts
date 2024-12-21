@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { LICENSE_API_ENDPOINT } from '../environments/endpoints/license.endpoint';
 import { License } from '../models/license.model';
-import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
-import { error } from 'console';
 @Injectable({
   providedIn: 'root',
 })
