@@ -19,6 +19,42 @@
 
 <div class="container">
   <fieldset>
+    <legend>Required Fees</legend>
+    <div class="control-row border-color">
+      <div class="control">
+        <label for="class-fee">Required fees for license class</label>
+        <p id="class-fee">
+          {{
+            current_license() !== undefined
+              ? (current_license()?.paidFees | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="app-fee">Required fees for renewal application</label>
+        <p id="app-fee">
+          {{
+            applicationTypeFee !== undefined
+              ? (applicationTypeFee | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="total-fees">Total fees</label>
+        <p id="total-fees">
+          {{
+            current_license() !== undefined
+              ? (current_license()!.paidFees + applicationTypeFee | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
     <legend>License Info</legend>
     <div class="control-row">
       <div class="control">
@@ -76,35 +112,42 @@
   </fieldset>
 
   <fieldset>
-    <legend>New license info</legend>
-    <div class="control-row border-color">
+    <legend>New License Info</legend>
+    <div class="control-row new">
       <div class="control">
-        <label for="fee">Required Fee for license class</label>
-        <p id="fee">
-          {{
-            current_license() !== undefined
-              ? (current_license()?.paidFees | currency)
-              : "N/A"
-          }}
+        <label for="new-app-id">New Application ID</label>
+        <p id="new-app-id">
+          {{ "N/A" }}
         </p>
       </div>
       <div class="control">
-        <label for="new-id">New license ID</label>
+        <label for="new-id">New License ID</label>
         <p id="new-id">
+          {{ "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-issue-reason">Issue Reason</label>
+        <p id="new-issue-reason">
+          {{ "N/A" }}
+        </p>
+      </div>
+    </div>
+    <div class="control-row new">
+      <div class="control">
+        <label for="new-exp-date">Expiration Date</label>
+        <p id="new-exp-date">
+          {{ "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-active-status">Active Status</label>
+        <p id="new-active-status">
           {{ "N/A" }}
         </p>
       </div>
     </div>
   </fieldset>
-
-  <!-- <div class="control">
-      <label for="test_type">Test Type available based on previous tests</label>
-      <p id="test_type">
-        {{
-          testTypeID() != undefined ? testTypes[testTypeID()!].typeTitle : "N/A"
-        }}
-      </p>
-    </div> -->
 
   <div class="actions">
     <button class="button button-secondary" (click)="onReset()">Reset</button>

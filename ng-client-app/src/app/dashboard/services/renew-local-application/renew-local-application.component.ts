@@ -1,19 +1,22 @@
 import { Component, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
-import { AppointmentService } from '../../../services/appointment.service';
+import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { TestTypesService } from '../../../services/test-type.service';
-import { LocalApplicationService } from '../../../services/local-application.service';
 import { ApplicationService } from '../../../services/application.service';
-import { PersonService } from '../../../services/person.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LicenseService } from '../../../services/license.service';
 import { Driver_View } from '../../../models/driver.model';
 import { DriverService } from '../../../services/driver.service';
-import { enLicenseClass } from '../../../models/license-class.model';
+import {
+  enLicenseClass,
+  LicenseClass,
+} from '../../../models/license-class.model';
 import { CurrencyPipe } from '@angular/common';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { LicenseClassService } from '../../../services/license-class.service';
+import { enApplicationType } from '../../../models/application.model';
+import { ApplicationTypes } from '../../../models/application-type.model';
 
 @Component({
   selector: 'app-renew-local-application',
@@ -23,18 +26,21 @@ import { NotificationComponent } from '../../../shared/notification/notification
   styleUrl: './renew-local-application.component.css',
 })
 export class RenewLocalApplicationComponent {
-  current_license = signal<License | null>(null);
-  current_driver = signal<Driver_View | null>(null);
+  current_license = signal<License | undefined>(undefined);
+  new_license = signal<License | undefined>(undefined);
+  current_driver = signal<Driver_View | undefined>(undefined);
   applicantName = signal<string | undefined>(undefined);
   issueReason = signal<string | undefined>(undefined);
-  // applicationType = signal<string | undefined>(undefined);
-  // applicationStatus = signal<string | undefined>(undefined);
+  classes = signal<LicenseClass[] | undefined>(undefined);
+  applicationTypeFee: number =
+    ApplicationTypes[enApplicationType['Renew Driving License Service']]
+      .typeFee;
   licenseClass = signal<string | undefined>(undefined);
-  // testTypeID = signal<number | undefined>(undefined);
   filter = new FormControl('', {
     validators: [Validators.required, Validators.min(1)],
   });
-
+  active = true;
+  expired = true;
   current_user_id = signal<number>(0);
   current_date = new Date();
   private destroy$ = new Subject<void>();
@@ -42,24 +48,11 @@ export class RenewLocalApplicationComponent {
   constructor(
     private licenseService: LicenseService,
     private driverService: DriverService,
-    private apppointmentService: AppointmentService,
-    private testTypeService: TestTypesService,
-    private applicationService: LocalApplicationService,
+    private licenseClassService: LicenseClassService,
     private mainAppService: ApplicationService,
-    private personService: PersonService,
     private notificationService: NotificationService
-  ) {
-    this.testTypeService
-      .all()
-      .pipe(
-        tap((response) => {
-          // this.testTypes = response;
-          // console.log(this.testTypes[2]);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
+  ) {}
+
   ngOnInit(): void {
     const current_user = localStorage.getItem('current-user');
     if (current_user) {
@@ -70,20 +63,16 @@ export class RenewLocalApplicationComponent {
         console.error('Error parsing user data from local storage:', error);
       }
     }
+
+    this.licenseClassService
+      .getAllClasses()
+      .pipe(
+        tap((response) => this.classes.set(response)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 
-  // checkTests() {
-  //   if (this.testCount() == 3 && this.applicationStatus() == 'Completed') {
-  //     this.testTypeID.set(undefined);
-  //     this.notificationService.showMessage({
-  //       message:
-  //         'This person is already took the three tests, Check there license in Licenses Management section',
-  //       status: 'notification',
-  //     });
-  //   } else if (this.testCount()! < 3) {
-  //     this.testTypeID.set(this.testCount()!);
-  //   }
-  // }
   onSearch() {
     const licenseID: number = +this.filter.value!;
 
@@ -99,9 +88,14 @@ export class RenewLocalApplicationComponent {
         }),
         tap((license) => {
           if (!license.isActive) {
+            this.active = false;
             throw new Error(
               'The license is inactive. Please check with the administrator.'
             );
+          }
+          if (new Date(license.expDate) > this.current_date) {
+            this.expired = false;
+            throw new Error('The license is NOT expired yet.');
           }
         }),
         takeUntil(this.destroy$)
@@ -112,7 +106,6 @@ export class RenewLocalApplicationComponent {
             message: err.message,
             status: 'failed',
           });
-          this.onReset();
         },
       });
   }
@@ -129,18 +122,11 @@ export class RenewLocalApplicationComponent {
   }
 
   onReset() {
-    this.current_driver.set(null);
-    this.current_license.set(null);
+    this.current_driver.set(undefined);
+    this.current_license.set(undefined);
     this.applicantName.set(undefined);
     this.licenseClass.set(undefined);
-    // this.applicationStatus.set(undefined);
-    // this.applicationType.set(undefined);
-    // this.testCount.set(undefined);
   }
-
-  // get invalidTestTypeID() {
-  //   return this.testTypeID() == undefined;
-  // }
 
   // private CreateRetakeTestAppointment() {
   //   const new_app: Application = {
@@ -199,21 +185,20 @@ export class RenewLocalApplicationComponent {
   //     })
   //   );
   // }
+
+  get ValidLicense() {
+    return this.current_license() && this.expired && this.active;
+  }
   onRenew() {
-    //   if (this.invalidTestTypeID) {
-    //     this.notificationService.showMessage({
-    //       message: 'You cannot schedule undefined test!',
-    //       status: 'failed',
-    //     });
-    //     return;
-    //   }
-    //   if (this.appointmentDate.invalid) {
-    //     this.notificationService.showMessage({
-    //       message: 'Invalid date! Make sure to pick a date.',
-    //       status: 'failed',
-    //     });
-    //     return;
-    //   }
+    if (!this.ValidLicense) {
+      this.notificationService.showMessage({
+        message: 'You cannot renew an invalid license!',
+        status: 'failed',
+      });
+      return;
+    }
+
+    
     //   this.apppointmentService
     //     .isThereAnActiveAppointment(
     //       this.testTypeID()! + 1,

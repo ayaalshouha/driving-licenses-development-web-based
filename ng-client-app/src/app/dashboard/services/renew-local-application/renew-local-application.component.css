@@ -58,6 +58,10 @@ select {
   -o-border-radius: 5px;
 }
 
+.new .control label {
+  color: var(--dark-color);
+}
+
 .border-color .control label {
   color: #f84e2c;
 }
