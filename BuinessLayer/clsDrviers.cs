@@ -13,7 +13,8 @@ namespace BuisnessLayer
         public clsPerson PersonInfo;
         public DateOnly CreationDate { get; set; }
         public int CreatedByUserID { get; set; }
-        public Driver DriverDTO{
+        public Driver DriverDTO
+        {
             get
             {
                 return new Driver(this.ID, this.PersonID, this.CreationDate, this.CreatedByUserID);
@@ -48,6 +49,13 @@ namespace BuisnessLayer
             Driver driver = await DriverData.getDriverInfo_ByIDAsync(DriverID);
             if (driver != null)
                 return new clsDrviers(driver);
+            else return null;
+        }
+        public static async Task<Driver_View> FindDriver(int DriverID)
+        {
+            Driver_View driver = await DriverData.getDriverInfo(DriverID);
+            if (driver != null)
+                return driver;
             else return null;
         }
         public static clsDrviers Find(int DriverID)

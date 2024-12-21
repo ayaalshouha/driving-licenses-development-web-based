@@ -10,7 +10,7 @@ import { error } from 'console';
 export class DriverService {
   constructor(private http: HttpClient) {}
   read(ID: number): Observable<Driver_View> {
-    return this.http.get<Driver_View>(`${DRIVER_API_ENDPOINT.read}/${ID}`).pipe(
+    return this.http.get<Driver_View>(DRIVER_API_ENDPOINT.read_view(ID)).pipe(
       catchError((error) => {
         if (error.status == 404) {
           return throwError(() => new Error(`Driver with ID ${ID} NOT Found`));

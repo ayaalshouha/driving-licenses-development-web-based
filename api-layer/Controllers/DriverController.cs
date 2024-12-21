@@ -55,6 +55,19 @@ namespace api_layer.Controllers
 
             return Ok(driver.DriverDTO);
         }
+        [HttpGet("{id}/driver-view", Name = "ReadDriverView")]
+        public async Task<ActionResult<Driver_View>> ReadView(int id)
+        {
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid Driver ID Number");
+
+            var driver = await clsDrviers.FindDriver(id);
+
+            if (driver == null)
+                return NotFound($"Driver With ID {id} Not Found");
+
+            return Ok(driver);
+        }
 
         [HttpPost("", Name ="CreateDriver")]
         public async Task<ActionResult<Driver>> Create(Driver newDriver)

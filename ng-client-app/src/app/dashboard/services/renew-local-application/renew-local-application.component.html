@@ -83,7 +83,7 @@
         <p id="fee">
           {{
             current_license() !== undefined
-              ? (current_license()!.paidFees | currency)
+              ? (current_license()?.paidFees | currency)
               : "N/A"
           }}
         </p>

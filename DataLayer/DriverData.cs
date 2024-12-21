@@ -1,12 +1,44 @@
-﻿using System;
-using Microsoft.Data.SqlClient;
-using System.Data;
+﻿using Microsoft.Data.SqlClient;
 using DTOsLayer; 
 
 namespace DataLayer
 {
     public class DriverData
     {
+        public static async Task<Driver_View> getDriverInfo(int DriverID)
+        {
+            SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"SELECT * from Drivers_Views WHERE ID = @DriverID;";
+                SqlCommand Command = new SqlCommand(Query, Connection);
+                Command.Parameters.AddWithValue("@DriverID", DriverID);
+
+                Connection.Open();
+                SqlDataReader Reader = Command.ExecuteReader();
+                while (await Reader.ReadAsync())
+                {
+                    return new Driver_View(
+                            Reader.GetInt32(Reader.GetOrdinal("ID")),
+                            Reader.GetInt32(Reader.GetOrdinal("PersonID")),
+                            Reader.GetString(Reader.GetOrdinal("FullName")),
+                            DateOnly.FromDateTime(Reader.GetDateTime(Reader.GetOrdinal("Date"))),
+                            Reader.GetString(Reader.GetOrdinal("NationalID")),
+                            Reader.GetInt32(Reader.GetOrdinal("ActiveLicenses"))
+                        );
+                }
+                Reader.Close();
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return null;
+        }
         public static async Task<Driver> getDriverInfo_ByPersonIDAsync(int PersonID)
         {
            

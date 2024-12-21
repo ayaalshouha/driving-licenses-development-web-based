@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { map, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { AppointmentService } from '../../../services/appointment.service';
 import { TestTypesService } from '../../../services/test-type.service';
 import { LocalApplicationService } from '../../../services/local-application.service';
@@ -9,7 +9,7 @@ import { ApplicationService } from '../../../services/application.service';
 import { PersonService } from '../../../services/person.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LicenseService } from '../../../services/license.service';
-import { Driver, Driver_View } from '../../../models/driver.model';
+import { Driver_View } from '../../../models/driver.model';
 import { DriverService } from '../../../services/driver.service';
 import { enLicenseClass } from '../../../models/license-class.model';
 import { CurrencyPipe } from '@angular/common';
@@ -84,53 +84,29 @@ export class RenewLocalApplicationComponent {
   //     this.testTypeID.set(this.testCount()!);
   //   }
   // }
-
   onSearch() {
     const licenseID: number = +this.filter.value!;
 
     this.licenseService
       .read(licenseID)
       .pipe(
-        tap((license) => {
-          this.current_license.set(license);
-          this.licenseClass.set(
-            enLicenseClass[this.current_license()!.licenseClass]
-          );
-          this.issueReason.set(
-            enIssueReason[this.current_license()!.issueReason]
-          );
-        }),
+        tap((license) => this.handleLicense(license)),
         switchMap((license) => {
           return this.driverService.read(license.driverID).pipe(
-            tap((driver) => this.current_driver.set(driver))
-            // switchMap((mainApp) => {
-            //   this.applicationStatus.set(
-            //     enApplicationStatus[this.current_main_application()!.status]
-            //   );
-
-            //   this.applicationType.set(
-            //     enApplicationType[this.current_main_application()!.type]
-            //   );
-
-            //   return forkJoin({
-            //     passedTest: this.applicationService.passedTestCount(
-            //       localApp.id
-            //     ),
-            //     applicantFullName: this.personService.getFullName(
-            //       mainApp.personID
-            //     ),
-            //   });
-            // })
+            tap((driver) => this.handleDriver(driver)),
+            map(() => license)
           );
         }),
-        takeUntil(this.destroy$) // Automatic cleanup
+        tap((license) => {
+          if (!license.isActive) {
+            throw new Error(
+              'The license is inactive. Please check with the administrator.'
+            );
+          }
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
-        // next: ({ passedTest, applicantFullName }) => {
-        //   this.testCount.set(passedTest);
-        //   this.applicantName.set(applicantFullName);
-        //   this.checkTests();
-        // },
         error: (err) => {
           this.notificationService.showMessage({
             message: err.message,
@@ -139,6 +115,17 @@ export class RenewLocalApplicationComponent {
           this.onReset();
         },
       });
+  }
+
+  private handleLicense(license: License): void {
+    this.current_license.set(license);
+    this.licenseClass.set(enLicenseClass[license.licenseClass]);
+    this.issueReason.set(enIssueReason[license.issueReason]);
+  }
+
+  private handleDriver(driver: Driver_View): void {
+    this.current_driver.set(driver);
+    this.applicantName.set(driver.fullName);
   }
 
   onReset() {
