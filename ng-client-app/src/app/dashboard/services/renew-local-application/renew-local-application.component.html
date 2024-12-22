@@ -137,7 +137,11 @@
       <div class="control">
         <label for="new-issue-reason">Issue Reason</label>
         <p id="new-issue-reason">
-          {{ issueReason() != undefined ? issueReason() : "N/A" }}
+          {{
+            new_license_issue_reason != undefined
+              ? new_license_issue_reason
+              : "N/A"
+          }}
         </p>
       </div>
     </div>

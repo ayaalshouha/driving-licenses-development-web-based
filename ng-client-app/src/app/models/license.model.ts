@@ -13,8 +13,8 @@ export interface License {
 }
 
 export enum enIssueReason {
-  FirstTime = 1,
-  Renew,
-  DamagedReplacement,
-  LostReplacement,
+  'First Time Issuance' = 1,
+  'Renew License',
+  'Damaged Replacement',
+  'Lost Replacement',
 }

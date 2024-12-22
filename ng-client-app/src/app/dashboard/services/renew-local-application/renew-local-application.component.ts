@@ -37,6 +37,7 @@ export class RenewLocalApplicationComponent {
   current_driver = signal<Driver_View | undefined>(undefined);
   applicantName = signal<string | undefined>(undefined);
   issueReason = signal<string | undefined>(undefined);
+  new_license_issue_reason = enIssueReason[enIssueReason['Renew License']];
   classes = signal<LicenseClass[] | undefined>(undefined);
   applicationTypeFee: number =
     ApplicationTypes[enApplicationType['Renew Driving License Service']]
@@ -56,8 +57,7 @@ export class RenewLocalApplicationComponent {
     private licenseService: LicenseService,
     private driverService: DriverService,
     private licenseClassService: LicenseClassService,
-    private notificationService: NotificationService,
-    private confirmationDialog: ConfirmationDialogComponent
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
