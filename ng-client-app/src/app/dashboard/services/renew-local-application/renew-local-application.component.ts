@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
@@ -10,7 +10,7 @@ import {
   enLicenseClass,
   LicenseClass,
 } from '../../../models/license-class.model';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, isPlatformBrowser } from '@angular/common';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { LicenseClassService } from '../../../services/license-class.service';
 import { enApplicationType } from '../../../models/application.model';
@@ -54,6 +54,7 @@ export class RenewLocalApplicationComponent {
   private destroy$ = new Subject<void>();
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private licenseService: LicenseService,
     private driverService: DriverService,
     private licenseClassService: LicenseClassService,
@@ -61,13 +62,15 @@ export class RenewLocalApplicationComponent {
   ) {}
 
   ngOnInit(): void {
-    const current_user = localStorage.getItem('current-user');
-    if (current_user) {
-      try {
-        const user = JSON.parse(current_user);
-        this.current_user_id.set(user.id);
-      } catch (error) {
-        console.error('Error parsing user data from local storage:', error);
+    if (isPlatformBrowser(this.platformId)) {
+      const current_user = window.localStorage.getItem('current-user');
+      if (current_user) {
+        try {
+          const user = JSON.parse(current_user);
+          this.current_user_id.set(user.id);
+        } catch (error) {
+          console.error('Error parsing user data from local storage:', error);
+        }
       }
     }
 
@@ -142,22 +145,27 @@ export class RenewLocalApplicationComponent {
     this.new_license.set(newLicense);
     this.issueReason.set(enIssueReason[newLicense.issueReason]);
   }
-  get ValidLicense() {
-    return this.current_license() && this.expired && this.active;
+  get inValidLicense(): boolean {
+    console.log(this.current_license()?.applicationID);
+    return this.current_license() == undefined && !this.expired && !this.active;
   }
 
   onRenew() {
+
     this.isDialogVisible.set(false);
-    if (!this.ValidLicense) {
+
+    if (this.inValidLicense) {
       this.notificationService.showMessage({
         message: 'You cannot renew an invalid license!',
         status: 'failed',
       });
       return;
     }
+
     const notes: string | null = this.notes.value ? this.notes.value : null;
     this.isDialogVisible.set(true);
-    if (this.isConfirmed()) {
+
+    if (this.isConfirmed() == true) {
       this.licenseService
         .renew(this.current_license()!.id, notes!, this.current_user_id()!)
         .pipe(
@@ -167,16 +175,17 @@ export class RenewLocalApplicationComponent {
           takeUntil(this.destroy$)
         )
         .subscribe({
-          next: () => {
-            this.notificationService.showMessage({
-              message: 'License renewed successfully',
-              status: 'success',
-            });
-          },
+          next: () => {},
           error: (err) => {
             this.notificationService.showMessage({
               message: err.message,
               status: 'failed',
+            });
+          },
+          complete: () => {
+            this.notificationService.showMessage({
+              message: 'License renewed successfully',
+              status: 'success',
             });
           },
         });

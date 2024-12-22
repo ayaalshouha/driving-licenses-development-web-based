@@ -13,7 +13,7 @@ export class LicenseService {
     return this.http.get<License>(`${LICENSE_API_ENDPOINT.read}${ID}`).pipe(
       catchError((error) => {
         if (error.status == 404) {
-          throwError(() => new Error(`License with ID ${ID} NOT Found`));
+          return throwError(() => new Error(`License with ID ${ID} NOT Found`));
         }
         return throwError(() => new Error('An unexpected error occurred.'));
       })
@@ -27,10 +27,12 @@ export class LicenseService {
       })
       .pipe(
         catchError((error) => {
-          if (error.status === 404) {
-            return throwError(() => new Error('licese NOT Found'));
+          if (error.status == 404) {
+            return throwError(
+              () => new Error(`License with ID ${ID} NOT Found`)
+            );
           }
-          return throwError(() => new Error('An error occured'));
+          return throwError(() => new Error('An unexpected error occurred.'));
         }),
         map((response) => {
           return response;

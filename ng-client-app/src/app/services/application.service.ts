@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Application } from '../models/application.model';
 import { APPLICATION_API_ENDPOINT } from '../environments/endpoints/application.endpoints';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,9 +22,7 @@ export class ApplicationService {
       .pipe(
         catchError((error) => {
           if (error.status == 404) {
-            return throwError(
-              () => new Error(`Application with ID ${ID} NOT Found`)
-            );
+            throwError(() => new Error(`Application with ID ${ID} NOT Found`));
           }
           return throwError(() => new Error('An unexpected error occurred.'));
         })
