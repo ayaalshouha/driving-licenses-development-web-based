@@ -122,14 +122,18 @@ namespace BuisnessLayer
         }
         public async Task<bool> ActivateCurrentLicenseAsync()
         {
-            return await LicensesData.DeactivateLicenseAsync(this.ID);
+            return await LicensesData.ActivateLicenseAsync(this.ID);
         }
         public async Task<bool> DeactivateCurrentLicenseAsync()
         {
-            return await LicensesData.ActivateLicenseAsync(this.ID);
+            return await LicensesData.DeactivateLicenseAsync(this.ID);
         }
-        public async Task<clsLicenses> RenewLicenseAsync(string Notes, int CreatedByUserID)
+        public async Task<_License> RenewLicenseAsync(string Notes, int CreatedByUserID)
         {
+            if (!this.isActive)
+            {
+                return null;
+            }
             var NewApplication = new clsApplication
             {
                 PersonID = this.DriverInfo.PersonID,
@@ -162,7 +166,7 @@ namespace BuisnessLayer
                     await DeactivateCurrentLicenseAsync();
                 }
             }
-            return NewLicense;
+            return NewLicense.licenseDTO;
         }
         public async Task<clsLicenses> ReplaceAsync(enIssueReason reason, int CreatedByUserID)
         {

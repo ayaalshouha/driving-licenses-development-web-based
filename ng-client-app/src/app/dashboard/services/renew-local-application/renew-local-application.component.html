@@ -52,6 +52,12 @@
         </p>
       </div>
     </div>
+    <div class="control-row border-color">
+      <div class="control">
+        <label for="additional-notes">Additional Notes</label>
+        <input id="additional-notes" [formControl]="notes" />
+      </div>
+    </div>
   </fieldset>
 
   <fieldset>
@@ -117,19 +123,21 @@
       <div class="control">
         <label for="new-app-id">New Application ID</label>
         <p id="new-app-id">
-          {{ "N/A" }}
+          {{
+            new_license() != undefined ? new_license()!.applicationID : "N/A"
+          }}
         </p>
       </div>
       <div class="control">
         <label for="new-id">New License ID</label>
         <p id="new-id">
-          {{ "N/A" }}
+          {{ new_license() != undefined ? new_license()!.id : "N/A" }}
         </p>
       </div>
       <div class="control">
         <label for="new-issue-reason">Issue Reason</label>
         <p id="new-issue-reason">
-          {{ "N/A" }}
+          {{ issueReason() != undefined ? issueReason() : "N/A" }}
         </p>
       </div>
     </div>
@@ -137,13 +145,19 @@
       <div class="control">
         <label for="new-exp-date">Expiration Date</label>
         <p id="new-exp-date">
-          {{ "N/A" }}
+          {{ new_license() != undefined ? new_license()!.expDate : "N/A" }}
         </p>
       </div>
       <div class="control">
         <label for="new-active-status">Active Status</label>
         <p id="new-active-status">
-          {{ "N/A" }}
+          {{
+            new_license() != undefined
+              ? new_license()!.isActive
+                ? "Active"
+                : "Not Active"
+              : "N/A"
+          }}
         </p>
       </div>
     </div>
@@ -153,4 +167,13 @@
     <button class="button button-secondary" (click)="onReset()">Reset</button>
     <button class="button" (click)="onRenew()">Renew License</button>
   </div>
+
+  @if(isDialogVisible()){
+  <app-confirmation-dialog
+    [isVisible]="isDialogVisible()"
+    title="Confirm Renewal App"
+    message="Are you sure you want to renew license?"
+    (confirmed)="onDialogResult($event)"
+  ></app-confirmation-dialog>
+  }
 </div>

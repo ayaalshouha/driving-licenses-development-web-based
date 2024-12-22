@@ -156,6 +156,22 @@ namespace api_layer.Controllers
             return NotFound("License Not Found");
         }
 
+        [HttpGet("{id}/renew/by-user-id/{userId}")]
+        public async Task<ActionResult<_License>> RenewLicense(int id, int userId,string notes="")
+        {
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid License ID");
+
+            var license = await clsLicenses.FindAsync(id);
+            if (license != null)
+            {
+                _License result = await license.RenewLicenseAsync(notes, userId);
+                return Ok(result);
+            }
+            else
+                return NotFound("License Not Found");
+        }
+
         [HttpGet("{id}/lost-replacement/by-user-id/{userId}")]
         public async Task<ActionResult<_License>> LostReplacement(int id, int userId)
         {
@@ -219,6 +235,7 @@ namespace api_layer.Controllers
             else
                 return NotFound("License Not Found");
         }
+       
         [HttpGet("{id}/is-detained")]
         public async Task<ActionResult<bool>> isDetained(int id)
         {
@@ -234,11 +251,14 @@ namespace api_layer.Controllers
             else
                 return NotFound("License Not Found");
         }
+       
         [HttpGet("count", Name = "LicensesCount")]
         public async Task<ActionResult<int>> count()
         {
             int count = await clsLicenses.count();
             return Ok(count);
         }
+   
+    
     }
 }

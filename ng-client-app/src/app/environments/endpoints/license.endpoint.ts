@@ -2,4 +2,6 @@ import { environment } from '../environment';
 
 export const LICENSE_API_ENDPOINT = {
   read: `${environment.apiBaseUrl}/license/`,
+  renew: (ID: number, notes: string, byUserID: number) =>
+    `${environment.apiBaseUrl}/license/${ID}/renew/by-user-id/${byUserID}?notes=${notes}`,
 };

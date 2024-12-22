@@ -2,8 +2,6 @@ import { Component, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { TestTypesService } from '../../../services/test-type.service';
-import { ApplicationService } from '../../../services/application.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LicenseService } from '../../../services/license.service';
 import { Driver_View } from '../../../models/driver.model';
@@ -17,15 +15,23 @@ import { NotificationComponent } from '../../../shared/notification/notification
 import { LicenseClassService } from '../../../services/license-class.service';
 import { enApplicationType } from '../../../models/application.model';
 import { ApplicationTypes } from '../../../models/application-type.model';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-renew-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe, NotificationComponent],
+  imports: [
+    ReactiveFormsModule,
+    CurrencyPipe,
+    NotificationComponent,
+    ConfirmationDialogComponent,
+  ],
   templateUrl: './renew-local-application.component.html',
   styleUrl: './renew-local-application.component.css',
 })
 export class RenewLocalApplicationComponent {
+  isConfirmed = signal<boolean>(false);
+  isDialogVisible = signal<boolean>(false);
   current_license = signal<License | undefined>(undefined);
   new_license = signal<License | undefined>(undefined);
   current_driver = signal<Driver_View | undefined>(undefined);
@@ -39,6 +45,7 @@ export class RenewLocalApplicationComponent {
   filter = new FormControl('', {
     validators: [Validators.required, Validators.min(1)],
   });
+  notes = new FormControl('');
   active = true;
   expired = true;
   current_user_id = signal<number>(0);
@@ -49,8 +56,8 @@ export class RenewLocalApplicationComponent {
     private licenseService: LicenseService,
     private driverService: DriverService,
     private licenseClassService: LicenseClassService,
-    private mainAppService: ApplicationService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private confirmationDialog: ConfirmationDialogComponent
   ) {}
 
   ngOnInit(): void {
@@ -109,7 +116,10 @@ export class RenewLocalApplicationComponent {
         },
       });
   }
-
+  onDialogResult(result: boolean) {
+    this.isDialogVisible.set(false);
+    this.isConfirmed.set(result);
+  }
   private handleLicense(license: License): void {
     this.current_license.set(license);
     this.licenseClass.set(enLicenseClass[license.licenseClass]);
@@ -128,68 +138,16 @@ export class RenewLocalApplicationComponent {
     this.licenseClass.set(undefined);
   }
 
-  // private CreateRetakeTestAppointment() {
-  //   const new_app: Application = {
-  //     id: 0,
-  //     personID: this.current_main_application()!.personID,
-  //     paidFees: ApplicationTypes[enApplicationType['Retake Test']].typeFee,
-  //     date: this.current_date,
-  //     lastStatusDate: this.current_date,
-  //     status: enApplicationStatus.New,
-  //     type: enApplicationType['Retake Test'],
-  //     createdByUserID: this.current_user_id(),
-  //   };
-
-  //   return this.mainAppService.create(new_app).pipe(
-  //     switchMap((newApp) => {
-  //       if (!newApp) {
-  //         throw new Error('Failed to create retake application');
-  //       }
-  //       const new_appointment: Appointment = {
-  //         createdByUserID: this.current_user_id(),
-  //         id: 0,
-  //         isLocked: false,
-  //         date: new Date(this.appointmentDate.value!),
-  //         paidFees: this.testTypes[this.testTypeID()!].fees,
-  //         localLicenseApplicationID: this.current_local_application()!.id,
-  //         retakeTestID: newApp.id,
-  //         testType: this.testTypeID()! + 1,
-  //       };
-
-  //       return this.apppointmentService.create(new_appointment).pipe(
-  //         catchError((err) => {
-  //           throw new Error(
-  //             `Error creating retake appointment: ${err.message}`
-  //           );
-  //         })
-  //       );
-  //     })
-  //   );
-  // }
-
-  // private CreateNewAppointment() {
-  //   const newAppointment: Appointment = {
-  //     createdByUserID: this.current_user_id(),
-  //     id: 0,
-  //     isLocked: false,
-  //     date: new Date(this.appointmentDate.value!),
-  //     paidFees: this.testTypes[this.testTypeID()!].fees,
-  //     localLicenseApplicationID: this.current_local_application()!.id,
-  //     testType: this.testTypeID()! + 1,
-  //     retakeTestID: null,
-  //   };
-
-  //   return this.apppointmentService.create(newAppointment).pipe(
-  //     catchError((err) => {
-  //       throw new Error(`Error creating new appointment: ${err.message}`);
-  //     })
-  //   );
-  // }
-
+  private handleNewLicense(newLicense: License): void {
+    this.new_license.set(newLicense);
+    this.issueReason.set(enIssueReason[newLicense.issueReason]);
+  }
   get ValidLicense() {
     return this.current_license() && this.expired && this.active;
   }
+
   onRenew() {
+    this.isDialogVisible.set(false);
     if (!this.ValidLicense) {
       this.notificationService.showMessage({
         message: 'You cannot renew an invalid license!',
@@ -197,68 +155,34 @@ export class RenewLocalApplicationComponent {
       });
       return;
     }
-
-    
-    //   this.apppointmentService
-    //     .isThereAnActiveAppointment(
-    //       this.testTypeID()! + 1,
-    //       this.current_local_application()!.id
-    //     )
-    //     .pipe(
-    //       switchMap((appointment_found) => {
-    //         if (appointment_found) {
-    //           return throwError(
-    //             () =>
-    //               new Error(
-    //                 'Person already schaduled an appointment with same test type!'
-    //               )
-    //           );
-    //         }
-    //         return this.applicationService
-    //           .isTestAttended(
-    //             this.current_local_application()!.id,
-    //             this.testTypeID()! + 1
-    //           )
-    //           .pipe(
-    //             switchMap((isTestAttended) => {
-    //               return isTestAttended
-    //                 ? this.CreateRetakeTestAppointment()
-    //                 : this.CreateNewAppointment();
-    //             })
-    //           );
-    //       }),
-    //       catchError((err) => {
-    //         this.notificationService.showMessage({
-    //           message: err.message || 'An unexpected error occured!!',
-    //           status: 'failed',
-    //         });
-    //         return [];
-    //       }),
-    //       takeUntil(this.destroy$)
-    //     )
-    //     .subscribe({
-    //       next: () => {
-    //         this.notificationService.showMessage({
-    //           message: 'Appointment scheduled successfully!',
-    //           status: 'success',
-    //         });
-    //       },
-    //       error: (err) => {
-    //         console.error('Error scheduling appointment:', err);
-    //       },
-    //     });
-    //is appointment locked with pass or fail result
-    // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
-    // const new_appointment: Appointment = {
-    //   id: 0,
-    //   localLicenseApplicationID: this.current_local_application()!.id,
-    //   isLocked: false,
-    //   testType: this.testTypeID()!,
-    //   paidFees: this.testTypes[this.testTypeID()!].fees,
-    //   createdByUserID: 3,
-    //   date:
-    // };
+    const notes: string | null = this.notes.value ? this.notes.value : null;
+    this.isDialogVisible.set(true);
+    if (this.isConfirmed()) {
+      this.licenseService
+        .renew(this.current_license()!.id, notes!, this.current_user_id()!)
+        .pipe(
+          tap((new_license) => {
+            this.handleNewLicense(new_license);
+          }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.notificationService.showMessage({
+              message: 'License renewed successfully',
+              status: 'success',
+            });
+          },
+          error: (err) => {
+            this.notificationService.showMessage({
+              message: err.message,
+              status: 'failed',
+            });
+          },
+        });
+    }
   }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
