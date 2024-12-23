@@ -16,7 +16,7 @@ export enum enApplicationStatus {
 }
 
 export enum enApplicationType {
-  'New Local Driving License Services' = 1,
+  'New Local Driving License Services' = 0,
   'Renew Driving License Service',
   'Replacement for Lost Driving License',
   'Replacement for Damaged Driving License',

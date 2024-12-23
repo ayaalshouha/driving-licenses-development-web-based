@@ -1,1 +1,186 @@
-<p>replace-application works!</p>
+<!-- showign notification if person took all 3 tests already  -->
+<app-notification />
+
+<form action="">
+  <div class="flex">
+    <input
+      type="number"
+      [formControl]="filter"
+      placeholder="Enter License ID..."
+    />
+    <div class="add-btn">
+      <button class="button" type="button" (click)="onSearch()">Search</button>
+    </div>
+  </div>
+  @if (filter.touched && filter.invalid) {
+  <p class="error-message">PLEASE ENTER A VALID ID NUMBER</p>
+  }
+</form>
+
+<div class="container">
+  <fieldset>
+    <legend>Required</legend>
+    <div class="control-row border-color">
+      <div class="control">
+        <label for="class-fee">Required fees for license class</label>
+        <p id="class-fee">
+          {{
+            current_license() !== undefined
+              ? (current_license()?.paidFees | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="app-fee">Required fees for replacement application</label>
+        <p id="app-fee">
+          {{
+            applicationTypeFee !== undefined
+              ? (applicationTypeFee | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="total-fees">Total fees</label>
+        <p id="total-fees">
+          {{
+            current_license() !== undefined
+              ? (current_license()!.paidFees + applicationTypeFee! | currency)
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+    <div class="control-row border-color">
+      <div class="control">
+        <label for="replace-mode">Replacement Reason</label>
+        <select id="replace-mode" [formControl]="replaceMode">
+          <option value="Lost">Lost Replacement</option>
+          <option value="Damage">Damage Replacement</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>License Info</legend>
+    <div class="control-row">
+      <div class="control">
+        <label for="full-name">Applicant Name</label>
+        <p id="full-name">
+          {{
+            current_driver() != undefined ? current_driver()!.fullName : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="license-class">License Class</label>
+        <p id="license-class">
+          {{ licenseClass() != undefined ? licenseClass() : "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="issue-reason">Issue Reason</label>
+        <p id="issue-reason">
+          {{ issueReason() != undefined ? issueReason() : "N/A" }}
+        </p>
+      </div>
+    </div>
+    <div class="control-row">
+      <div class="control">
+        <label for="exp-date">Expiration Date</label>
+        <p id="exp-date">
+          {{
+            current_license() != undefined ? current_license()!.expDate : "N/A"
+          }}
+        </p>
+      </div>
+
+      <div class="control">
+        <label for="driver-id">Driver ID</label>
+        <p id="status">
+          {{
+            current_license() != undefined ? current_license()?.driverID : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="active-status">Active Status</label>
+        <p id="active-status">
+          {{
+            current_license() != undefined
+              ? current_license()!.isActive
+                ? "Active"
+                : "Not Active"
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>New License Info</legend>
+    <div class="control-row new">
+      <div class="control">
+        <label for="new-app-id">New Application ID</label>
+        <p id="new-app-id">
+          {{
+            new_license() != undefined ? new_license()!.applicationID : "N/A"
+          }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-id">New License ID</label>
+        <p id="new-id">
+          {{ new_license() != undefined ? new_license()!.id : "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-issue-reason">Issue Reason</label>
+        <p id="new-issue-reason">
+          {{
+            new_license_issue_reason != undefined
+              ? new_license_issue_reason
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+    <div class="control-row new">
+      <div class="control">
+        <label for="new-exp-date">Expiration Date</label>
+        <p id="new-exp-date">
+          {{ new_license() != undefined ? new_license()!.expDate : "N/A" }}
+        </p>
+      </div>
+      <div class="control">
+        <label for="new-active-status">Active Status</label>
+        <p id="new-active-status">
+          {{
+            new_license() != undefined
+              ? new_license()!.isActive
+                ? "Active"
+                : "Not Active"
+              : "N/A"
+          }}
+        </p>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="actions">
+    <button class="button button-secondary" (click)="onReset()">Reset</button>
+    <button class="button" (click)="onReplace()">Replace License</button>
+  </div>
+
+  @if(isDialogVisible()){
+  <app-confirmation-dialog
+    [isVisible]="isDialogVisible()"
+    title="Confirm"
+    message="Are you sure you want to replace license?"
+    (confirmed)="onDialogResult($event)"
+  ></app-confirmation-dialog>
+  }
+</div>
