@@ -19,7 +19,7 @@ namespace BuisnessLayer
         public bool isActive { get; set; }
         public decimal PaidFees { get; set; }
         public enIssueReason IssueReason { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         public int CreatedByUserID { get; set; }
         public bool isDetained
         {
@@ -45,7 +45,7 @@ namespace BuisnessLayer
             this.isActive = false;
             this.IssueDate = DateOnly.FromDateTime(DateTime.Now);
             this.ExpDate = DateOnly.FromDateTime(DateTime.Now);
-            this.Notes=string.Empty;
+            this.Notes=null;
             this.PaidFees = -1;
             this.IssueReason = enIssueReason.FirstTime;
             this._Mode = enMode.add;
@@ -168,7 +168,7 @@ namespace BuisnessLayer
             }
             return NewLicense.licenseDTO;
         }
-        public async Task<clsLicenses> ReplaceAsync(enIssueReason reason, int CreatedByUserID)
+        public async Task<_License> ReplaceAsync(enIssueReason reason, int CreatedByUserID)
         {
             var NewApplication = new clsApplication();
             var NewLicense = new clsLicenses();
@@ -203,7 +203,7 @@ namespace BuisnessLayer
                     await DeactivateCurrentLicenseAsync();
                 }
             }
-            return NewLicense; 
+            return NewLicense.licenseDTO; 
         }
         public async Task<int> DetainAsync(decimal finefee, int CreatedByUserID)
         {

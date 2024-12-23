@@ -1,6 +1,7 @@
 ﻿using BuisnessLayer;
 using DTOsLayer;
 using Microsoft.AspNetCore.Mvc;
+using static Azure.Core.HttpHeader;
 
 namespace api_layer.Controllers
 {
@@ -181,7 +182,7 @@ namespace api_layer.Controllers
             var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReplaceAsync(enIssueReason.LostReplacement, userId);
+                _License result = await license.ReplaceAsync(enIssueReason.LostReplacement, userId);
                 return Ok(result);
             }
             else
@@ -197,7 +198,7 @@ namespace api_layer.Controllers
             var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReplaceAsync(enIssueReason.DamagedReplacement, userId);
+                _License result = await license.ReplaceAsync(enIssueReason.DamagedReplacement, userId);
                 return Ok(result);
             }
             else
