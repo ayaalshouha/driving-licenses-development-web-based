@@ -8,7 +8,7 @@ export interface License {
   isActive: boolean;
   paidFees: number;
   issueReason: number;
-  notes: string;
+  notes: string | null;
   createdByUserID: number;
 }
 

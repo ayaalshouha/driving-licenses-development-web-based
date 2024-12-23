@@ -14,10 +14,12 @@ export class ConfirmationDialogComponent {
   @Output() confirmed = new EventEmitter<boolean>();
 
   confirm() {
+    console.log('Confirm clicked. Emitting true...');
     this.confirmed.emit(true);
     this.isVisible = false;
   }
   cancel() {
+    console.log('Cancel clicked. Emitting false...');
     this.confirmed.emit(false);
     this.isVisible = false;
   }

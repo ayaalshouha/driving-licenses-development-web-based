@@ -17,12 +17,12 @@ namespace DTOsLayer
         public bool isActive { get; set; }
         public decimal PaidFees { get; set; }
         public int IssueReason { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         public int CreatedByUserID { get; set; }
       
         public _License(int id, int applicationId, int driverId, int licenseClass,
             DateOnly issueDate, DateOnly expDate, bool isActive, decimal paidFees,
-            int issueReason, string notes, int createdByUserId)
+            int issueReason, string? notes, int createdByUserId)
         {
             this.ID = id;
             this.ApplicationID = applicationId;
