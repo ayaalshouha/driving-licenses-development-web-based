@@ -2,10 +2,11 @@
   <p class="main">System Analytics</p>
   <p>Your comprehensive counts dashboard</p>
   <div class="shapes">
+    <div class="apps-count">{{ appsCount() }} <span>Applications</span></div>
     <div class="tests-count">{{ testCount() }} <span>Tests</span></div>
-    <div class="drivers-count">{{ driversCount() }} <span>Drivers</span></div>
     <div class="licenses-count">
       {{ licensesCount() }} <span>Licenses</span>
     </div>
+    <div class="drivers-count">{{ driversCount() }} <span>Drivers</span></div>
   </div>
 </div>

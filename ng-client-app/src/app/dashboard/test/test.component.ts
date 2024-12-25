@@ -3,6 +3,7 @@ import { TestService } from '../../services/test.service';
 import { DriverService } from '../../services/driver.service';
 import { LicenseService } from '../../services/license.service';
 import { switchMap, tap } from 'rxjs';
+import { ApplicationService } from '../../services/application.service';
 
 @Component({
   selector: 'app-test',
@@ -16,11 +17,13 @@ export class TestComponent implements OnInit {
   testCount = signal<number>(0);
   driversCount = signal<number>(0);
   licensesCount = signal<number>(0);
+  appsCount = signal<number>(0);
 
   constructor(
     private testService: TestService,
     private driverService: DriverService,
-    private licenseService: LicenseService
+    private licenseService: LicenseService,
+    private applicationService: ApplicationService
   ) {}
   ngOnInit(): void {
     this.driverService
@@ -36,6 +39,11 @@ export class TestComponent implements OnInit {
               return this.licenseService.count().pipe(
                 tap((licensesCount) => {
                   this.licensesCount.set(licensesCount);
+                }),
+                switchMap((licensesCount) => {
+                  return this.applicationService
+                    .count()
+                    .pipe(tap((appsCount) => this.appsCount.set(appsCount)));
                 })
               );
             })

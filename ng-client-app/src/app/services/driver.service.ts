@@ -3,7 +3,6 @@ import { DRIVER_API_ENDPOINT } from '../environments/endpoints/driver.endpoints'
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Driver_View } from '../models/driver.model';
-import { error } from 'console';
 @Injectable({
   providedIn: 'root',
 })

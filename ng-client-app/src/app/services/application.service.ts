@@ -28,4 +28,7 @@ export class ApplicationService {
         })
       );
   }
+  count(): Observable<number> {
+    return this.http.get<number>(APPLICATION_API_ENDPOINT.count);
+  }
 }
