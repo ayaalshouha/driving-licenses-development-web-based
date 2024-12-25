@@ -1,4 +1,3 @@
-import { read } from 'fs';
 import { environment } from '../environment';
 
 export const DETAINED_LICENSE_API_ENDPOINT = {

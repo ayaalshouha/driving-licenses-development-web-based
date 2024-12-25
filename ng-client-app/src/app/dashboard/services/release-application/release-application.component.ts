@@ -53,7 +53,7 @@ export class ReleaseApplicationComponent {
   current_user_id = signal<number>(0);
   current_date = new Date();
   private destroy$ = new Subject<void>();
-  isDetaiend = signal<boolean>(false);
+  isDetaiend = signal<boolean | undefined>(undefined);
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -101,24 +101,30 @@ export class ReleaseApplicationComponent {
         }),
         tap((license) => {
           if (license.isActive) {
-            this.active = false;
+            this.active = true;
+            this.isDetaiend.set(false);
             throw new Error('The license is active and NOT detained.');
           }
           if (new Date(license.expDate) < this.current_date) {
             this.expired = true;
             throw new Error(
-              'The license is expired. Please renew license first!'
+              'The license is expired, You cannot release an expired license  '
             );
           }
         }),
-        switchMap((license)=>{
-          return this.licenseService.
-        })
-          ,
         switchMap((license) => {
-          return this.detainedLicenseService.read(license.id).pipe(
-            tap((detainInfo) => {
-              this.detain_info.set(detainInfo);
+          return this.licenseService.isDetained(license.id).pipe(
+            switchMap((isDetained) => {
+              if (!isDetained) {
+                this.isDetaiend.set(false);
+                throw new Error('License is NOT detained!');
+              }
+              this.isDetaiend.set(true);
+              return this.detainedLicenseService.read(license.id).pipe(
+                tap((detainInfo) => {
+                  this.detain_info.set(detainInfo);
+                })
+              );
             })
           );
         }),
@@ -157,7 +163,12 @@ export class ReleaseApplicationComponent {
     this.applicantName.set(driver.fullName);
   }
   get ValidLicense(): boolean {
-    return this.current_license() != undefined && !this.expired && !this.active;
+    return (
+      this.current_license() != undefined &&
+      !this.expired &&
+      !this.active &&
+      !this.isDetaiend()
+    );
   }
 
   processWithRelease() {

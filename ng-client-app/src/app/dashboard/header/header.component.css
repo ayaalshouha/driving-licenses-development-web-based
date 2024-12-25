@@ -9,6 +9,7 @@ header {
 }
 header .logo {
   font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .user-section {

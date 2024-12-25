@@ -15,7 +15,7 @@
   -o-border-radius: 30px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   .main {
-    color: black;
+    color: #1b2568;
     font-size: 24px;
     font-weight: bold;
   }
@@ -39,6 +39,7 @@
   justify-content: center;
   color: var(--light-color);
   background: linear-gradient(145deg, #1d2b86, #9aa0c9);
+  width: 200px;
   padding: 50px;
   border-radius: 20px;
   -webkit-border-radius: 20px;
@@ -48,4 +49,15 @@
   font-size: 24px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
+}
+
+.tests-count:hover,
+.drivers-count:hover,
+.licenses-count:hover {
+  box-shadow: 0, 10px, 20px, rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }

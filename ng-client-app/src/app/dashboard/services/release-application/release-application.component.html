@@ -114,10 +114,10 @@
         <label for="detain-status">Detain Status</label>
         <p id="detain-status">
           {{
-            current_license() != undefined
-              ? current_license()!.isActive
-                ? "Active"
-                : "Not Active"
+            isDetaiend() != undefined
+              ? isDetaiend()!
+                ? "Detained"
+                : "Not Detained"
               : "N/A"
           }}
         </p>
@@ -126,48 +126,45 @@
   </fieldset>
 
   <fieldset>
-    <legend>New License Info</legend>
+    <legend>Detain Info</legend>
+
     <div class="control-row new">
       <div class="control">
-        <label for="new-app-id">New Application ID</label>
-        <p id="new-app-id">
-          {{
-            new_license() != undefined ? new_license()!.applicationID : "N/A"
-          }}
+        <label for="detain-id">Detain ID</label>
+        <p id="detain-id">
+          {{ detain_info() != undefined ? detain_info()!.id : "N/A" }}
         </p>
       </div>
       <div class="control">
-        <label for="new-id">New License ID</label>
-        <p id="new-id">
-          {{ new_license() != undefined ? new_license()!.id : "N/A" }}
+        <label for="detain-date">Detain Date</label>
+        <p id="detain-date">
+          {{ detain_info() != undefined ? detain_info()!.detainDate : "N/A" }}
         </p>
       </div>
+    </div>
+
+    <div class="control-row new">
       <div class="control">
-        <label for="new-issue-reason">Issue Reason</label>
-        <p id="new-issue-reason">
+        <label for="release-app-id">Release Application ID</label>
+        <p id="release-app-id">
           {{
-            new_license_issue_reason != undefined
-              ? new_license_issue_reason
+            detain_info() != undefined
+              ? detain_info()!.releaseApplicationID
+                ? detain_info()!.releaseApplicationID
+                : "NULL"
               : "N/A"
           }}
         </p>
       </div>
-    </div>
-    <div class="control-row new">
+
       <div class="control">
-        <label for="new-exp-date">Expiration Date</label>
-        <p id="new-exp-date">
-          {{ new_license() != undefined ? new_license()!.expDate : "N/A" }}
-        </p>
-      </div>
-      <div class="control">
-        <label for="new-active-status">Active Status</label>
-        <p id="new-active-status">
+        <label for="new-issue-reason">Release Date</label>
+        <p id="new-issue-reason">
           {{
-            new_license() != undefined
-              ? new_license()!.isActive
-                ? "Active"
-                : "Not Active"
+            detain_info() != undefined
+              ? detain_info()!.releaseDate
+                ? detain_info()!.releaseDate
+                : "NULL"
               : "N/A"
           }}
         </p>
@@ -177,14 +174,14 @@
 
   <div class="actions">
     <button class="button button-secondary" (click)="onReset()">Reset</button>
-    <button class="button" (click)="onRelease()">Renew License</button>
+    <button class="button" (click)="onRelease()">Release License</button>
   </div>
 
   @if(isDialogVisible()){
   <app-confirmation-dialog
     [isVisible]="isDialogVisible()"
     title="Confirm"
-    message="Are you sure you want to renew license?"
+    message="Are you sure you want to release license?"
     (confirmed)="onDialogResult($event)"
   ></app-confirmation-dialog>
   }
