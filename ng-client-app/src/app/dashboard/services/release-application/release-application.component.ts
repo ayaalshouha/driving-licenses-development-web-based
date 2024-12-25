@@ -1,7 +1,10 @@
 import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { Driver_View } from '../../../models/driver.model';
-import { enLicenseClass, LicenseClass } from '../../../models/license-class.model';
+import {
+  enLicenseClass,
+  LicenseClass,
+} from '../../../models/license-class.model';
 import { ApplicationTypes } from '../../../models/application-type.model';
 import { enApplicationType } from '../../../models/application.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,11 +14,20 @@ import { LicenseService } from '../../../services/license.service';
 import { DriverService } from '../../../services/driver.service';
 import { LicenseClassService } from '../../../services/license-class.service';
 import { NotificationService } from '../../../services/notification.service';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { DetainedLicenseService } from '../../../services/detained-license.service';
+import { DetainedLicense } from '../../../models/detained-license.model';
 
 @Component({
   selector: 'app-release-application',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [
+    ReactiveFormsModule,
+    CurrencyPipe,
+    ConfirmationDialogComponent,
+    NotificationComponent,
+  ],
   templateUrl: './release-application.component.html',
   styleUrl: './release-application.component.css',
 })
@@ -23,14 +35,13 @@ export class ReleaseApplicationComponent {
   isConfirmed = signal<boolean>(false);
   isDialogVisible = signal<boolean>(false);
   current_license = signal<License | undefined>(undefined);
-  new_license = signal<License | undefined>(undefined);
+  detain_info = signal<DetainedLicense | undefined>(undefined);
   current_driver = signal<Driver_View | undefined>(undefined);
   applicantName = signal<string | undefined>(undefined);
   issueReason = signal<string | undefined>(undefined);
-  new_license_issue_reason = enIssueReason[enIssueReason['Renew License']];
   classes = signal<LicenseClass[] | undefined>(undefined);
   applicationTypeFee: number =
-    ApplicationTypes[enApplicationType['Renew Driving License Service']]
+    ApplicationTypes[enApplicationType['Release Detained Driving License']]
       .typeFee;
   licenseClass = signal<string | undefined>(undefined);
   filter = new FormControl('', {
@@ -42,13 +53,15 @@ export class ReleaseApplicationComponent {
   current_user_id = signal<number>(0);
   current_date = new Date();
   private destroy$ = new Subject<void>();
+  isDetaiend = signal<boolean>(false);
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private licenseService: LicenseService,
     private driverService: DriverService,
     private licenseClassService: LicenseClassService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private detainedLicenseService: DetainedLicenseService
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +111,17 @@ export class ReleaseApplicationComponent {
             );
           }
         }),
+        switchMap((license)=>{
+          return this.licenseService.
+        })
+          ,
+        switchMap((license) => {
+          return this.detainedLicenseService.read(license.id).pipe(
+            tap((detainInfo) => {
+              this.detain_info.set(detainInfo);
+            })
+          );
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -113,7 +137,7 @@ export class ReleaseApplicationComponent {
   onDialogResult(isConfirmed: boolean) {
     this.isDialogVisible.set(false);
     if (isConfirmed) {
-      this.processWithRenewal();
+      this.processWithRelease();
     } else {
       this.notificationService.showMessage({
         message: 'Release license process canceled',
@@ -144,12 +168,13 @@ export class ReleaseApplicationComponent {
       });
       return;
     }
-    const notes: string | null = this.notes.value ? this.notes.value : null;
     this.licenseService
-      .renew(this.current_license()!.id, notes!, this.current_user_id()!)
+      .release(this.current_license()!.id, this.current_user_id()!)
       .pipe(
-        tap((new_license) => {
-          this.handleNewLicense(new_license);
+        tap((released) => {
+          if (released) {
+            this.current_license()!.isActive = true;
+          }
         }),
         takeUntil(this.destroy$)
       )
@@ -163,14 +188,14 @@ export class ReleaseApplicationComponent {
         },
         complete: () => {
           this.notificationService.showMessage({
-            message: 'License renewed successfully',
+            message: 'License released successfully',
             status: 'success',
           });
         },
       });
   }
 
-  onRenew() {
+  onRelease() {
     this.isDialogVisible.set(true);
   }
   onReset() {

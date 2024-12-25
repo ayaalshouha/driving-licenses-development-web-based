@@ -120,6 +120,26 @@ export class LicenseService {
         })
       );
   }
+
+  isDetained(licenseID: number): Observable<boolean> {
+    return this.http
+      .get<boolean>(LICENSE_API_ENDPOINT.isDetained(licenseID), {
+        observe: 'body',
+      })
+      .pipe(
+        catchError((error) => {
+          if (error.status == 404) {
+            return throwError(
+              () => new Error(`License with ID ${licenseID} NOT Found`)
+            );
+          }
+          return throwError(() => new Error('An unexpected error occurred.'));
+        }),
+        map((response) => {
+          return response;
+        })
+      );
+  }
   // getAll(): Observable<License[]> {
   //   // return this.http.get<License[]>(LICENSE_API_ENDPOINT.all);
   // }

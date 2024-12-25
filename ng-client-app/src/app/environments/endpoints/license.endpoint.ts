@@ -3,6 +3,8 @@ import { environment } from '../environment';
 export const LICENSE_API_ENDPOINT = {
   count: `${environment.apiBaseUrl}/license/count`,
   read: `${environment.apiBaseUrl}/license/`,
+  isDetained: (ID: number) =>
+    `${environment.apiBaseUrl}/license/${ID}/is-detained`,
   detain: (ID: number, fees: number, byUserID: number) =>
     `${environment.apiBaseUrl}/license/${ID}/detain/fees/${fees}/by-user-id/${byUserID}`,
   release: (ID: number, byUserID: number) =>
