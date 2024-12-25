@@ -61,9 +61,49 @@ export class LicenseService {
         })
       );
   }
+
   damageReplacement(ID: number, byUserID: number): Observable<License> {
     return this.http
       .get<License>(LICENSE_API_ENDPOINT.damageReplacement(ID, byUserID), {
+        observe: 'body',
+      })
+      .pipe(
+        catchError((error) => {
+          if (error.status == 404) {
+            return throwError(
+              () => new Error(`License with ID ${ID} NOT Found`)
+            );
+          }
+          return throwError(() => new Error('An unexpected error occurred.'));
+        }),
+        map((response) => {
+          return response;
+        })
+      );
+  }
+
+  detain(ID: number, fees: number, byUserID: number): Observable<number> {
+    return this.http
+      .get<number>(LICENSE_API_ENDPOINT.detain(ID, fees, byUserID), {
+        observe: 'body',
+      })
+      .pipe(
+        catchError((error) => {
+          if (error.status == 404) {
+            return throwError(
+              () => new Error(`License with ID ${ID} NOT Found`)
+            );
+          }
+          return throwError(() => new Error('An unexpected error occurred.'));
+        }),
+        map((response) => {
+          return response;
+        })
+      );
+  }
+  release(ID: number, byUserID: number): Observable<boolean> {
+    return this.http
+      .get<boolean>(LICENSE_API_ENDPOINT.release(ID, byUserID), {
         observe: 'body',
       })
       .pipe(

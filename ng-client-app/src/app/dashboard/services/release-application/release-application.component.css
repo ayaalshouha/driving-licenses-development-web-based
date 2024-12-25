@@ -1,0 +1,97 @@
+form {
+  background: var(--bg-light-color);
+  margin: 10px;
+}
+form,
+fieldset {
+  padding: 20px;
+}
+fieldset {
+  border: 2px solid var(--light-color);
+}
+
+.container {
+  gap: 30px;
+}
+.control-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.control {
+  margin-bottom: 0;
+  width: fit-content;
+}
+.control p,
+select,
+input {
+  background-color: var(--light-color);
+  color: black;
+  min-width: 300px;
+  width: fit-content;
+  padding: 8px;
+  border-radius: 5px;
+  height: 35px;
+}
+.control select,
+input {
+  font-weight: normal;
+}
+
+.control label {
+  display: block;
+  font-size: 0.6rem;
+  margin-bottom: 3px;
+}
+
+.control input,
+select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #758a8a;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.new .control label {
+  color: var(--dark-color);
+}
+
+.border-color .control label {
+  color: #f84e2c;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+input:focus {
+  border: 1px solid var(--special-color) !important;
+  outline: none !important;
+}
+
+[formgroupname].ng-invalid.ng-touched.ng-dirty input,
+input.ng-invalid.ng-touched.ng-dirty {
+  background-color: #fbdcd6;
+  border-color: #f84e2c;
+}
+
+[formgroupname].ng-invalid.ng-touched.ng-dirty label,
+.control:has(.ng-invalid.ng-touched.ng-dirty) label {
+  color: #f98b75;
+}
+.is-invalid {
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 4px;
+}
