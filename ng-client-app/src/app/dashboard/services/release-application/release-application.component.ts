@@ -8,7 +8,7 @@ import {
 import { ApplicationTypes } from '../../../models/application-type.model';
 import { enApplicationType } from '../../../models/application.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CurrencyPipe, isPlatformBrowser } from '@angular/common';
+import { CurrencyPipe, DatePipe, isPlatformBrowser } from '@angular/common';
 import { map, Subject, switchAll, switchMap, takeUntil, tap } from 'rxjs';
 import { LicenseService } from '../../../services/license.service';
 import { DriverService } from '../../../services/driver.service';
@@ -26,6 +26,7 @@ import { DetainedLicense } from '../../../models/detained-license.model';
     ReactiveFormsModule,
     CurrencyPipe,
     ConfirmationDialogComponent,
+    DatePipe,
     NotificationComponent,
   ],
   templateUrl: './release-application.component.html',
@@ -165,9 +166,8 @@ export class ReleaseApplicationComponent {
   get ValidLicense(): boolean {
     return (
       this.current_license() != undefined &&
-      !this.expired &&
       !this.active &&
-      !this.isDetaiend()
+      this.isDetaiend() == true
     );
   }
 

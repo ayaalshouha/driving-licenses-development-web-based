@@ -138,7 +138,11 @@
       <div class="control">
         <label for="detain-date">Detain Date</label>
         <p id="detain-date">
-          {{ detain_info() != undefined ? detain_info()!.detainDate : "N/A" }}
+          {{
+            detain_info() != undefined
+              ? (detain_info()!.detainDate | date)
+              : "N/A"
+          }}
         </p>
       </div>
     </div>
@@ -151,7 +155,7 @@
             detain_info() != undefined
               ? detain_info()!.releaseApplicationID
                 ? detain_info()!.releaseApplicationID
-                : "NULL"
+                : "N/A"
               : "N/A"
           }}
         </p>
@@ -163,8 +167,8 @@
           {{
             detain_info() != undefined
               ? detain_info()!.releaseDate
-                ? detain_info()!.releaseDate
-                : "NULL"
+                ? (detain_info()!.releaseDate | date)
+                : "N/A"
               : "N/A"
           }}
         </p>

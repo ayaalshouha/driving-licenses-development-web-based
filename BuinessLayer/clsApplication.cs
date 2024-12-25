@@ -156,6 +156,9 @@ namespace BuisnessLayer
             return await ApplicationData.isClassExistAsync(PersonID, ClassID); 
         }
 
-       
+        public static async Task<int> count()
+        {
+            return await ApplicationData.ApplicationsCount();
+        }
     }
 }

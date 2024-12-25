@@ -159,8 +159,13 @@ namespace api_layer.Controllers
                 return Ok(fee); 
             }
         }
-   
 
 
+        [HttpGet("count", Name = "ApplicationsCount")]
+        public async Task<ActionResult<int>> count()
+        {
+            int count = await clsApplication.count();
+            return Ok(count);
+        }
     }
 }

@@ -230,7 +230,7 @@ namespace api_layer.Controllers
             var license = await clsLicenses.FindAsync(id);
             if (license != null)
             {
-                var result = license.ReleaseLicenseAsync(userId);
+                bool result = await license.ReleaseLicenseAsync(userId);
                 return Ok(result);
             }
             else
