@@ -6,6 +6,12 @@ header {
   padding: 0.8rem;
   color: #1b2568;
   border-bottom: 1px solid var(--light-color);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 header .logo {
   font-weight: bold;
