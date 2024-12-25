@@ -22,4 +22,7 @@ export class DriverService {
   getAll(): Observable<Driver_View[]> {
     return this.http.get<Driver_View[]>(DRIVER_API_ENDPOINT.all);
   }
+  count(): Observable<number> {
+    return this.http.get<number>(DRIVER_API_ENDPOINT.count);
+  }
 }

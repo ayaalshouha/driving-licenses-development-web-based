@@ -259,7 +259,7 @@ namespace api_layer.Controllers
             int count = await clsLicenses.count();
             return Ok(count);
         }
-   
-    
+
+       
     }
 }

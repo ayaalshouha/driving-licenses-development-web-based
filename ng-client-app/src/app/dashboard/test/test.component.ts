@@ -1,6 +1,8 @@
-import { Component, signal, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, signal, ViewEncapsulation } from '@angular/core';
 import { TestService } from '../../services/test.service';
 import { DriverService } from '../../services/driver.service';
+import { LicenseService } from '../../services/license.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-test',
@@ -10,13 +12,36 @@ import { DriverService } from '../../services/driver.service';
   styleUrl: './test.component.css',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class TestComponent {
+export class TestComponent implements OnInit {
   testCount = signal<number>(0);
   driversCount = signal<number>(0);
   licensesCount = signal<number>(0);
 
   constructor(
     private testService: TestService,
-    private driverService: DriverService
+    private driverService: DriverService,
+    private licenseService: LicenseService
   ) {}
+  ngOnInit(): void {
+    this.driverService
+      .count()
+      .pipe(
+        tap((driverCount) => this.driversCount.set(driverCount)),
+        switchMap((driverCount) => {
+          return this.testService.count().pipe(
+            tap((testCount) => {
+              this.testCount.set(testCount);
+            }),
+            switchMap((testCount) => {
+              return this.licenseService.count().pipe(
+                tap((licensesCount) => {
+                  this.licensesCount.set(licensesCount);
+                })
+              );
+            })
+          );
+        })
+      )
+      .subscribe();
+  }
 }

@@ -1,86 +1,51 @@
-svg {
-  margin: 20px;
-}
 .wrapper {
+  background-color: var(--bg-light-color);
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.section {
-  display: flex;
-  justify-content: flex-start;
   flex-direction: column;
-  gap: 10px;
-  padding: 30px;
-}
-
-div p {
-  font-size: 0.8rem;
-  color: black;
-  text-transform: uppercase;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 850px;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  .main {
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+  }
 }
 
 .shapes {
-  width: 500px;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-light-color);
+  gap: 25px;
 }
 
 .tests-count,
 .drivers-count,
 .licenses-count {
   display: flex;
+  margin-top: 20px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute;
   color: var(--light-color);
-
-  span {
-    text-transform: uppercase;
-    font-size: 0.6rem;
-  }
-}
-
-.tests-count {
-  background-color: #8382de;
-  padding: 30px;
-  border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  top: 3px;
-  left: 6%;
-  font-size: 2rem;
-  z-index: 99;
-}
-
-.drivers-count {
-  background-color: var(--special-color);
+  background: linear-gradient(145deg, #1d2b86, #9aa0c9);
   padding: 50px;
-  border-radius: 50%;
-  top: 45px;
-  left: 25%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  font-size: 2rem;
-}
-
-.licenses-count {
-  background-color: #43c5e1;
-  padding: 40px;
-  border-radius: 50%;
-  top: 110px;
-  left: 0%;
-  z-index: 999;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  font-size: 2rem;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  font-size: 24px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
 }

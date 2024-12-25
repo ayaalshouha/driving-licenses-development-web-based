@@ -14,8 +14,8 @@ export class TestService {
     return this.http.get<Test[]>(TESTS_API_ENDPOINTS.all);
   }
 
-  count(){
-    
+  count(): Observable<number> {
+    return this.http.get<number>(TESTS_API_ENDPOINTS.count);
   }
 
   // getFees(type_id: number) {

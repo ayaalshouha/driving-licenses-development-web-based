@@ -8,7 +8,9 @@ import { License } from '../models/license.model';
 })
 export class LicenseService {
   constructor(private http: HttpClient) {}
-
+  count(): Observable<number> {
+    return this.http.get<number>(LICENSE_API_ENDPOINT.count);
+  }
   read(ID: number): Observable<License> {
     return this.http.get<License>(`${LICENSE_API_ENDPOINT.read}${ID}`).pipe(
       catchError((error) => {

@@ -7,4 +7,5 @@ export const DRIVER_API_ENDPOINT = {
   read: `${environment.apiBaseUrl}/driver/`,
   read_view: (driverid: number) =>
     `${environment.apiBaseUrl}/driver/${driverid}/driver-view`,
+  count: `${environment.apiBaseUrl}/driver/count`,
 };
