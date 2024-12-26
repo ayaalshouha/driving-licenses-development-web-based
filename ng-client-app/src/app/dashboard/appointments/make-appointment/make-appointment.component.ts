@@ -285,19 +285,6 @@ export class MakeAppointmentComponent implements OnInit {
           console.error('Error scheduling appointment:', err);
         },
       });
-
-    //is appointment locked with pass or fail result
-    // check if there is a previous test type (FAILED/LOCKED)of the same one to assign a retake test
-
-    // const new_appointment: Appointment = {
-    //   id: 0,
-    //   localLicenseApplicationID: this.current_local_application()!.id,
-    //   isLocked: false,
-    //   testType: this.testTypeID()!,
-    //   paidFees: this.testTypes[this.testTypeID()!].fees,
-    //   createdByUserID: 3,
-    //   date:
-    // };
   }
   ngOnDestroy() {
     this.destroy$.next();
