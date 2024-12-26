@@ -28,4 +28,11 @@ export class PersonService {
       responseType: 'text' as 'json',
     });
   }
+
+  malePercentage(): Observable<number> {
+    return this.http.get<number>(PERSON_API_ENDPOINTS.male_percentage);
+  }
+  femlePercentage(): Observable<number> {
+    return this.http.get<number>(PERSON_API_ENDPOINTS.female_percentage);
+  }
 }
