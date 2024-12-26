@@ -148,5 +148,16 @@ namespace api_layer.Controllers
             return await clsPerson.getFullName(id);
         }
 
+        [HttpGet("all-male-percetage", Name ="MalePercentage")]
+        public async Task<ActionResult<int>> MalePercentage()
+        {
+            return await clsPerson.MalePercentage();
+        }
+        [HttpGet("all-female-percetage", Name = "FemalePercentage")]
+        public async Task<ActionResult<int>> FemalePercentage()
+        {
+            return await clsPerson.FemalePercentage();
+        }
+
     }
 }

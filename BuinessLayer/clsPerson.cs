@@ -196,5 +196,34 @@ namespace BuisnessLayer
             return await PersonData.ListAsync();
         }
 
+        public static async Task<int> FemaleCount()
+        {
+            return await PersonData.FemaleCount();
+        }
+        public static async Task<int> MaleCount()
+        {
+            return await PersonData.maleCount();
+        }
+        public static async Task<int> TotalPeopleCount()
+        {
+            int femaleCount = await FemaleCount();
+            int maleCount = await MaleCount();
+            int TotalPeopleCount = femaleCount + maleCount;
+            return TotalPeopleCount;
+        }
+        public static async Task<int> MalePercentage()
+        {
+            int maleCount = await MaleCount();
+            int total = await TotalPeopleCount();
+            double percentage = (maleCount / (double)total) * 100;
+            return (int)percentage;
+        }
+        public static async Task<int> FemalePercentage()
+        {
+            int femaleCount = await FemaleCount();
+            int total = await TotalPeopleCount();
+            double percentage = (femaleCount / (double)total) * 100;
+            return (int)percentage;
+        }
     }
 }

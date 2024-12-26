@@ -33,6 +33,8 @@ body {
   --border-radius: 8px;
   --font-size: 1.2rem;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --circle-size: 120px;
+  --stroke-width: 10px;
 }
 ::-webkit-scrollbar {
   width: 5px;

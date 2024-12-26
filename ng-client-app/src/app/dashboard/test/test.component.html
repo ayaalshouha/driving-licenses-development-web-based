@@ -10,3 +10,32 @@
     <div class="drivers-count">{{ driversCount() }} <span>Drivers</span></div>
   </div>
 </div>
+<div class="wrapper fit-width">
+  <p class="main second">People Analytics</p>
+  <div class="circle-container">
+    <div
+      class="circle male"
+      [style.background]="
+        'conic-gradient(#007bff ' +
+        malePercentage +
+        '%, #e9ecef ' +
+        malePercentage +
+        '%)'
+      "
+    >
+      <span>Male {{ malePercentage | number : "1.0-2" }}%</span>
+    </div>
+    <div
+      class="circle female"
+      [style.background]="
+        'conic-gradient(#e83e8c ' +
+        femalePercentage +
+        '%, #e9ecef ' +
+        femalePercentage +
+        '%)'
+      "
+    >
+      <span>Female {{ femalePercentage | number : "1.0-2" }}%</span>
+    </div>
+  </div>
+</div>

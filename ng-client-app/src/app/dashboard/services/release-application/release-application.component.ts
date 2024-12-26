@@ -9,7 +9,7 @@ import { ApplicationTypes } from '../../../models/application-type.model';
 import { enApplicationType } from '../../../models/application.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CurrencyPipe, DatePipe, isPlatformBrowser } from '@angular/common';
-import { map, Subject, switchAll, switchMap, takeUntil, tap } from 'rxjs';
+import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { LicenseService } from '../../../services/license.service';
 import { DriverService } from '../../../services/driver.service';
 import { LicenseClassService } from '../../../services/license-class.service';
@@ -164,6 +164,7 @@ export class ReleaseApplicationComponent {
     this.applicantName.set(driver.fullName);
   }
   get ValidLicense(): boolean {
+    console.log('is detained = ' + this.isDetaiend());
     return (
       this.current_license() != undefined &&
       !this.active &&
@@ -202,6 +203,7 @@ export class ReleaseApplicationComponent {
             message: 'License released successfully',
             status: 'success',
           });
+          this.isDetaiend.set(false);
         },
       });
   }

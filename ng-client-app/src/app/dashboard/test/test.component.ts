@@ -4,11 +4,13 @@ import { DriverService } from '../../services/driver.service';
 import { LicenseService } from '../../services/license.service';
 import { switchMap, tap } from 'rxjs';
 import { ApplicationService } from '../../services/application.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './test.component.html',
   styleUrl: './test.component.css',
   encapsulation: ViewEncapsulation.Emulated,
@@ -18,7 +20,8 @@ export class TestComponent implements OnInit {
   driversCount = signal<number>(0);
   licensesCount = signal<number>(0);
   appsCount = signal<number>(0);
-
+  malePercentage = 60;
+  femalePercentage = 40;
   constructor(
     private testService: TestService,
     private driverService: DriverService,

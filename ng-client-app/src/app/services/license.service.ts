@@ -84,9 +84,7 @@ export class LicenseService {
 
   detain(ID: number, fees: number, byUserID: number): Observable<number> {
     return this.http
-      .get<number>(LICENSE_API_ENDPOINT.detain(ID, fees, byUserID), {
-        observe: 'body',
-      })
+      .patch<number>(LICENSE_API_ENDPOINT.detain(ID, fees, byUserID), {})
       .pipe(
         catchError((error) => {
           if (error.status == 404) {
@@ -103,9 +101,7 @@ export class LicenseService {
   }
   release(ID: number, byUserID: number): Observable<boolean> {
     return this.http
-      .get<boolean>(LICENSE_API_ENDPOINT.release(ID, byUserID), {
-        observe: 'body',
-      })
+      .patch<boolean>(LICENSE_API_ENDPOINT.release(ID, byUserID), {})
       .pipe(
         catchError((error) => {
           if (error.status == 404) {
@@ -116,6 +112,7 @@ export class LicenseService {
           return throwError(() => new Error('An unexpected error occurred.'));
         }),
         map((response) => {
+          //this should return a boolean value
           return response;
         })
       );
