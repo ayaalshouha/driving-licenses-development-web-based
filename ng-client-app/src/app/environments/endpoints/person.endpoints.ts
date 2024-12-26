@@ -9,4 +9,6 @@ export const PERSON_API_ENDPOINTS = {
   isExistNationalNo: (nationalNo: string) =>
     `${environment.apiBaseUrl}/person/No:${nationalNo}/is-exist`,
   fullName: (id: number) => `${environment.apiBaseUrl}/person/${id}/full-name`,
+  male_percentage: `${environment.apiBaseUrl}/person/all-male-percetage`,
+  female_percentage: `${environment.apiBaseUrl}/person/all-female-percetage`,
 };
