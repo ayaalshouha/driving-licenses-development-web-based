@@ -49,7 +49,7 @@ export class ReplaceApplicationComponent {
       .typeFee;
 
   licenseClass = signal<string | undefined>(undefined);
-  filter = new FormControl('', {
+  filter = new FormControl(undefined, {
     validators: [Validators.required, Validators.min(1)],
   });
   replaceMode = new FormControl<'Lost' | 'Damage'>('Lost');
@@ -113,6 +113,9 @@ export class ReplaceApplicationComponent {
   }
 
   onSearch() {
+    if (this.filter.value == undefined) {
+      return;
+    }
     const licenseID: number = +this.filter.value!;
 
     this.licenseService

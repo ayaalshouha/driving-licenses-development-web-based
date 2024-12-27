@@ -48,7 +48,7 @@ export class MakeAppointmentComponent implements OnInit {
   applicationStatus = signal<string | undefined>(undefined);
   licenseClass = signal<string | undefined>(undefined);
   testTypeID = signal<number | undefined>(undefined);
-  filter = new FormControl('', {
+  filter = new FormControl<number | undefined>(undefined, {
     validators: [Validators.required, Validators.min(1)],
   });
   appointmentDate = new FormControl('', {
@@ -104,6 +104,9 @@ export class MakeAppointmentComponent implements OnInit {
   }
 
   onSearch() {
+    if (this.filter.value == undefined) {
+      return;
+    }
     const applicationID: number = +this.filter.value!;
 
     this.applicationService

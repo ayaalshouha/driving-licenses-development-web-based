@@ -43,7 +43,7 @@ export class RenewLocalApplicationComponent {
     ApplicationTypes[enApplicationType['Renew Driving License Service']]
       .typeFee;
   licenseClass = signal<string | undefined>(undefined);
-  filter = new FormControl('', {
+  filter = new FormControl(undefined, {
     validators: [Validators.required, Validators.min(1)],
   });
   notes = new FormControl('');
@@ -84,6 +84,9 @@ export class RenewLocalApplicationComponent {
   }
 
   onSearch() {
+    if (this.filter.value == undefined) {
+      return;
+    }
     const licenseID: number = +this.filter.value!;
 
     this.licenseService
