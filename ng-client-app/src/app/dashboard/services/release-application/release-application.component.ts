@@ -188,6 +188,15 @@ export class ReleaseApplicationComponent {
             this.current_license()!.isActive = true;
           }
         }),
+        switchMap(() => {
+          return this.detainedLicenseService
+            .read(this.current_license()!.id)
+            .pipe(
+              tap((updatedDetainInfo) => {
+                this.detain_info.set(updatedDetainInfo);
+              })
+            );
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe({
