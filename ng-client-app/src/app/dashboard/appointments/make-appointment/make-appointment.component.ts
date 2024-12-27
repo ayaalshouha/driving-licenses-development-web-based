@@ -27,6 +27,11 @@ import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ApplicationTypes } from '../../../models/application-type.model';
+
+enum enMode {
+  add = 'Add appointment',
+  edit = 'Edit appointment',
+}
 @Component({
   selector: 'app-make-appointment',
   standalone: true,
@@ -53,7 +58,7 @@ export class MakeAppointmentComponent implements OnInit {
   current_date = new Date();
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
-
+  appointments_mode = enMode.add;
   constructor(
     private apppointmentService: AppointmentService,
     private testTypeService: TestTypesService,

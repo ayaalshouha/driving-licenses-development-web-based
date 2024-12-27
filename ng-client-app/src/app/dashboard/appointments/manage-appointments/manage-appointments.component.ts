@@ -6,10 +6,11 @@ import { AppointmentService } from '../../../services/appointment.service';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-manage-appointments',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, RouterLink],
   templateUrl: './manage-appointments.component.html',
   styleUrl: './manage-appointments.component.css',
 })

@@ -30,31 +30,43 @@ export class TestComponent implements OnInit {
     private applicationService: ApplicationService,
     private personService: PersonService
   ) {}
+
+  private animateCount(target: number, signal: any, delay: number = 50) {
+    const interval = setInterval(() => {
+      if (signal() < target) {
+        signal.update((current: number) => current + 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, delay); 
+  }
+
   ngOnInit(): void {
     this.driverService
       .count()
       .pipe(
-        tap((driverCount) => this.driversCount.set(driverCount)),
-        switchMap((driverCount) => {
+        tap((driverCount) => this.animateCount(driverCount, this.driversCount)),
+        switchMap(() => {
           return this.testService.count().pipe(
-            tap((testCount) => {
-              this.testCount.set(testCount);
-            }),
-            switchMap((testCount) => {
+            tap((testCount) => this.animateCount(testCount, this.testCount)),
+            switchMap(() => {
               return this.licenseService.count().pipe(
-                tap((licensesCount) => {
-                  this.licensesCount.set(licensesCount);
-                }),
-                switchMap((licensesCount) => {
+                tap((licensesCount) =>
+                  this.animateCount(licensesCount, this.licensesCount)
+                ),
+                switchMap(() => {
                   return this.applicationService
                     .count()
-                    .pipe(tap((appsCount) => this.appsCount.set(appsCount)));
+                    .pipe(
+                      tap((appsCount) =>
+                        this.animateCount(appsCount, this.appsCount)
+                      )
+                    );
                 })
               );
             })
           );
         }),
-
         takeUntil(this.destroy$)
       )
       .subscribe();
@@ -71,6 +83,7 @@ export class TestComponent implements OnInit {
       this.femalePercentage = femaleCount;
     });
   }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

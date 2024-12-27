@@ -1,6 +1,5 @@
 <!-- showign notification if person took all 3 tests already  -->
 <app-notification />
-
 <form action="">
   <div class="flex">
     <input
@@ -82,9 +81,7 @@
       <label for="test_type">Test Type available based on previous tests</label>
       <p id="test_type">
         {{
-          testTypeID() != undefined
-            ? testTypes[testTypeID()!].typeTitle
-            : "N/A"
+          testTypeID() != undefined ? testTypes[testTypeID()!].typeTitle : "N/A"
         }}
       </p>
     </div>
