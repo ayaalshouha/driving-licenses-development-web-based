@@ -113,5 +113,9 @@ namespace BuisnessLayer
         {
             return await Appointments_Data.DeleteAsync(id);
         }
+        public static async Task<Appointment> GetApointmentPerTestType(int localID, enTestType TestTypeID)
+        {
+            return await Appointments_Data.getAppointmentByTest(localID, (int)TestTypeID);
+        }
     }
 }

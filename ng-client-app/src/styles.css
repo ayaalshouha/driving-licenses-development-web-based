@@ -263,11 +263,6 @@ input {
   padding: 10px;
   border-radius: 5px;
 }
-.control select,
-input {
-  padding: 10px;
-  font-weight: normal;
-}
 
 .control label {
   display: block;
@@ -278,7 +273,8 @@ input {
 .control input,
 select {
   width: 100%;
-  padding: 6px;
+  padding: 10px;
+  font-weight: normal;
   border: 1px solid #758a8a;
   border-radius: 5px;
   -webkit-border-radius: 5px;

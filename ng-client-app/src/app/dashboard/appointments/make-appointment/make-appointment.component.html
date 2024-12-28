@@ -4,12 +4,20 @@
 <form action="">
   <div class="flex">
     <input
+      [readonly]="appointments_mode == enMode.edit"
       type="number"
       [formControl]="filter"
       placeholder="Enter Application ID..."
     />
     <div class="add-btn">
-      <button class="button" type="button" (click)="onSearch()">Search</button>
+      <button
+        class="button"
+        type="button"
+        [disabled]="appointments_mode == enMode.edit"
+        (click)="onSearch()"
+      >
+        Search
+      </button>
     </div>
   </div>
   @if (filter.touched && filter.invalid) {
@@ -97,7 +105,14 @@
     </div>
   </div>
   <div class="actions">
-    <button class="button" (click)="onReset()">Reset</button>
+    <button
+      class="button"
+      [disabled]="appointments_mode == enMode.edit"
+      (click)="onReset()"
+    >
+      Reset
+    </button>
+
     <button class="button" (click)="onClosed()">Cancel</button>
     <button class="button" (click)="onSchedule()">Schadule</button>
   </div>

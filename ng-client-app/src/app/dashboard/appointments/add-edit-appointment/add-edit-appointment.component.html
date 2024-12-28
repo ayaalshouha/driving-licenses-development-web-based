@@ -14,6 +14,7 @@
         Appointments > {{ mode }} Appointemnt
       </h2>
     </header>
-    <app-make-appointment [appointmentID]="id ?? 0" (closed)="onClose($event)"/>
+
+    <app-make-appointment [applicationID]="id" (closed)="onClose($event)" />
   </div>
 </div>

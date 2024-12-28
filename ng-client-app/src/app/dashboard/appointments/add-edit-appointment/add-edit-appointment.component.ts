@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MakeAppointmentComponent } from '../make-appointment/make-appointment.component';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ export class AddEditAppointmentComponent implements OnInit {
   id: number | null = null;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location
@@ -24,6 +25,9 @@ export class AddEditAppointmentComponent implements OnInit {
       this.mode = params['mode'];
       this.id = +params['id'];
     });
+
+    console.log('from OnInit ' + this.id);
+    this.cdr.detectChanges();
   }
 
   onClose(confirmed: boolean) {

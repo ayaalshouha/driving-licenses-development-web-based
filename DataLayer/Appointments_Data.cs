@@ -341,5 +341,49 @@ namespace DataLayer
             }
             return isFound;
         }
+        public static async Task<Appointment> getAppointmentByTest(int LocalID, int TestType)
+        {
+
+            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"select * from TestAppointments
+                    WHERE TestTypeID = @TestType 
+                        AND LocalDrvingLicenseApplicationID = @LocalID 
+                        AND isLocked = 0;";
+
+                SqlCommand command = new SqlCommand(Query, connection);
+                command.Parameters.AddWithValue("@TestType", TestType);
+                command.Parameters.AddWithValue("@LocalID", LocalID);
+
+                connection.Open();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    return new Appointment(
+                        reader.GetInt32(reader.GetOrdinal("CreateByUserID")),
+                        reader.IsDBNull(reader.GetOrdinal("RetakeTestApplicationID")) ? 0 :
+                        reader.GetInt32(reader.GetOrdinal("RetakeTestApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                        reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.GetDateTime(reader.GetOrdinal("Date")),
+                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                        reader.GetBoolean(reader.GetOrdinal("isLocked"))
+                   );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+                //Console.WriteLine("Error: " + e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
     }
 }

@@ -145,5 +145,19 @@ namespace api_layer.Controllers
             else
                 return Ok(all);
         }
+
+        [HttpGet("test-type/{testType}/local-app/{localAppID}", Name = "ReadAppointment")]
+        public async Task<ActionResult<Appointment>> ReadAppointment(int localAppID, enTestType testType )
+        {
+            if (!int.TryParse(localAppID.ToString(), out _) || Int32.IsNegative(localAppID))
+                return BadRequest("Invalid Application ID Number");
+
+            Appointment appointment = await clsAppointment.GetApointmentPerTestType(localAppID, testType);
+
+            if (appointment == null)
+                return NotFound($"There is no unlocked appointment with application id {localAppID} and test type {testType}");
+
+            return Ok(appointment);
+        }
     }
 }

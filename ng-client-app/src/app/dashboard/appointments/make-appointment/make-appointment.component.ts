@@ -6,6 +6,8 @@ import {
   Output,
   signal,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
@@ -35,7 +37,7 @@ import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ApplicationTypes } from '../../../models/application-type.model';
 
-enum enMode {
+export enum enMode {
   add = 'Add appointment',
   edit = 'Edit appointment',
 }
@@ -46,11 +48,11 @@ enum enMode {
   templateUrl: './make-appointment.component.html',
   styleUrl: './make-appointment.component.css',
 })
-export class MakeAppointmentComponent implements OnInit {
+export class MakeAppointmentComponent implements OnInit, OnChanges {
   @Output() closed = new EventEmitter<boolean>();
-  @Input() appointmentID: number = 0;
-  appointments_mode = this.appointmentID == 0 ? enMode.add : enMode.edit;
-
+  @Input() applicationID: number | null = null;
+  appointments_mode = this.applicationID == null ? enMode.add : enMode.edit;
+  enMode = enMode;
   current_local_application = signal<LocalApplication | null>(null);
   current_main_application = signal<Application | null>(null);
   applicantName = signal<string | undefined>(undefined);
@@ -69,6 +71,7 @@ export class MakeAppointmentComponent implements OnInit {
   current_date = new Date();
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
+
   constructor(
     private apppointmentService: AppointmentService,
     private testTypeService: TestTypesService,
@@ -82,11 +85,29 @@ export class MakeAppointmentComponent implements OnInit {
       .pipe(
         tap((response) => {
           this.testTypes = response;
-          // console.log(this.testTypes[2]);
         }),
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['applicationID'] && changes['applicationID'].currentValue) {
+      this.initializeMode();
+      this.handleEditMode();
+    }
+  }
+  private initializeMode(): void {
+    this.appointments_mode =
+      this.applicationID == null ? enMode.add : enMode.edit;
+  }
+  private handleEditMode(): void {
+    if (this.appointments_mode === enMode.edit && this.applicationID) {
+      this.filter.setValue(this.applicationID);
+      console.log('filter value ' + this.filter.value);
+      this.onSearch();
+    } else {
+      this.onReset();
+    }
   }
   ngOnInit(): void {
     const current_user = localStorage.getItem('current-user');
@@ -116,6 +137,7 @@ export class MakeAppointmentComponent implements OnInit {
   }
 
   onSearch() {
+
     if (this.filter.value == undefined) {
       return;
     }
@@ -240,6 +262,7 @@ export class MakeAppointmentComponent implements OnInit {
       })
     );
   }
+
   onSchedule() {
     if (this.invalidTestTypeID) {
       this.notificationService.showMessage({
@@ -256,7 +279,12 @@ export class MakeAppointmentComponent implements OnInit {
       });
       return;
     }
-
+    // handle edit appointment date ONLY
+    if (this.appointments_mode == enMode.edit) {
+      console.log('this is gonna update the date ');
+      return;
+      // edit only the date
+    }
     this.apppointmentService
       .isThereAnActiveAppointment(
         this.testTypeID()! + 1,
