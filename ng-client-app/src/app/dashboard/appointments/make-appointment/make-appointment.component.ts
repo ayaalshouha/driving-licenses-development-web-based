@@ -15,6 +15,7 @@ import { TestTypesService } from '../../../services/test-type.service';
 import {
   catchError,
   forkJoin,
+  of,
   Subject,
   switchMap,
   takeUntil,
@@ -135,45 +136,46 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
       this.testTypeID.set(this.testCount()!);
     }
   }
-
   onSearch() {
-
     if (this.filter.value == undefined) {
       return;
     }
+
     const applicationID: number = +this.filter.value!;
 
     this.applicationService
       .read(applicationID)
       .pipe(
         tap((localApp) => this.current_local_application.set(localApp)),
-        switchMap((localApp) => {
-          return this.mainAppService.read(localApp.applicationID).pipe(
-            tap((mainApp) => this.current_main_application.set(mainApp)),
-            switchMap((mainApp) => {
-              this.applicationStatus.set(
-                enApplicationStatus[this.current_main_application()!.status]
-              );
+        switchMap((localApp) =>
+          forkJoin({
+            mainApp: this.mainAppService.read(localApp.applicationID),
+            appointment: this.fetchAppointment(localApp),
+          }).pipe(
+            tap(({ mainApp, appointment }) => {
+              this.current_main_application.set(mainApp);
 
-              this.applicationType.set(
-                enApplicationType[this.current_main_application()!.type]
-              );
-              this.licenseClass.set(
-                enLicenseClass[this.current_local_application()!.licenseClassID]
-              );
+              if (appointment) {
+                this.appointmentDate.setValue(appointment.date.toString());
+              }
 
-              return forkJoin({
+              this.applicationStatus.set(enApplicationStatus[mainApp.status]);
+              this.applicationType.set(enApplicationType[mainApp.type]);
+              this.licenseClass.set(enLicenseClass[localApp.licenseClassID]);
+            }),
+            switchMap(({ mainApp }) =>
+              forkJoin({
                 passedTest: this.applicationService.passedTestCount(
                   localApp.id
                 ),
                 applicantFullName: this.personService.getFullName(
                   mainApp.personID
                 ),
-              });
-            })
-          );
-        }),
-        takeUntil(this.destroy$) // Automatic cleanup
+              })
+            )
+          )
+        ),
+        takeUntil(this.destroy$) // Cleanup on component destroy
       )
       .subscribe({
         next: ({ passedTest, applicantFullName }) => {
@@ -189,6 +191,15 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
           this.onReset();
         },
       });
+  }
+
+  private fetchAppointment(localApp: any) {
+    if (this.appointments_mode === enMode.edit) {
+      return this.apppointmentService
+        .appointment(this.testTypeID()!, localApp.id)
+        .pipe(catchError(() => of(null))); // Return null on error
+    }
+    return of(null); // Return null if not in edit mode
   }
 
   onReset() {

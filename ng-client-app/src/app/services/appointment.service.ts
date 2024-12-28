@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { APPOINTMENT_API_ENDPOINT } from '../environments/endpoints/appointment.endpoints';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Appointment, Appointment_View } from '../models/appointment.model';
 
 @Injectable({
@@ -29,5 +29,21 @@ export class AppointmentService {
   }
   appointments(): Observable<Appointment_View[]> {
     return this.http.get<Appointment_View[]>(APPOINTMENT_API_ENDPOINT.all);
+  }
+
+  appointment(testType: number, localAppID: number): Observable<Appointment> {
+    return this.http
+      .get<Appointment>(APPOINTMENT_API_ENDPOINT.read(testType, localAppID))
+      .pipe(
+        catchError((error) => {
+          if (error.status == 404) {
+            throwError(() => new Error('No Appointment Found'));
+          }
+          return throwError(() => new Error('An unexpected error happened'));
+        }),
+        map((response) => {
+          return response;
+        })
+      );
   }
 }
