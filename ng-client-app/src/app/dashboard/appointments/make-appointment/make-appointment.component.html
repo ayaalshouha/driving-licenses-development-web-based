@@ -1,5 +1,6 @@
 <!-- showign notification if person took all 3 tests already  -->
 <app-notification />
+
 <form action="">
   <div class="flex">
     <input
@@ -96,7 +97,8 @@
     </div>
   </div>
   <div class="actions">
-    <button class="button button-secondary" (click)="onReset()">Reset</button>
+    <button class="button" (click)="onReset()">Reset</button>
+    <button class="button" (click)="onClosed()">Cancel</button>
     <button class="button" (click)="onSchedule()">Schadule</button>
   </div>
 </div>

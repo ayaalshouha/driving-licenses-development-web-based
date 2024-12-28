@@ -1,5 +1,5 @@
 <div class="container">
-  <form>
+  <form class="filteration">
     <div class="flex">
       <input
         type="text"
@@ -7,7 +7,11 @@
         placeholder="Full Text Search..."
       />
       <div class="add-btn">
-        <button routerLink="../../appointments/make-appointment" class="button">
+        <button
+          routerLink="../add-edit-appointment"
+          [queryParams]="{ mode: 'add', id: 0 }"
+          class="button"
+        >
           + Add New Appointment
         </button>
       </div>
@@ -36,7 +40,14 @@
         <td>{{ app.date | date }}</td>
         <td>{{ testTypes[app.testType - 1].typeTitle }}</td>
         <td class="actions">
-          <button [disabled]="app.isLocked" class="button">Edit</button>
+          <button
+            [disabled]="app.isLocked"
+            routerLink="../add-edit-appointment"
+            [queryParams]="{ mode: 'edit', id: app.id }"
+            class="button"
+          >
+            Edit
+          </button>
           <button [disabled]="app.isLocked" class="button">Take Test</button>
         </td>
       </tr>

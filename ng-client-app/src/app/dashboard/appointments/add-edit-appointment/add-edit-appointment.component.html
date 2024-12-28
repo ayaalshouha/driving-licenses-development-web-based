@@ -1,1 +1,19 @@
-<p>add-edit-appointment works!</p>
+<div class="backdrop">
+  <div class="dialog-box">
+    <header>
+      <h2
+        style="
+          text-align: left;
+          font-size: 10px;
+          padding-left: 5px;
+          margin: 3px;
+          font-weight: normal;
+          color: var(--text-color);
+        "
+      >
+        Appointments > {{ mode }} Appointemnt
+      </h2>
+    </header>
+    <app-make-appointment [appointmentID]="id ?? 0" (closed)="onClose($event)"/>
+  </div>
+</div>

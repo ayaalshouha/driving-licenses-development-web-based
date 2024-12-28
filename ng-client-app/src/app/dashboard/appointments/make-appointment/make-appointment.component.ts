@@ -1,5 +1,12 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  signal,
+  EventEmitter,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
@@ -40,6 +47,10 @@ enum enMode {
   styleUrl: './make-appointment.component.css',
 })
 export class MakeAppointmentComponent implements OnInit {
+  @Output() closed = new EventEmitter<boolean>();
+  @Input() appointmentID: number = 0;
+  appointments_mode = this.appointmentID == 0 ? enMode.add : enMode.edit;
+
   current_local_application = signal<LocalApplication | null>(null);
   current_main_application = signal<Application | null>(null);
   applicantName = signal<string | undefined>(undefined);
@@ -58,7 +69,6 @@ export class MakeAppointmentComponent implements OnInit {
   current_date = new Date();
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
-  appointments_mode = enMode.add;
   constructor(
     private apppointmentService: AppointmentService,
     private testTypeService: TestTypesService,
@@ -89,7 +99,9 @@ export class MakeAppointmentComponent implements OnInit {
       }
     }
   }
-
+  onClosed() {
+    this.closed.emit(true);
+  }
   checkTests() {
     if (this.testCount() == 3 && this.applicationStatus() == 'Completed') {
       this.testTypeID.set(undefined);
