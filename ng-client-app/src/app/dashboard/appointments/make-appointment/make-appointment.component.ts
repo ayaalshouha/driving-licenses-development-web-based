@@ -37,6 +37,7 @@ import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ApplicationTypes } from '../../../models/application-type.model';
+import { error } from 'node:console';
 
 export enum enMode {
   add = 'Add appointment',
@@ -72,7 +73,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
   current_date = new Date();
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
-
+  private appointentID: number | undefined = 0;
   constructor(
     private apppointmentService: AppointmentService,
     private testTypeService: TestTypesService,
@@ -189,6 +190,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
                         .pipe(
                           tap((appointment) => {
                             if (appointment) {
+                              this.appointentID = appointment.id;
                               const dateValue = new Date(appointment.date);
                               const localDate = new Date(
                                 dateValue.getTime() -
@@ -309,12 +311,40 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
       });
       return;
     }
+
     // handle edit appointment date ONLY
-    if (this.appointments_mode == enMode.edit) {
-      console.log('this is gonna update the date ');
+    if (this.appointments_mode === enMode.edit) {
+      this.apppointmentService
+        .updateDate(this.appointentID!, new Date(this.appointmentDate.value!))
+        .pipe(
+          catchError((err) => {
+            console.error('Error updating appointment date:', err);
+            return throwError(() => new Error(err.message));
+          }),
+          tap((response) => {
+            console.log('Date updated:', response);
+          }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: () => {
+            this.notificationService.showMessage({
+              message: 'Appointment date updatted successfully!',
+              status: 'success',
+            });
+          },
+          error: (error) => {
+            this.notificationService.showMessage({
+              message: `Failed to update appointment date: ${error.message}`,
+              status: 'failed',
+            });
+          },
+        });
+
       return;
-      // edit only the date
     }
+
+    // add new appointment process
     this.apppointmentService
       .isThereAnActiveAppointment(
         this.testTypeID()! + 1,
@@ -360,7 +390,10 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
           });
         },
         error: (err) => {
-          console.error('Error scheduling appointment:', err);
+          this.notificationService.showMessage({
+            message: err.message,
+            status: 'failed',
+          });
         },
       });
   }

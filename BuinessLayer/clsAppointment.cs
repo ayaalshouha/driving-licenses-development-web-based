@@ -1,10 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Reflection.PortableExecutable;
-using System.Runtime.InteropServices;
+﻿using DTOsLayer;
 using DataLayer;
-using DTOsLayer; 
-
 namespace BuisnessLayer
 {
     public class clsAppointment
@@ -116,6 +111,10 @@ namespace BuisnessLayer
         public static async Task<Appointment> GetApointmentPerTestType(int localID, enTestType TestTypeID)
         {
             return await Appointments_Data.getAppointmentByTest(localID, (int)TestTypeID);
+        }
+        public static async Task<bool> UpdateDate(int ID, DateTime date)
+        {
+            return await Appointments_Data.UpdateDate(ID, date);
         }
     }
 }

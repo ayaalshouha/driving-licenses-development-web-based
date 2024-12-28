@@ -10,7 +10,7 @@ namespace DataLayer
     {
         public static async Task<Appointment> getAppointmentInfoAsync(int AppointmentID)
         {
-            
+
             SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
@@ -33,14 +33,14 @@ namespace DataLayer
                         reader.GetDateTime(reader.GetOrdinal("Date")),
                         reader.GetDecimal(reader.GetOrdinal("PaidFees")),
                         reader.GetBoolean(reader.GetOrdinal("isLocked"))
-                   ); 
+                   );
                 }
                 reader.Close();
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -66,7 +66,7 @@ namespace DataLayer
                 Command.Parameters.AddWithValue("@PaidFees", appointment.PaidFees);
                 Command.Parameters.AddWithValue("@CreatedByUserID", appointment.CreatedByUserID);
                 Command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationIDID", appointment.LocalLicenseApplicationID);
-                if(appointment.RetakeTestID == null)
+                if (appointment.RetakeTestID == null)
                 {
                     Command.Parameters.AddWithValue("@RetakeTestApplicationID", DBNull.Value);
                 }
@@ -84,8 +84,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -134,8 +134,8 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -154,12 +154,12 @@ namespace DataLayer
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
                 Connection.Open();
-                RowAffected =await command.ExecuteNonQueryAsync();
+                RowAffected = await command.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -173,7 +173,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "SELECT ID FROM TestAppointmentID WHERE ID = @AppointmentID;";
+                string Query = "SELECT ID FROM TestAppointments WHERE ID = @AppointmentID;";
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
 
@@ -183,8 +183,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -192,7 +192,7 @@ namespace DataLayer
             }
             return isFound;
         }
-        public static async Task<IEnumerable<Appointement_>> getAppointmentsTablePerTestTypeAsync(int LocalApplicationID,int TestType)
+        public static async Task<IEnumerable<Appointement_>> getAppointmentsTablePerTestTypeAsync(int LocalApplicationID, int TestType)
         {
             var table = new List<Appointement_>();
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
@@ -201,7 +201,7 @@ namespace DataLayer
                 string Query = @"SELECT ID, Date, PaidFees, isLocked 
                                  FROM Appointments_View
                              WHERE (TestTypeID = @TestTypeID) AND
-                     (LocalDrvingLicenseApplicationID = @LocalDrvingLicenseApplicationID);"; 
+                     (LocalDrvingLicenseApplicationID = @LocalDrvingLicenseApplicationID);";
 
                 SqlCommand command = new SqlCommand(Query, Connection);
                 command.Parameters.AddWithValue("@TestTypeID", TestType);
@@ -245,7 +245,7 @@ namespace DataLayer
                 Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                while(await reader.ReadAsync())
+                while (await reader.ReadAsync())
                 {
                     table.Add(new Appointment_Veiw(
                         reader.GetInt32(reader.GetOrdinal("TestTypeID")),
@@ -283,23 +283,23 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
 
                 Connection.Open();
-                object result = await command.ExecuteScalarAsync(); 
+                object result = await command.ExecuteScalarAsync();
 
-                if(result!=null && int.TryParse(result.ToString(), out int InsertedID))
+                if (result != null && int.TryParse(result.ToString(), out int InsertedID))
                 {
-                    TestID = InsertedID; 
+                    TestID = InsertedID;
                 }
-               
+
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: "+ e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
 
             }
             finally
             {
-                Connection.Close(); 
+                Connection.Close();
             }
             return TestID;
         }
@@ -321,23 +321,23 @@ namespace DataLayer
                 command.Parameters.AddWithValue("@LocalID", LocalID);
                 command.Parameters.AddWithValue("@TestType", TestType);
 
-                Connection.Open(); 
+                Connection.Open();
                 object result = await command.ExecuteScalarAsync();
 
-                if(result!= null)
+                if (result != null)
                 {
                     isFound = true;
                 }
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " +  e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " +  ex.Message);
             }
 
             finally
             {
-                Connection.Close(); 
+                Connection.Close();
             }
             return isFound;
         }
@@ -376,8 +376,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-                //Console.WriteLine("Error: " + e.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -385,5 +385,35 @@ namespace DataLayer
             }
             return null;
         }
+        public static async Task<bool> UpdateDate(int AppointmentID, DateTime appointmentDate)
+        {
+            int RowAffected = 0;
+            var Connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = @"Update TestAppointments
+                    SET Date = @appointmentDate, 
+                        WHERE ID = @AppointmentID;";
+
+                var Command = new SqlCommand(Query, Connection);
+
+                Command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
+                Command.Parameters.AddWithValue("@Date", appointmentDate);
+
+                Connection.Open();
+                RowAffected = await Command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
+            return RowAffected > 0;
+        }
     }
-}
+}   

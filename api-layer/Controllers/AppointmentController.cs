@@ -159,5 +159,21 @@ namespace api_layer.Controllers
 
             return Ok(appointment);
         }
+
+        [HttpGet("{id}/update-date/{newDate}", Name = "UpdateAppointmentDate")]
+        public async Task<ActionResult<bool>> update(int id, DateTime newDate)
+        {
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid Appointment ID Number");
+           
+            var found = await clsAppointment.isExistAsync(id);
+            if (!found)
+            {
+                return NotFound("No Appiontment Found");
+            }
+            
+            bool updated = await clsAppointment.UpdateDate(id, newDate);
+            return Ok(updated);
+        }
     }
 }

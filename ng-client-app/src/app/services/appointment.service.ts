@@ -46,4 +46,20 @@ export class AppointmentService {
         })
       );
   }
+
+  updateDate(id: number, new_date: Date): Observable<boolean> {
+    return this.http
+      .get<boolean>(APPOINTMENT_API_ENDPOINT.updateDate(id, new_date))
+      .pipe(
+        catchError((error) => {
+          if (error.status == 404) {
+            throwError(() => new Error(`Appointment ${id} NOT Found`));
+          }
+          return throwError(() => new Error(`An unexpected error happend`));
+        }),
+        map((response) => {
+          return response;
+        })
+      );
+  }
 }
