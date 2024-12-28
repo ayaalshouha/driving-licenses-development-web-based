@@ -106,14 +106,14 @@
   </div>
   <div class="actions">
     <button
-      class="button"
+      class="button edit-btn"
       [disabled]="appointments_mode == enMode.edit"
       (click)="onReset()"
     >
       Reset
     </button>
 
-    <button class="button" (click)="onClosed()">Cancel</button>
+    <button class="button cancel-btn" (click)="onClosed()">Cancel</button>
     <button class="button" (click)="onSchedule()">Schadule</button>
   </div>
 </div>
