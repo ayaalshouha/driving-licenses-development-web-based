@@ -13,8 +13,7 @@ fieldset {
   gap: 8px;
 }
 .control {
-  margin-bottom: 10px;
-  width: 200px;
+  margin-bottom: 5px;
 }
 .control label {
   display: block;
@@ -22,10 +21,11 @@ fieldset {
   margin-bottom: 3px;
 }
 
-.control input,
+.control p,
+input,
 select {
-  width: 100%;
-  padding: 6px;
+  min-width: 80px !important;
+  padding: 8px;
   border: 1px solid #758a8a;
   border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -39,30 +39,3 @@ select {
   justify-content: space-between;
   align-items: center;
 }
-
-/* button {
-  border: none;
-  background-color: transparent;
-  color: var(--hover-color);
-  cursor: pointer;
-}
-button.apply {
-  border-radius: 5px;
-  padding: 8px 35px;
-  color: white;
-  background-color: #f99c30;
-  margin-left: 10px;
-  transition: opacity 0.5s;
-  -webkit-transition: opacity 0.5s;
-  -moz-transition: opacity 0.5s;
-  -ms-transition: opacity 0.5s;
-  -o-transition: opacity 0.5s;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-} */
-/* button:hover {
-  opacity: 0.8;
-} */
-

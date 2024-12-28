@@ -148,41 +148,69 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
       .pipe(
         tap((localApp) => this.current_local_application.set(localApp)),
         switchMap((localApp) =>
-          forkJoin({
-            mainApp: this.mainAppService.read(localApp.applicationID),
-            appointment: this.fetchAppointment(localApp),
-          }).pipe(
-            tap(({ mainApp, appointment }) => {
+          this.mainAppService.read(localApp.applicationID).pipe(
+            tap((mainApp) => {
               this.current_main_application.set(mainApp);
-
-              if (appointment) {
-                this.appointmentDate.setValue(appointment.date.toString());
-              }
-
-              this.applicationStatus.set(enApplicationStatus[mainApp.status]);
-              this.applicationType.set(enApplicationType[mainApp.type]);
-              this.licenseClass.set(enLicenseClass[localApp.licenseClassID]);
             }),
-            switchMap(({ mainApp }) =>
+            switchMap((mainApp) =>
               forkJoin({
                 passedTest: this.applicationService.passedTestCount(
                   localApp.id
                 ),
                 applicantFullName: this.personService.getFullName(
                   mainApp.personID
-                ),
-              })
+                ), // Using personID from mainApp
+              }).pipe(
+                tap(({ passedTest, applicantFullName }) => {
+                  // Set values related to application status and type
+                  this.applicationStatus.set(
+                    enApplicationStatus[mainApp.status]
+                  );
+                  this.applicationType.set(enApplicationType[mainApp.type]);
+                  this.licenseClass.set(
+                    enLicenseClass[
+                      this.current_local_application()!.licenseClassID
+                    ]
+                  );
+
+                  // Set other values
+                  this.testCount.set(passedTest);
+                  this.applicantName.set(applicantFullName);
+
+                  // Call checkTests() to determine test type
+                  this.checkTests();
+                }),
+                switchMap(() => {
+                  // Only retrieve the appointment if in "edit" mode
+                  if (this.appointments_mode === enMode.edit) {
+                    if (this.testTypeID() !== undefined) {
+                      return this.apppointmentService
+                        .appointment(this.testTypeID()! + 1, localApp.id)
+                        .pipe(
+                          tap((appointment) => {
+                            if (appointment) {
+                              const dateValue = new Date(appointment.date);
+                              const localDate = new Date(
+                                dateValue.getTime() -
+                                  dateValue.getTimezoneOffset() * 60000
+                              ); // Adjust for time zone offset
+                              this.appointmentDate.setValue(
+                                localDate.toISOString().split('T')[0]
+                              );
+                            }
+                          })
+                        );
+                    }
+                  }
+                  return of(null);
+                })
+              )
             )
           )
         ),
-        takeUntil(this.destroy$) // Cleanup on component destroy
+        takeUntil(this.destroy$)
       )
       .subscribe({
-        next: ({ passedTest, applicantFullName }) => {
-          this.testCount.set(passedTest);
-          this.applicantName.set(applicantFullName);
-          this.checkTests();
-        },
         error: (err) => {
           this.notificationService.showMessage({
             message: err.message,
@@ -191,15 +219,6 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
           this.onReset();
         },
       });
-  }
-
-  private fetchAppointment(localApp: any) {
-    if (this.appointments_mode === enMode.edit) {
-      return this.apppointmentService
-        .appointment(this.testTypeID()!, localApp.id)
-        .pipe(catchError(() => of(null))); // Return null on error
-    }
-    return of(null); // Return null if not in edit mode
   }
 
   onReset() {
