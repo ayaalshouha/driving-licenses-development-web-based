@@ -4,3 +4,7 @@
   align-items: center;
   gap: 5px;
 }
+.wrapper {
+  z-index: 1001; /* Must be higher than the dialog box */
+  position: fixed; /* Ensure it overlays properly */
+}

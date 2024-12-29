@@ -1,23 +1,15 @@
 @if(messageBox()) {
-<div class="backdrop">
-  @if(messageBox()?.status === 'success'){
-
-  <div class="notification-box">
-    <header>success</header>
-    <div class="message">
-      {{ messageBox()?.message }}
+<div class="wrapper">
+  <div class="backdrop">
+    <div class="notification-box">
+      <header>{{ messageBox()!.status }}</header>
+      <div class="message">
+        {{ messageBox()?.message }}
+      </div>
+      <button class="button button-primary" (click)="closeNotification()">
+        OK
+      </button>
     </div>
-    <button class="button button-primary" (click)="closeNotification()">OK</button>
   </div>
-  }@else{
-  <div class="notification-box">
-    <header>Error</header>
-    <div class="message">
-      {{ messageBox()?.message }}
-    </div>
-    <button class="button button-primary" (click)="closeNotification()">OK</button>
-  </div>
-  }
 </div>
-
 }

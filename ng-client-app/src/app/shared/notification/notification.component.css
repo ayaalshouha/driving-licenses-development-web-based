@@ -1,3 +1,7 @@
 .notification-box {
   text-align: right;
 }
+.wrapper {
+  z-index: 1001;
+  position: fixed;
+}

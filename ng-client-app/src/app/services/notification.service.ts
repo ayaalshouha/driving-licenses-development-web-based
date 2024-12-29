@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 type notifyStatus = 'success' | 'failed' | 'notification'| null;
