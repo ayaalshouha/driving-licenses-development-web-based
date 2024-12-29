@@ -7,6 +7,6 @@ export const APPOINTMENT_API_ENDPOINT = {
     `${environment.apiBaseUrl}/appointment/test-type/${test_type}/local-app/${local_app}`,
   active_appointments: (test_type: number, local_app: number) =>
     `${environment.apiBaseUrl}/appointment/active-appointments-exist/by-test-type/${test_type}/local-app/${local_app}`,
-  updateDate: (id: number, new_date: Date) =>
+  updateDate: (id: number, new_date: string) =>
     `${environment.apiBaseUrl}/appointment/${id}/update-date/${new_date}`,
 };

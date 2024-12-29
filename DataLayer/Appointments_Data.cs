@@ -392,13 +392,13 @@ namespace DataLayer
             try
             {
                 string Query = @"Update TestAppointments
-                    SET Date = @appointmentDate, 
+                    SET Date = @appointmentDate 
                         WHERE ID = @AppointmentID;";
 
                 var Command = new SqlCommand(Query, Connection);
 
                 Command.Parameters.AddWithValue("@AppointmentID", AppointmentID);
-                Command.Parameters.AddWithValue("@Date", appointmentDate);
+                Command.Parameters.AddWithValue("@appointmentDate", appointmentDate);
 
                 Connection.Open();
                 RowAffected = await Command.ExecuteNonQueryAsync();

@@ -47,7 +47,7 @@ export class AppointmentService {
       );
   }
 
-  updateDate(id: number, new_date: Date): Observable<boolean> {
+  updateDate(id: number, new_date: string): Observable<boolean> {
     return this.http
       .get<boolean>(APPOINTMENT_API_ENDPOINT.updateDate(id, new_date))
       .pipe(

@@ -121,6 +121,18 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
         console.error('Error parsing user data from local storage:', error);
       }
     }
+
+    if ((this.appointments_mode = enMode.add)) {
+      const filterElement = document.getElementById('filter-element');
+      if (filterElement) {
+        filterElement.focus();
+      }
+    } else {
+      const dateElement = document.getElementById('schadule-date');
+      if (dateElement) {
+        dateElement.focus();
+      }
+    }
   }
   onClosed() {
     this.closed.emit(true);
@@ -314,11 +326,14 @@ export class MakeAppointmentComponent implements OnInit, OnChanges {
 
     // handle edit appointment date ONLY
     if (this.appointments_mode === enMode.edit) {
+      const date = new Date(this.appointmentDate.value!)
+        .toISOString()
+        .split('T')[0];
+      console.log(date);
       this.apppointmentService
-        .updateDate(this.appointentID!, new Date(this.appointmentDate.value!))
+        .updateDate(this.appointentID!, date)
         .pipe(
           catchError((err) => {
-            console.error('Error updating appointment date:', err);
             return throwError(() => new Error(err.message));
           }),
           tap((response) => {
