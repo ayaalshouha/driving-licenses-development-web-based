@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Test } from '../models/test.model';
 import { TESTS_API_ENDPOINTS } from '../environments/endpoints/test.endpoints';
 
@@ -9,7 +9,13 @@ import { TESTS_API_ENDPOINTS } from '../environments/endpoints/test.endpoints';
 })
 export class TestService {
   constructor(private http: HttpClient) {}
-
+  create(new_test: Test): Observable<Test > {
+    return this.http.post<Test>(TESTS_API_ENDPOINTS.add, new_test).pipe(
+      map((response) => {
+        return response;
+      })
+    );
+  }
   all(): Observable<Test[]> {
     return this.http.get<Test[]>(TESTS_API_ENDPOINTS.all);
   }

@@ -70,7 +70,7 @@ namespace api_layer.Controllers
             var test = AssignDataToTest(newTest);
 
             if (await test.SaveAsync())
-                return CreatedAtRoute("ReadTestByID", new { test.ID }, newTest);
+                return CreatedAtRoute("ReadTestByID", new { test.ID }, test);
             else
                 return StatusCode(500, new { message = "Error Creating Test" });
         }

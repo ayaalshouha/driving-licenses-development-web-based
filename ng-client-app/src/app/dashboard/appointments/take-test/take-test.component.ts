@@ -1,9 +1,16 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { AppointmentService } from '../../../services/appointment.service';
 import { TestService } from '../../../services/test.service';
 import { Test } from '../../../models/test.model';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import { catchError, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationService } from '../../../services/notification.service';
@@ -11,11 +18,16 @@ import { NotificationComponent } from '../../../shared/notification/notification
 import { Appointment_View } from '../../../models/appointment.model';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import { error } from 'console';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { timeStamp } from 'console';
 @Component({
   selector: 'app-take-test',
   standalone: true,
-  imports: [ConfirmationDialogComponent, NotificationComponent],
+  imports: [
+    ReactiveFormsModule,
+    ConfirmationDialogComponent,
+    NotificationComponent,
+  ],
   templateUrl: './take-test.component.html',
   styleUrl: './take-test.component.css',
 })
@@ -26,7 +38,15 @@ export class TakeTestComponent implements OnInit, OnDestroy {
   isDialogVisible = signal<boolean>(false);
   private destroy$ = new Subject<void>();
   testTypes: TestType[] | null = null;
+  current_user_id = signal<number>(0);
+
+  result = new FormControl<boolean>(true, {
+    validators: [Validators.required],
+  });
+  notes = new FormControl<string | null>(null);
+
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private appointmetnService: AppointmentService,
     private testService: TestService,
@@ -37,6 +57,18 @@ export class TakeTestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => (this.id = +params['id']));
+    //retrieving current user id
+    if (isPlatformBrowser(this.platformId)) {
+      const current_user = window.localStorage.getItem('current-user');
+      if (current_user) {
+        try {
+          const user = JSON.parse(current_user);
+          this.current_user_id.set(user.id);
+        } catch (error) {
+          console.error('Error parsing user data from local storage:', error);
+        }
+      }
+    }
     // retrieving test types
     this.testTypeService
       .all()
@@ -58,7 +90,7 @@ export class TakeTestComponent implements OnInit, OnDestroy {
         },
       });
 
-      // retrieving appointment 
+    // retrieving appointment
     if (this.id) {
       this.appointmetnService
         .readView(this.id!)
@@ -72,12 +104,6 @@ export class TakeTestComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$)
         )
         .subscribe({
-          // next: () => {
-          //   this.notificationService.showMessage({
-          //     message: 'Test saved successfully',
-          //     status: 'success',
-          //   });
-          // },
           error: (error) => {
             this.notificationService.showMessage({
               message: error.message,
@@ -87,7 +113,44 @@ export class TakeTestComponent implements OnInit, OnDestroy {
         });
     }
   }
-  CrateTest() {}
+  CrateTest() {
+    // declaring test object
+    console.log(` note value = ${this.notes.value}`);
+    console.log(` result  value = ${this.result.value}`);
+    this.test = {
+      appointmentID: this.appointment!.id,
+      id: 0,
+      createdByUserID: this.current_user_id()!,
+      notes: this.notes.value,
+      result: this.result.value!,
+    };
+
+    // creating test
+    this.testService
+      .create(this.test)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error));
+        }),
+        tap((response) => {
+          this.test!.id = response.id;
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.notificationService.showMessage({
+            message: 'Test saved successfully',
+            status: 'success',
+          });
+        },
+        error: (error) => {
+          this.notificationService.showMessage({
+            message: error.message,
+            status: 'failed',
+          });
+        },
+      });
+  }
   onDialogResult(isConfirmed: boolean) {
     this.isDialogVisible.set(false);
     if (isConfirmed) {

@@ -53,9 +53,9 @@
         <div class="control-row">
           <div class="control">
             <label for="result">Result</label>
-            <select name="result" id="result">
-              <option value="pass">PASS</option>
-              <option value="fail">FAIL</option>
+            <select name="result" id="result" [formControl]="result">
+              <option value="true">PASS</option>
+              <option value="false">FAIL</option>
             </select>
           </div>
           <div class="control">
@@ -64,9 +64,18 @@
               type="text"
               name="notes"
               id="notes"
+              [formControl]="notes"
               placeholder="Additional notes"
             />
           </div>
+          @if (test?.id) {
+          <div class="control">
+            <label for="new-id">Test ID</label>
+            <p type="text" name="new-id" id="new-id">
+              {{ test != null ? (test.id != 0 ? test.id : "N/A") : "N/A" }}
+            </p>
+          </div>
+          }
         </div>
 
         <div class="actions">
