@@ -25,8 +25,6 @@ export class AddEditAppointmentComponent implements OnInit {
       this.mode = params['mode'];
       this.id = +params['id'];
     });
-
-    console.log('from OnInit ' + this.id);
     this.cdr.detectChanges();
   }
 

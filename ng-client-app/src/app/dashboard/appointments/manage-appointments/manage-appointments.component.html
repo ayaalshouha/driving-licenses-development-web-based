@@ -48,7 +48,14 @@
           >
             Edit
           </button>
-          <button [disabled]="app.isLocked" class="button">Take Test</button>
+          <button
+            [disabled]="app.isLocked"
+            routerLink="../take-test"
+            [queryParams]="{ id: app.id }"
+            class="button"
+          >
+            Take Test
+          </button>
         </td>
       </tr>
       } @empty {
