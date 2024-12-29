@@ -1,6 +1,8 @@
 import { environment } from '../environment';
 
 export const APPOINTMENT_API_ENDPOINT = {
+  readView: (id: number) =>
+    `${environment.apiBaseUrl}/appointment/appointment-view/${id}`,
   all: `${environment.apiBaseUrl}/appointment/appointments-view`,
   add: `${environment.apiBaseUrl}/appointment`,
   read: (test_type: number, local_app: number) =>

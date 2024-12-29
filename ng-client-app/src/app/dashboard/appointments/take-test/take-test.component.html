@@ -1,3 +1,12 @@
+<app-notification></app-notification>
+@if(isDialogVisible()){
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  title="Confirm"
+  message="Are you sure you want to save result? these result are not editable!"
+  (confirmed)="onDialogResult($event)"
+></app-confirmation-dialog>
+}
 <div class="backdrop">
   <div class="dialog-box light">
     <header>
@@ -21,22 +30,23 @@
           <div class="control">
             <label for="appoitnment-id">Appointemnt ID</label>
             <p id="appoitnment-id">
-              {{ "N/A" }}
-              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+              {{ appointment != null ? appointment.id : "N/A" }}
             </p>
           </div>
           <div class="control">
             <label for="full-name">Applicant full name</label>
             <p id="full-name">
-              {{ "N/A" }}
-              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+              {{ appointment != null ? appointment.fullName : "N/A" }}
             </p>
           </div>
           <div class="control">
             <label for="test-type">Test Type</label>
             <p id="test-type">
-              {{ "N/A" }}
-              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+              {{
+                appointment != null
+                  ? testTypes![appointment.testType].typeTitle
+                  : "N/A"
+              }}
             </p>
           </div>
         </div>

@@ -41,7 +41,7 @@ namespace api_layer.Controllers
         public async Task<ActionResult<Appointment>> Read(int id)
         {
             if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
-                return BadRequest("Invalid Test ID Number");
+                return BadRequest("Invalid Appointment ID Number");
 
             var appointment = await clsAppointment.FindAsync(id);
 
@@ -49,6 +49,19 @@ namespace api_layer.Controllers
                 return NotFound($"Appointment With ID {id} Not Found");
 
             return Ok(appointment.AppointementDTO);
+        }
+        [HttpGet("appointment-view/{id}", Name = "ReadAppointmentView")]
+        public async Task<ActionResult<Appointment_Veiw>> ReadView(int id)
+        {
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid Appointment ID Number");
+
+            var appointment = await clsAppointment.FindView(id);
+
+            if (appointment == null)
+                return NotFound($"Appointment With ID {id} Not Found");
+
+            return Ok(appointment);
         }
 
         [HttpPost("", Name = "CreateAppointment")]

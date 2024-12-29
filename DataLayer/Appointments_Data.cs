@@ -48,6 +48,44 @@ namespace DataLayer
             }
             return null;
         }
+        public static async Task<Appointment_Veiw> getAppointmentView(int AppointmentID)
+        {
+
+            SqlConnection connection = new SqlConnection(DataSettings.ConnectionString);
+            try
+            {
+                string Query = "select * from Appointments_View where ID = @ID";
+
+                SqlCommand command = new SqlCommand(Query, connection);
+                command.Parameters.AddWithValue("@ID", AppointmentID);
+
+                connection.Open();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    return new Appointment_Veiw(
+                        reader.GetInt32(reader.GetOrdinal("TestTypeID")),
+                        reader.GetInt32(reader.GetOrdinal("LocalDrvingLicenseApplicationID")),
+                        reader.GetString(reader.GetOrdinal("FullName")),
+                        reader.GetInt32(reader.GetOrdinal("ID")),
+                        reader.GetDateTime(reader.GetOrdinal("Date")),
+                        reader.GetDecimal(reader.GetOrdinal("PaidFees")),
+                        reader.GetBoolean(reader.GetOrdinal("isLocked"))
+                   );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
+        }
         public static async Task<int> AddAsync(Appointment appointment)
         {
             int newID = 0;

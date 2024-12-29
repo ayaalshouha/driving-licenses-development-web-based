@@ -9,7 +9,15 @@ import { Appointment, Appointment_View } from '../models/appointment.model';
 })
 export class AppointmentService {
   constructor(private http: HttpClient) {}
-
+  readView(id: number) {
+    return this.http
+      .get<Appointment_View>(APPOINTMENT_API_ENDPOINT.readView(id))
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
+  }
   create(new_appointment: Appointment): Observable<Appointment> {
     return this.http
       .post<Appointment>(APPOINTMENT_API_ENDPOINT.add, new_appointment)

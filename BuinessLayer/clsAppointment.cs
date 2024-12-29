@@ -62,6 +62,14 @@ namespace BuisnessLayer
             else
                 return null;
         }
+        public static async Task<Appointment_Veiw> FindView(int appointmentID)
+        {
+            Appointment_Veiw appointment = await Appointments_Data.getAppointmentView(appointmentID);
+            if (appointment != null)
+                return appointment;
+            else
+                return null;
+        }
         public async Task<bool> _AddNewAsync()
         {
             this.ID = await Appointments_Data.AddAsync(AppointementDTO);
