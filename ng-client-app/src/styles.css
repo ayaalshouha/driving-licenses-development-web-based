@@ -84,6 +84,18 @@ p.inline-error {
     text-transform: uppercase;
   }
 }
+.dialog-box.light {
+  background-color: var(--light-color);
+  color: var(--text-color);
+  font-size: small;
+  padding: 0;
+
+  header {
+    text-align: left;
+    color: var(--light-color);
+    text-transform: capitalize;
+  }
+}
 .button {
   padding: 8px 16px;
   border: none;

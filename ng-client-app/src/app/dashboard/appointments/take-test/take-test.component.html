@@ -1,5 +1,5 @@
 <div class="backdrop">
-  <div class="dialog-box">
+  <div class="dialog-box light">
     <header>
       <h2
         style="
@@ -13,9 +13,57 @@
       >
         Appointments > Take Test
       </h2>
-
-      
-
     </header>
+    <div class="container">
+      <fieldset>
+        <legend>Appontment Info</legend>
+        <div class="control-row">
+          <div class="control">
+            <label for="appoitnment-id">Appointemnt ID</label>
+            <p id="appoitnment-id">
+              {{ "N/A" }}
+              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+            </p>
+          </div>
+          <div class="control">
+            <label for="full-name">Applicant full name</label>
+            <p id="full-name">
+              {{ "N/A" }}
+              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+            </p>
+          </div>
+          <div class="control">
+            <label for="test-type">Test Type</label>
+            <p id="test-type">
+              {{ "N/A" }}
+              <!-- {{ applicantName() != undefined ? applicantName() : "N/A" }} -->
+            </p>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="control">
+            <label for="result">Result</label>
+            <select name="result" id="result">
+              <option value="pass">PASS</option>
+              <option value="fail">FAIL</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="notes">Additional Notes</label>
+            <input
+              type="text"
+              name="notes"
+              id="notes"
+              placeholder="Additional notes"
+            />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="button cancel-btn" (click)="onCancel()">Cancel</button>
+          <button class="button" (click)="onSubmit()">Submit</button>
+        </div>
+      </fieldset>
+    </div>
   </div>
 </div>

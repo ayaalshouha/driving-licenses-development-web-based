@@ -8,6 +8,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TestType } from '../../../models/test-type.model';
@@ -50,7 +51,7 @@ export enum enMode {
   templateUrl: './make-appointment.component.html',
   styleUrl: './make-appointment.component.css',
 })
-export class MakeAppointmentComponent implements OnInit, OnChanges {
+export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
   @Output() closed = new EventEmitter<boolean>();
   @Input() applicationID: number | null = null;
   appointments_mode = this.applicationID == null ? enMode.add : enMode.edit;

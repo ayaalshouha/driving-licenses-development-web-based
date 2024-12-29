@@ -1,5 +1,5 @@
 import { CurrencyPipe, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, Inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
@@ -33,7 +33,7 @@ enum enMode {
   templateUrl: './replace-application.component.html',
   styleUrl: './replace-application.component.css',
 })
-export class ReplaceApplicationComponent {
+export class ReplaceApplicationComponent implements OnDestroy{
   replace_mode: enMode | undefined = undefined;
   isConfirmed = signal<boolean>(false);
   isDialogVisible = signal<boolean>(false);

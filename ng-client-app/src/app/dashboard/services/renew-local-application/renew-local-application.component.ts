@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, Inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, Subject, switchMap, takeUntil, tap } from 'rxjs';
@@ -29,7 +29,7 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
   templateUrl: './renew-local-application.component.html',
   styleUrl: './renew-local-application.component.css',
 })
-export class RenewLocalApplicationComponent {
+export class RenewLocalApplicationComponent implements OnDestroy {
   isConfirmed = signal<boolean>(false);
   isDialogVisible = signal<boolean>(false);
   current_license = signal<License | undefined>(undefined);

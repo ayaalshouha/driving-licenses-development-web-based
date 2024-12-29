@@ -1,12 +1,1 @@
-.dialog-box {
-  background-color: var(--light-color);
-  color: var(--text-color);
-  font-size: small;
-  padding: 0;
 
-  header {
-    text-align: left;
-    color: var(--light-color);
-    text-transform: capitalize;
-  }
-}

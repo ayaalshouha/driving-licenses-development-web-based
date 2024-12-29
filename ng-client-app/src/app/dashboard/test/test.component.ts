@@ -1,4 +1,10 @@
-import { Component, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TestService } from '../../services/test.service';
 import { DriverService } from '../../services/driver.service';
 import { LicenseService } from '../../services/license.service';
@@ -15,7 +21,7 @@ import { PersonService } from '../../services/person.service';
   styleUrl: './test.component.css',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class TestComponent implements OnInit {
+export class TestComponent implements OnInit, OnDestroy {
   testCount = signal<number>(0);
   driversCount = signal<number>(0);
   licensesCount = signal<number>(0);
@@ -38,7 +44,7 @@ export class TestComponent implements OnInit {
       } else {
         clearInterval(interval);
       }
-    }, delay); 
+    }, delay);
   }
 
   ngOnInit(): void {

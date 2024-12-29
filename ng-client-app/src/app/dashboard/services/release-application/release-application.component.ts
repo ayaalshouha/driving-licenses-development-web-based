@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, Inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { enIssueReason, License } from '../../../models/license.model';
 import { Driver_View } from '../../../models/driver.model';
 import {
@@ -32,7 +32,7 @@ import { DetainedLicense } from '../../../models/detained-license.model';
   templateUrl: './release-application.component.html',
   styleUrl: './release-application.component.css',
 })
-export class ReleaseApplicationComponent {
+export class ReleaseApplicationComponent implements OnDestroy {
   isConfirmed = signal<boolean>(false);
   isDialogVisible = signal<boolean>(false);
   current_license = signal<License | undefined>(undefined);
