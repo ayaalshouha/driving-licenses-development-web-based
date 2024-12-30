@@ -37,7 +37,7 @@
         <td>{{ app.fullName }}</td>
         <td>{{ app.localLicenseApplicationID }}</td>
         <td>{{ app.isLocked }}</td>
-        <td>{{ app.date | date }}</td>
+        <td>{{ app.date |date}}</td>
         <td>{{ testTypes[app.testType - 1].typeTitle }}</td>
         <td class="actions">
           <button
@@ -49,7 +49,7 @@
             Edit
           </button>
           <button
-            [disabled]="app.isLocked || app.date !== current_date"
+            [disabled]="app.isLocked || !isSameDate(app.date,current_date)"
             routerLink="../take-test"
             [queryParams]="{ id: app.id }"
             class="button"

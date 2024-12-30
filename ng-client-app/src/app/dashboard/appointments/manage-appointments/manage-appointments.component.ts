@@ -25,7 +25,7 @@ export class ManageAppointmentsComponent {
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
   current_date = new Date();
-  
+
   constructor(
     private appointmentService: AppointmentService,
     private testTypeService: TestTypesService
@@ -75,7 +75,7 @@ export class ManageAppointmentsComponent {
     this.currentPage = 1;
     this.updateDisplayedData();
   }
-  isSameDate(date1: string, date2: string): boolean {
+  isSameDate(date1: string | Date, date2: string | Date): boolean {
     const d1 = new Date(date1);
     const d2 = new Date(date2);
     return (
