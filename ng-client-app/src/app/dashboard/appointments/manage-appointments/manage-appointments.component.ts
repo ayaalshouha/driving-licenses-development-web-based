@@ -24,7 +24,8 @@ export class ManageAppointmentsComponent {
   filter = new FormControl('', { nonNullable: true });
   testTypes: TestType[] = [];
   private destroy$ = new Subject<void>();
-
+  current_date = new Date();
+  
   constructor(
     private appointmentService: AppointmentService,
     private testTypeService: TestTypesService
@@ -74,7 +75,15 @@ export class ManageAppointmentsComponent {
     this.currentPage = 1;
     this.updateDisplayedData();
   }
-
+  isSameDate(date1: string, date2: string): boolean {
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  }
   updateDisplayedData() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;

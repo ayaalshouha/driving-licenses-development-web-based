@@ -49,7 +49,7 @@
             Edit
           </button>
           <button
-            [disabled]="app.isLocked"
+            [disabled]="app.isLocked || app.date !== current_date"
             routerLink="../take-test"
             [queryParams]="{ id: app.id }"
             class="button"

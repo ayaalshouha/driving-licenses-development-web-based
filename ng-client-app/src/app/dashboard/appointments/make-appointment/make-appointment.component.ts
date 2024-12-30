@@ -38,7 +38,6 @@ import { NotificationService } from '../../../services/notification.service';
 import { Appointment } from '../../../models/appointment.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ApplicationTypes } from '../../../models/application-type.model';
-import { error } from 'node:console';
 
 export enum enMode {
   add = 'Add appointment',
@@ -106,7 +105,6 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
   private handleEditMode(): void {
     if (this.appointments_mode === enMode.edit && this.applicationID) {
       this.filter.setValue(this.applicationID);
-      console.log('filter value ' + this.filter.value);
       this.onSearch();
     } else {
       this.onReset();
@@ -123,7 +121,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
 
-    if ((this.appointments_mode = enMode.add)) {
+    if (this.appointments_mode == enMode.add) {
       const filterElement = document.getElementById('filter-element');
       if (filterElement) {
         filterElement.focus();
