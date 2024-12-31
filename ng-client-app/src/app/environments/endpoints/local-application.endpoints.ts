@@ -10,4 +10,6 @@ export const LOCAL_APPLICATION_API_ENDPOINT = {
     `${environment.apiBaseUrl}/localApplication/${id}/passed-test-count`,
   isTestAttended: (id: number, testID: number) =>
     `${environment.apiBaseUrl}/localApplication/${id}/is-test-attended/${testID}`,
+  isLicenseIssued: (id: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/license-issued`,
 };
