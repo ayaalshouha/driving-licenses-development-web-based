@@ -19,7 +19,14 @@ import {
 import { CountryService } from '../../../services/country.service';
 import { LicenseClass } from '../../../models/license-class.model';
 import { LicenseClassService } from '../../../services/license-class.service';
-import { catchError, concatMap, forkJoin, switchMap, throwError } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  forkJoin,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -177,7 +184,67 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   retrieveApplication(application_id: number) {
-    // retrieving
+    // retrieving current application
+    if (application_id && this.application_mode == enMode.edit) {
+      const subscription = this.localAppService
+        .read(application_id)
+        .pipe(
+          catchError((error) => throwError(() => new Error(error.message))),
+          tap((local_app) => {
+            this.register_form.controls.licenseclass.setValue(
+              local_app.licenseClassID
+            );
+          }),
+          switchMap((local_app) => {
+            return this.applicationService.read(local_app.applicationID).pipe(
+              catchError((error) => throwError(() => new Error(error.message))),
+              switchMap((mainApp) => {
+                return this.personService.read(mainApp.personID).pipe(
+                  catchError((error) =>
+                    throwError(() => new Error(error.message))
+                  ),
+                  tap((person_info) => {
+                    this.assignPerson(person_info);
+                  })
+                );
+              })
+            );
+          })
+        )
+        .subscribe({
+          next: () => {},
+          error: (error) => {
+            this.notificationSerice.showMessage({
+              message: error.message,
+              status: 'failed',
+            });
+          },
+        });
+      this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    }
+  }
+
+  assignPerson(person_info: Person) {
+    const stringDate = new Date(person_info.birthDate)
+      .toISOString()
+      .split('T')[0];
+
+    this.register_form.controls.firstname.setValue(person_info.firstName);
+    this.register_form.controls.secondname.setValue(person_info.secondName);
+    this.register_form.controls.thirdname.setValue(person_info.thirdName);
+    this.register_form.controls.lastname.setValue(person_info.lastName);
+    this.register_form.controls.email.setValue(person_info.email);
+    this.register_form.controls.nationalno.setValue(person_info.nationalNumber);
+    this.register_form.controls.birthdate.setValue(person_info.birthDate);
+    this.register_form.controls.phonenumber.setValue(person_info.phoneNumber);
+    this.register_form.controls.country.setValue(person_info.nationality);
+    this.register_form.controls.address.setValue(person_info.address);
+    this.register_form.controls.gender.setValue(
+      person_info.gender == 'Male' ? 'Male' : 'Female'
+    );
+    // this.register_form.controls.img.setValue(
+    //   person_info.personalPicture ? person_info.personalPicture.toString() : ''
+    // );
   }
 
   onSubmit() {
