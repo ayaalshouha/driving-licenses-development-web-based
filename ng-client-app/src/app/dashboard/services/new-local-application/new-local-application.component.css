@@ -10,9 +10,11 @@ fieldset {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  margin-bottom: 5px;
 }
 .control {
+  flex: 0;
   margin-bottom: 5px;
 }
 .control label {

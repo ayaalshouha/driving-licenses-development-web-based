@@ -3,11 +3,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-local-applications',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './local-applications.component.html',
   styleUrl: './local-applications.component.css',
 })

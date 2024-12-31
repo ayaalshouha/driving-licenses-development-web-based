@@ -9,7 +9,7 @@
       <div class="add-btn">
         <button
           routerLink="../add-edit-appointment"
-          [queryParams]="{ mode: 'add', id: 0 }"
+          [queryParams]="{ mode: 'add', application_id: null }"
           class="button"
         >
           + Add New Appointment
@@ -43,7 +43,10 @@
           <button
             [disabled]="app.isLocked"
             routerLink="../add-edit-appointment"
-            [queryParams]="{ mode: 'edit', application_id: app.localLicenseApplicationID }"
+            [queryParams]="{
+              mode: 'edit',
+              application_id: app.localLicenseApplicationID
+            }"
             class="button edit-btn"
           >
             Edit

@@ -1,1 +1,20 @@
-<p>dialog-wrapper works!</p>
+<div class="backdrop">
+  <div class="dialog-box light">
+    <header>
+      <h2
+        style="
+          text-align: left;
+          font-size: 10px;
+          padding-left: 5px;
+          margin: 3px;
+          font-weight: normal;
+          color: var(--text-color);
+        "
+      >
+        {{ title }}
+      </h2>
+    </header>
+
+    <ng-content></ng-content>
+  </div>
+</div>

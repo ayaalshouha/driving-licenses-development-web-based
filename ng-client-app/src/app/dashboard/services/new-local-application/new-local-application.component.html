@@ -31,6 +31,9 @@
           formControlName="thirdname"
         />
       </div>
+    </div>
+
+    <div class="control-row">
       <div class="control">
         <label for="last-name">Last name</label>
         <input
@@ -40,9 +43,6 @@
           formControlName="lastname"
         />
       </div>
-    </div>
-
-    <div class="control-row">
       <div class="control">
         <label for="national-no">National number</label>
         <input
@@ -58,6 +58,13 @@
         <label for="email">Email</label>
         <input type="email" name="email" id="email" formControlName="email" />
       </div>
+    </div>
+    @if(notUniqueNationalNo){
+    <p class="inline-error" style="margin-left: 320px">
+      **National no. already exist.
+    </p>
+    }
+    <div class="control-row">
       <div class="control">
         <label for="phone-number">Phone number</label>
         <input
@@ -68,11 +75,6 @@
           formControlName="phonenumber"
         />
       </div>
-    </div>
-    @if(notUniqueNationalNo){
-    <p class="inline-error">**National no. already exist.</p>
-    }
-    <div class="control-row">
       <div class="control">
         <label for="gender">Gender</label>
         <select name="gender" id="gender" formControlName="gender">
@@ -92,15 +94,6 @@
     </div>
     <div class="control-row">
       <div class="control">
-        <label for="country">Country</label>
-        <select name="country" id="country" formControlName="country">
-          <option value="" disabled selected>--select a country--</option>
-          @if(countries){ @for(country of countries; track $index) {
-          <option [value]="country">{{ country }}</option>
-          } }
-        </select>
-      </div>
-      <div class="control">
         <label for="address">City-Street</label>
         <input
           type="text"
@@ -110,9 +103,6 @@
           formControlName="address"
         />
       </div>
-    </div>
-
-    <div class="control-row">
       <div class="control">
         <label for="license-class">License Class</label>
         <select
@@ -128,13 +118,24 @@
           } }
         </select>
       </div>
+      <div class="control">
+        <label for="country">Country</label>
+        <select name="country" id="country" formControlName="country">
+          <option value="" disabled selected>--select a country--</option>
+          @if(countries){ @for(country of countries; track $index) {
+          <option [value]="country">{{ country }}</option>
+          } }
+        </select>
+      </div>
     </div>
+
     <div class="control-row">
       <div class="control">
         <label for="file">--Select an image--</label>
         <input type="file" name="file" id="file" formControlName="img" />
       </div>
     </div>
+    <div class="control-row"></div>
 
     @if(invalidNationalNo){
     <p class="error">**National number must consist of exactly 10 digits</p>
@@ -147,7 +148,14 @@
     <div class="actions">
       <a href="#" onclick="event.preventDefault();">Already exist person?</a>
       <div class="actions">
-        <button type="reset" class="button button-secondary">Reset</button>
+        <button
+          type="reset"
+          [disabled]="application_mode == enMode.edit"
+          class="button edit-btn"
+        >
+          Reset
+        </button>
+        <button class="button cancel-btn" (click)="onClosed()">Cancel</button>
         <button
           type="submit"
           name="submit"

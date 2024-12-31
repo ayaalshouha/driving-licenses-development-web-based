@@ -1,20 +1,6 @@
-<div class="backdrop">
-  <div class="dialog-box light">
-    <header>
-      <h2
-        style="
-          text-align: left;
-          font-size: 10px;
-          padding-left: 5px;
-          margin: 3px;
-          font-weight: normal;
-          color: var(--text-color);
-        "
-      >
-        Appointments > {{ mode }} Appointemnt
-      </h2>
-    </header>
-
-    <app-make-appointment [applicationID]="application_id" (closed)="onClose($event)" />
-  </div>
-</div>
+<app-dialog-wrapper title="Appointments > {{ mode }} Appointemnt">
+  <app-make-appointment
+    [applicationID]="application_id"
+    (closed)="onClose($event)"
+  />
+</app-dialog-wrapper>

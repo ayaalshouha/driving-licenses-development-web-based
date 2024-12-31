@@ -3,10 +3,11 @@ import { MakeAppointmentComponent } from '../make-appointment/make-appointment.c
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { DialogWrapperComponent } from "../../../shared/dialog-wrapper/dialog-wrapper.component";
 @Component({
   selector: 'app-add-edit-appointment',
   standalone: true,
-  imports: [MakeAppointmentComponent],
+  imports: [MakeAppointmentComponent, DialogWrapperComponent],
   templateUrl: './add-edit-appointment.component.html',
   styleUrl: './add-edit-appointment.component.css',
 })

@@ -1,4 +1,15 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -31,7 +42,10 @@ import {
   NotificationService,
 } from '../../../services/notification.service';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-
+export enum enMode {
+  add = 'Add appointment',
+  edit = 'Edit appointment',
+}
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
@@ -39,7 +53,11 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
-export class NewLocalApplicationComponent implements OnInit {
+export class NewLocalApplicationComponent implements OnInit, OnChanges {
+  @Output() closed = new EventEmitter<boolean>();
+  @Input() applicationID: number | null = null;
+  application_mode = this.applicationID == null ? enMode.add : enMode.edit;
+  enMode = enMode;
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
   current_date: Date = new Date();
@@ -84,7 +102,7 @@ export class NewLocalApplicationComponent implements OnInit {
       validators: [Validators.required],
     }),
     img: new FormControl(''),
-    licenseclass: new FormControl(0, {
+    licenseclass: new FormControl(1, {
       validators: [Validators.required],
     }),
   });
@@ -110,7 +128,21 @@ export class NewLocalApplicationComponent implements OnInit {
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['applicationID'] && changes['applicationID'].currentValue) {
+      this.initializeMode();
+      this.handleEditMode();
+    }
+  }
+  private initializeMode(): void {
+    this.application_mode =
+      this.applicationID == null ? enMode.add : enMode.edit;
+  }
+  private handleEditMode(): void {
+    if (this.application_mode === enMode.edit && this.applicationID) {
+      this.retrieveApplication(this.applicationID);
+    }
+  }
   get invalidForm() {
     return this.register_form.invalid;
   }
@@ -144,6 +176,10 @@ export class NewLocalApplicationComponent implements OnInit {
     this.isConfirmed.set(result);
   }
 
+  retrieveApplication(application_id: number) {
+    // retrieving
+  }
+
   onSubmit() {
     this.isDialogVisible.set(false);
     const currentUser = this.currentUserSerice.getCurrentUser();
@@ -158,7 +194,8 @@ export class NewLocalApplicationComponent implements OnInit {
 
     if (this.register_form.valid) {
       this.isDialogVisible.set(true);
-      if (this.isConfirmed()) {
+      //new person/application/local application in ADD MODE
+      if (this.isConfirmed() && this.application_mode == enMode.add) {
         let new_person: Person = {
           id: 0,
           firstName: this.register_form.controls.firstname.value!,
@@ -253,6 +290,9 @@ export class NewLocalApplicationComponent implements OnInit {
         this.destroyRef.onDestroy(() => subscription.unsubscribe());
       }
     }
+  }
+  onClosed() {
+    this.closed.emit(true);
   }
 }
 

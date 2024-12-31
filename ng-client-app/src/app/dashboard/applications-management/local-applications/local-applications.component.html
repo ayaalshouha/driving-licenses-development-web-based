@@ -7,7 +7,16 @@
         placeholder="Full Text Search..."
       />
       <div class="add-btn">
-        <button routerLink="" class="button">+ Add New Application</button>
+        <button
+          routerLink="../add-edit-application"
+          [queryParams]="{
+            mode: 'add',
+            application_id: 0
+          }"
+          class="button"
+        >
+          + Add New Application
+        </button>
       </div>
     </div>
   </form>
@@ -36,7 +45,17 @@
         <td>{{ app.passedTest }}</td>
         <td>{{ app.status }}</td>
         <td class="actions">
-          <button class="button edit-btn" [disabled]="app.status !== 'New'">Edit</button>
+          <button
+            routerLink="../add-edit-application"
+            [queryParams]="{
+              mode: 'edit',
+              application_id: app.id
+            }"
+            class="button edit-btn"
+            [disabled]="app.status !== 'New'"
+          >
+            Edit
+          </button>
           <button class="button">Preview</button>
         </td>
       </tr>
