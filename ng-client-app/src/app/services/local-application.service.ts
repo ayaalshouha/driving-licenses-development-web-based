@@ -5,7 +5,7 @@ import {
   LocalApplicationView,
 } from '../models/local-application.model';
 import { LOCAL_APPLICATION_API_ENDPOINT } from '../environments/endpoints/local-application.endpoints';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +39,25 @@ export class LocalApplicationService {
           }
           // Handle other errors
           return throwError(() => new Error('An unexpected error occurred.'));
+        })
+      );
+  }
+  readView(ID: number): Observable<LocalApplicationView> {
+    return this.http
+      .get<LocalApplicationView>(LOCAL_APPLICATION_API_ENDPOINT.readView(ID))
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            // Emit a specific error message for 404
+            return throwError(
+              () => new Error(`Application with ID ${ID} NOT Found`)
+            );
+          }
+          // Handle other errors
+          return throwError(() => new Error('An unexpected error occurred.'));
+        }),
+        map((response) => {
+          return response;
         })
       );
   }

@@ -83,6 +83,46 @@ namespace DataLayer
             
             return null;
         }
+        public static async Task<LocalDLApp_View> getLocalAppView(int localApplicationID)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"select * from LocalDrivingLicensesApplications_Views where ID = @localApplicationID;";
+
+                    using (SqlCommand command = new SqlCommand(Query, connection))
+                    {
+                        command.Parameters.AddWithValue("@localApplicationID", localApplicationID);
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                return new LocalDLApp_View
+                                   (
+                                       reader.GetInt32(reader.GetOrdinal("ID")), 
+                                       reader.GetString(reader.GetOrdinal("NationalID")),
+                                       reader.GetString(reader.GetOrdinal("Class")),
+                                       reader.GetString(reader.GetOrdinal("FullName")),
+                                       DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("Date"))),
+                                       reader.GetInt32(reader.GetOrdinal("PassedTestCount")),
+                                       reader.GetString(reader.GetOrdinal("Status"))
+                                   );
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                DataSettings.LogError(ex.Message.ToString());
+                //Console.WriteLine("Error: " + e.Message);
+            }
+
+            return null;
+        }
         public static async Task<int> AddAsync(LocalDLApp application)
         {
             int newID = 0;

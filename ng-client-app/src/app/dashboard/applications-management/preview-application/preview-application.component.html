@@ -1,0 +1,91 @@
+<app-dialog-wrapper title="Application > Preview Application">
+  <div class="container">
+    <fieldset>
+      <legend>Application Info</legend>
+      <div class="control-row">
+        <div class="control">
+          <label for="full-name">Applicant full name</label>
+          <p id="full-name">
+            {{
+              current_application != undefined
+                ? current_application!.fullName
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="national-id">National ID</label>
+          <p id="national-id">
+            {{
+              current_application != undefined
+                ? current_application!.nationalID
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="class-name">Class</label>
+          <p id="class-name">
+            {{
+              current_application != undefined
+                ? current_application!.class
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="test-count"># of Passed tests</label>
+          <p id="test-count">
+            {{
+              current_application != undefined
+                ? current_application!.passedTest
+                : "N/A"
+            }}
+          </p>
+        </div>
+
+        <div class="control">
+          <label for="status">Status</label>
+          <p id="status">
+            {{
+              current_application != undefined
+                ? current_application!.status
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="date">Application Date</label>
+          <p id="date">
+            {{
+              current_application != undefined
+                ? current_application!.date
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a
+          routerLink="../add-edit-application"
+          [queryParams]="{
+            mode: 'edit',
+            application_id: application_id
+          }"
+          >Edit person's basic information?
+        </a>
+        <div class="actions">
+          @if(licenseIssued == true){
+          <button class="button">Preview license</button>
+          }@else{
+          <button class="button">Issue license</button>
+          }
+          <button class="button" (click)="onClose()">OK</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</app-dialog-wrapper>

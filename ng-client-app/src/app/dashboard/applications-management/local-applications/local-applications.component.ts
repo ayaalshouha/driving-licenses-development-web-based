@@ -74,4 +74,8 @@ export class LocalApplicationsComponent implements OnInit {
       this.updateDisplayedData();
     }
   }
+
+  onCancel(localAppID: number) {
+    // cancel app process
+  }
 }

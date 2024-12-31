@@ -88,6 +88,10 @@ namespace BuisnessLayer
         {
             return await Local_DL_Data.LocalApplicationsViewAsync();
         }
+        public static async Task<LocalDLApp_View> LocalAppView(int localID)
+        {
+            return await Local_DL_Data.getLocalAppView(localID);
+        }
         public async Task<bool> isTestPassedAsync(enTestType TestType)
         {
             //decide if person passed specific test type or not 

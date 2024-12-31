@@ -46,17 +46,15 @@
         <td>{{ app.status }}</td>
         <td class="actions">
           <button
-            routerLink="../add-edit-application"
-            [queryParams]="{
-              mode: 'edit',
-              application_id: app.id
-            }"
-            class="button edit-btn"
-            [disabled]="app.status !== 'New'"
+            class="button"
+            routerLink="../preview-application"
+            [queryParams]="{ application_id: app.id }"
           >
-            Edit
+            Preview
           </button>
-          <button class="button">Preview</button>
+          <button class="button cancel-btn" (click)="onCancel(app.id)">
+            Cancel
+          </button>
         </td>
       </tr>
       } @empty {

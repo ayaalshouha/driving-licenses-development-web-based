@@ -62,8 +62,8 @@ export enum enMode {
 })
 export class NewLocalApplicationComponent implements OnInit, OnChanges {
   @Output() closed = new EventEmitter<boolean>();
-  @Input() applicationID: number | null = null;
-  application_mode = this.applicationID == null ? enMode.add : enMode.edit;
+  @Input() application_id: number | null = null;
+  application_mode = this.application_id == null ? enMode.add : enMode.edit;
   enMode = enMode;
   countries: string[] = [];
   license_classes: LicenseClass[] = [];
@@ -136,18 +136,20 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['applicationID'] && changes['applicationID'].currentValue) {
+    console.log('from new local app edit mode app id = ' + this.application_id);
+    if (changes['application_id'] && changes['application_id'].currentValue) {
       this.initializeMode();
       this.handleEditMode();
     }
   }
   private initializeMode(): void {
+    
     this.application_mode =
-      this.applicationID == null ? enMode.add : enMode.edit;
+      this.application_id == null ? enMode.add : enMode.edit;
   }
   private handleEditMode(): void {
-    if (this.application_mode === enMode.edit && this.applicationID) {
-      this.retrieveApplication(this.applicationID);
+    if (this.application_mode === enMode.edit && this.application_id) {
+      this.retrieveApplication(this.application_id);
     }
   }
   get invalidForm() {
