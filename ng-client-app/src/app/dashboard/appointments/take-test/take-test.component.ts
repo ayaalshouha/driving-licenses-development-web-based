@@ -19,7 +19,6 @@ import { Appointment_View } from '../../../models/appointment.model';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { timeStamp } from 'console';
 @Component({
   selector: 'app-take-test',
   standalone: true,
@@ -40,7 +39,7 @@ export class TakeTestComponent implements OnInit, OnDestroy {
   testTypes: TestType[] | null = null;
   current_user_id = signal<number>(0);
 
-  result = new FormControl<boolean>(true, {
+  result = new FormControl<true | false>(true, {
     validators: [Validators.required],
   });
   notes = new FormControl<string | null>(null);
@@ -113,10 +112,8 @@ export class TakeTestComponent implements OnInit, OnDestroy {
         });
     }
   }
-  CrateTest() {
+  CreateTest() {
     // declaring test object
-    console.log(` note value = ${this.notes.value}`);
-    console.log(` result  value = ${this.result.value}`);
     this.test = {
       appointmentID: this.appointment!.id,
       id: 0,
@@ -124,6 +121,7 @@ export class TakeTestComponent implements OnInit, OnDestroy {
       notes: this.notes.value,
       result: this.result.value!,
     };
+    console.log('test result = ' + this.test.result);
 
     // creating test
     this.testService
@@ -154,7 +152,7 @@ export class TakeTestComponent implements OnInit, OnDestroy {
   onDialogResult(isConfirmed: boolean) {
     this.isDialogVisible.set(false);
     if (isConfirmed) {
-      this.CrateTest();
+      this.CreateTest();
     } else {
       this.notificationService.showMessage({
         message: 'Saving test result canceled',

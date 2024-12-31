@@ -113,8 +113,13 @@ namespace DataLayer
 
                 Command.Parameters.AddWithValue("@AppointmentID", test.AppointmentID);
                 Command.Parameters.AddWithValue("@Result", test.Result);
-                Command.Parameters.AddWithValue("@Notes", test.Notes);
                 Command.Parameters.AddWithValue("@CreatedByUserID", test.CreatedByUserID);
+                
+                if(test.Notes == null)
+                    Command.Parameters.AddWithValue("@Notes", DBNull.Value);
+                else
+                    Command.Parameters.AddWithValue("@Notes", test.Notes);
+                
             
                 Connection.Open();
                 object result = await Command.ExecuteScalarAsync();
@@ -236,7 +241,8 @@ namespace DataLayer
                              reader.GetInt32(reader.GetOrdinal("ID")),
                             reader.GetInt32(reader.GetOrdinal("AppointmentID")),
                             reader.GetBoolean(reader.GetOrdinal("Result")),
-                            reader.GetString(reader.GetOrdinal("Notes")),
+                           reader.IsDBNull(reader.GetOrdinal("Notes"))
+                            ? string.Empty : reader.GetString(reader.GetOrdinal("Notes")),
                             reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
                         ));
                 }

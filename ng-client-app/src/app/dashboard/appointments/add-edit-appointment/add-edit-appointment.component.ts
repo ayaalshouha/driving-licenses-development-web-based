@@ -12,7 +12,7 @@ import { Location } from '@angular/common';
 })
 export class AddEditAppointmentComponent implements OnInit {
   mode: string | null = null;
-  id: number | null = null;
+  application_id: number | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -23,7 +23,7 @@ export class AddEditAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.mode = params['mode'];
-      this.id = +params['id'];
+      this.application_id = +params['application_id'];
     });
     this.cdr.detectChanges();
   }

@@ -276,7 +276,8 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = @"select * from Appointments_View order by Date desc;";
+                string Query = @"select * from Appointments_View 
+                    order by isLocked asc , date desc;";
 
                 SqlCommand command = new SqlCommand(Query, Connection);
 

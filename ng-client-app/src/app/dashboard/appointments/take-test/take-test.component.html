@@ -44,7 +44,7 @@
             <p id="test-type">
               {{
                 appointment != null
-                  ? testTypes![appointment.testType].typeTitle
+                  ? testTypes![appointment.testType - 1].typeTitle
                   : "N/A"
               }}
             </p>

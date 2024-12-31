@@ -57,7 +57,7 @@ namespace api_layer.Controllers
             return Ok(test.testDTO);
         }
 
-        [HttpPost("", Name = "CreateTest")]
+        [HttpPost("new", Name = "CreateTest")]
         public async Task<ActionResult<Test>> Create(Test newTest)
         {
             if (newTest == null)
@@ -70,7 +70,7 @@ namespace api_layer.Controllers
             var test = AssignDataToTest(newTest);
 
             if (await test.SaveAsync())
-                return CreatedAtRoute("ReadTestByID", new { test.ID }, test);
+                return CreatedAtRoute("ReadTestByID", new { test.ID }, test.testDTO);
             else
                 return StatusCode(500, new { message = "Error Creating Test" });
         }
