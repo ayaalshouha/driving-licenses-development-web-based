@@ -235,7 +235,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     this.register_form.controls.lastname.setValue(person_info.lastName);
     this.register_form.controls.email.setValue(person_info.email);
     this.register_form.controls.nationalno.setValue(person_info.nationalNumber);
-    this.register_form.controls.birthdate.setValue(person_info.birthDate);
+    this.register_form.controls.birthdate.setValue(new Date(stringDate));
     this.register_form.controls.phonenumber.setValue(person_info.phoneNumber);
     this.register_form.controls.country.setValue(person_info.nationality);
     this.register_form.controls.address.setValue(person_info.address);
