@@ -131,16 +131,6 @@ namespace api_layer.Controllers
         }
 
 
-        //[HttpGet("{id}/class-exist/person-id/{personID}", Name = "isRepeatedClass")]
-        //public async Task<ActionResult<bool>> isRepeatedClass(int id, int personID)
-        //{
-        //    clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
-        //    if (app != null)
-        //        return NotFound($"Local Driving License Application Not Found");
-
-        //    return Ok(await app.isRepeatedClassAsync(personID));
-        //}
-
         [HttpGet("{id}/does-passed-all-tests", Name = "isAllTestsPassed")]
         public async Task<ActionResult<bool>> isAllTestsPassed(int id)
         {
@@ -166,7 +156,6 @@ namespace api_layer.Controllers
             int passedTest = await clsLocalDrivingLicenses.PassedTestAsync(id);
             return Ok(passedTest);
         }
-
 
         [HttpGet("{id}/is-test-passed/test-type/{testType}", Name = "isTestPassed")]
         public async Task<ActionResult<bool>> isTestPassed(int id, enTestType testType)

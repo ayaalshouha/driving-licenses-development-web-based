@@ -52,7 +52,11 @@
           >
             Preview
           </button>
-          <button class="button cancel-btn" (click)="onCancel(app.id)">
+          <button
+            class="button cancel-btn"
+            [disabled]="app.status != 'New'"
+            (click)="onCancel(app.id)"
+          >
             Cancel
           </button>
         </td>
