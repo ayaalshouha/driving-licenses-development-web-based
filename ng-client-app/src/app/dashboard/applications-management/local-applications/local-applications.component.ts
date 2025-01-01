@@ -1,12 +1,13 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { catchError, Subscription, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import { RouterLink } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-local-applications',
@@ -32,7 +33,8 @@ export class LocalApplicationsComponent implements OnInit {
   isDialogVisible = signal<boolean>(false);
   constructor(
     private localAppService: LocalApplicationService,
-    private notifyServ: NotificationService
+    private notifyServ: NotificationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -107,11 +109,12 @@ export class LocalApplicationsComponent implements OnInit {
           },
         });
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
+      this.refreshRoute();
     }
-
-    this.isDialogVisible.set(false);
   }
-
+  refreshRoute() {
+    this.router.navigate([this.router.url]);
+  }
   onCancel(localAppID: number) {
     this.current_app_id = localAppID;
     this.isDialogVisible.set(true);

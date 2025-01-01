@@ -4,7 +4,17 @@
       <legend>Application Info</legend>
       <div class="control-row">
         <div class="control">
-          <label for="full-name">Applicant full name</label>
+          <label for="app-id">Local Driving License Applicantion ID</label>
+          <p id="app-id">
+            {{
+              current_application != undefined ? current_application!.id : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="full-name">Applicant Full Name</label>
           <p id="full-name">
             {{
               current_application != undefined
@@ -24,7 +34,7 @@
           </p>
         </div>
         <div class="control">
-          <label for="class-name">Class</label>
+          <label for="class-name">License Class</label>
           <p id="class-name">
             {{
               current_application != undefined
@@ -36,7 +46,7 @@
       </div>
       <div class="control-row">
         <div class="control">
-          <label for="test-count"># of Passed tests</label>
+          <label for="test-count">Passed Tests Count</label>
           <p id="test-count">
             {{
               current_application != undefined
@@ -47,7 +57,7 @@
         </div>
 
         <div class="control">
-          <label for="status">Status</label>
+          <label for="status">Application Status</label>
           <p id="status">
             {{
               current_application != undefined
@@ -67,20 +77,7 @@
           </p>
         </div>
       </div>
-      <div class="control-row">
-        <div class="control">
-          <label for="issuance">License Issuance</label>
-          <p id="issuance">
-            {{
-              licenseIssued != undefined
-                ? licenseIssued
-                  ? "License Issued"
-                  : "NOT YET"
-                : "N/A"
-            }}
-          </p>
-        </div>
-      </div>
+
       <div class="actions">
         <a
           routerLink="../add-edit-application"
@@ -91,12 +88,10 @@
           >Edit person's basic information?
         </a>
         <div class="actions">
-          @if(current_application?.status === 'Completed' &&
-          current_application?.passedTest ==3 && licenseIssued == true){
-          <button class="button">Preview license</button>
-          } @if(current_application?.status === 'Completed' &&
-          current_application?.passedTest ==3 && !licenseIssued){
-          <button class="button">Issue license</button>
+          @if(current_application?.passedTest == 3 &&
+          current_application?.status == 'New'){
+
+          <button class="button">Issue License</button>
           }
           <button class="button" (click)="onClose()">OK</button>
         </div>
