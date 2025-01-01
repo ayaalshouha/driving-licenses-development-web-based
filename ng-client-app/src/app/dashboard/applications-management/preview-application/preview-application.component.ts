@@ -1,9 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
-import {
-  LocalApplication,
-  LocalApplicationView,
-} from '../../../models/local-application.model';
+import { LocalApplicationView } from '../../../models/local-application.model';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { LocalApplicationService } from '../../../services/local-application.service';
@@ -59,7 +56,22 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   checkLicenseIssuance() {
-    // this.localAppServ.
+    this.localAppServ
+      .isLicenseIssued(this.application_id!)
+      .pipe(
+        catchError((error) => throwError(() => new Error(error))),
+        tap((isLicenseIssued) => {
+          this.licenseIssued = isLicenseIssued;
+        })
+      )
+      .subscribe({
+        error: (error) => {
+          this.notifyServ.showMessage({
+            message: error.messages,
+            status: 'failed',
+          });
+        },
+      });
   }
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -67,7 +67,20 @@
           </p>
         </div>
       </div>
-
+      <div class="control-row">
+        <div class="control">
+          <label for="issuance">License Issuance</label>
+          <p id="issuance">
+            {{
+              licenseIssued != undefined
+                ? licenseIssued
+                  ? "License Issued"
+                  : "NOT YET"
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
       <div class="actions">
         <a
           routerLink="../add-edit-application"
@@ -78,9 +91,11 @@
           >Edit person's basic information?
         </a>
         <div class="actions">
-          @if(licenseIssued == true){
+          @if(current_application?.status === 'Completed' &&
+          current_application?.passedTest ==3 && licenseIssued == true){
           <button class="button">Preview license</button>
-          }@else{
+          } @if(current_application?.status === 'Completed' &&
+          current_application?.passedTest ==3 && !licenseIssued){
           <button class="button">Issue license</button>
           }
           <button class="button" (click)="onClose()">OK</button>

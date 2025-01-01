@@ -68,6 +68,15 @@ export class LocalApplicationService {
     );
   }
 
+  isLicenseIssued(id: number): Observable<boolean> {
+    return this.http
+      .get<boolean>(LOCAL_APPLICATION_API_ENDPOINT.isLicenseIssued(id))
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error));
+        })
+      );
+  }
   isTestAttended(id: number, testID: number): Observable<boolean> {
     return this.http.get<boolean>(
       LOCAL_APPLICATION_API_ENDPOINT.isTestAttended(id, testID)
