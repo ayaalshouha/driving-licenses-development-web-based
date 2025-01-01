@@ -93,7 +93,35 @@ namespace BuisnessLayer
         {
             return await Tests_Data.getTestsTableAsync();
         }
-
+        public static async Task<int> passedTestsCount()
+        {
+            return await Tests_Data.passedTestCount();
+        }
+        public static async Task<int> failedTestsCount()
+        {
+            return await Tests_Data.failedTestCount();
+        }
+        public static async Task<int> TotalCount()
+        {
+            int passed = await passedTestsCount();
+            int failed = await failedTestsCount();
+            int total = passed + failed;
+            return total;
+        }
+        public static async Task<int> PassedPercentage()
+        {
+            int passed = await passedTestsCount();
+            int total = await TotalCount();
+            double percentage = (passed / (double)total) * 100;
+            return (int)percentage;
+        }
+        public static async Task<int> FailedPercentage()
+        {
+            int failed = await failedTestsCount();
+            int total = await TotalCount();
+            double percentage = (failed / (double)total) * 100;
+            return (int)percentage;
+        }
         public static async Task<int> count()
         {
             return await Tests_Data.TestsCount();

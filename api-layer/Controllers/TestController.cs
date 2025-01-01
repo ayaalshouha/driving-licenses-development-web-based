@@ -135,5 +135,15 @@ namespace api_layer.Controllers
             return Ok(count);
         }
 
+        [HttpGet("passed-percetage", Name = "PassedPercentage")]
+        public async Task<ActionResult<int>> PassedPercentage()
+        {
+            return await clsTests.passedTestsCount();
+        }
+        [HttpGet("failed-percetage", Name = "FailedPercentage")]
+        public async Task<ActionResult<int>> FailedPercentage()
+        {
+            return await clsTests.failedTestsCount();
+        }
     }
 }
