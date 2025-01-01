@@ -25,6 +25,13 @@ export class TestService {
     return this.http.get<number>(TESTS_API_ENDPOINTS.count);
   }
 
+    failedPercentage(): Observable<number> {
+      return this.http.get<number>(TESTS_API_ENDPOINTS.faieldPercentage);
+    }
+    passedPercentage(): Observable<number> {
+      return this.http.get<number>(TESTS_API_ENDPOINTS.passedPercentage);
+    }
+
   // getFees(type_id: number) {
   //   return this.http.get<Observable<number>>(TEST_TYPE_API_ENDPOINT.fee(type_id));
   // }
