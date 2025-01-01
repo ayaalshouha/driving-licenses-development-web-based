@@ -28,6 +28,8 @@ export class TestComponent implements OnInit, OnDestroy {
   appsCount = signal<number>(0);
   malePercentage = 0;
   femalePercentage = 0;
+  passedTestsPercentage = 0;
+  failedTestPercentage = 0;
   private destroy$ = new Subject<void>();
   constructor(
     private testService: TestService,

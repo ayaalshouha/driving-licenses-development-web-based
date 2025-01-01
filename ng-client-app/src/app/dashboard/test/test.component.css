@@ -116,3 +116,19 @@
   --primary-color: #e83e8c;
   --secondary-color: #e9ecef;
 }
+
+.circle.passed {
+  --primary-color: green;
+  --secondary-color: #e9ecef;
+}
+
+.failed {
+  --primary-color: red;
+  --secondary-color: #e9ecef;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

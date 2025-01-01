@@ -1,41 +1,67 @@
-<div class="wrapper">
-  <p class="main">System Analytics</p>
-  <p>Your comprehensive counts dashboard</p>
-  <div class="shapes">
-    <div class="apps-count">{{ appsCount() }} <span>Applications</span></div>
-    <div class="tests-count">{{ testCount() }} <span>Tests</span></div>
-    <div class="licenses-count">
-      {{ licensesCount() }} <span>Licenses</span>
+<div>
+  <div class="wrapper">
+    <p class="main">System Analytics</p>
+    <p>Your comprehensive counts dashboard</p>
+    <div class="shapes">
+      <div class="apps-count">{{ appsCount() }} <span>Applications</span></div>
+      <div class="tests-count">{{ testCount() }} <span>Tests</span></div>
+      <div class="licenses-count">
+        {{ licensesCount() }} <span>Licenses</span>
+      </div>
+      <div class="drivers-count">{{ driversCount() }} <span>Drivers</span></div>
     </div>
-    <div class="drivers-count">{{ driversCount() }} <span>Drivers</span></div>
   </div>
-</div>
-<div class="wrapper fit-width">
-  <p class="main second">People Analytics</p>
-  <div class="circle-container">
-    <div
-      class="circle male"
-      [style.background]="
-        'conic-gradient(#007bff ' +
-        malePercentage +
-        '%, #e9ecef ' +
-        malePercentage +
-        '%)'
-      "
-    >
-      <span>Male {{ malePercentage | number : "1.0-2" }}%</span>
+  <div class="flex-row">
+    <div class="wrapper fit-width">
+      <p class="main second">People Analytics</p>
+      <div class="circle-container">
+        <div
+          class="circle male"
+          [style.background]="
+            'conic-gradient(#007bff ' +
+            malePercentage +
+            '%, #e9ecef ' +
+            malePercentage +
+            '%)'
+          "
+        >
+          <span>Male {{ malePercentage | number : "1.0-2" }}%</span>
+        </div>
+        <div
+          class="circle female"
+          [style.background]="
+            'conic-gradient(#e83e8c ' +
+            femalePercentage +
+            '%, #e9ecef ' +
+            femalePercentage +
+            '%)'
+          "
+        >
+          <span>Female {{ femalePercentage | number : "1.0-2" }}%</span>
+        </div>
+      </div>
     </div>
-    <div
-      class="circle female"
-      [style.background]="
-        'conic-gradient(#e83e8c ' +
-        femalePercentage +
-        '%, #e9ecef ' +
-        femalePercentage +
-        '%)'
-      "
-    >
-      <span>Female {{ femalePercentage | number : "1.0-2" }}%</span>
+    <div class="wrapper fit-width">
+      <p class="main second">Tests Analytics</p>
+      <div class="circle-container">
+        <div
+          class="circle passed"
+          [style.background]="
+            'conic-gradient(#4BB543 ' + 50 + '%, #e9ecef ' + 50 + '%)'
+          "
+        >
+          <span>Passed {{ 50 | number : "1.0-2" }}%</span>
+        </div>
+        <!-- changgd color into red -->
+        <div
+          class="circle failed"
+          [style.background]="
+            'conic-gradient(#fc100d ' + 60 + '%, #e9ecef ' + 60 + '%)'
+          "
+        >
+          <span>Failed {{ 60 | number : "1.0-2" }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
