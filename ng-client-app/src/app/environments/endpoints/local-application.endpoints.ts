@@ -12,4 +12,7 @@ export const LOCAL_APPLICATION_API_ENDPOINT = {
     `${environment.apiBaseUrl}/localApplication/${id}/is-test-attended/${testID}`,
   isLicenseIssued: (id: number) =>
     `${environment.apiBaseUrl}/localApplication/${id}/license-issued`,
+
+  cancel: (id: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/cancel`,
 };

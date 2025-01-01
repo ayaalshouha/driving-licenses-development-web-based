@@ -82,4 +82,14 @@ export class LocalApplicationService {
       LOCAL_APPLICATION_API_ENDPOINT.isTestAttended(id, testID)
     );
   }
+
+  cancel(id: number): Observable<boolean> {
+    return this.http
+      .patch<boolean>(LOCAL_APPLICATION_API_ENDPOINT.cancel(id), {})
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error));
+        })
+      );
+  }
 }

@@ -250,7 +250,10 @@ namespace api_layer.Controllers
             if (app == null)
                 return NotFound("Local Driving License Application Not Founs");
             else
-                return Ok(app.setCompletedAsync());
+            {
+                bool isCompleted = await app.setCompletedAsync();
+                return Ok(isCompleted);
+            }
         }
 
         [HttpPatch("{id}/cancel", Name = "CancelLocalApplciation")]
@@ -260,7 +263,10 @@ namespace api_layer.Controllers
             if (app == null)
                 return NotFound("Local Driving License Application Not Founs");
             else
-                return Ok(app.setCancelledAsync());
+            {
+                bool isCancelled = await app.setCancelledAsync();
+                return Ok(isCancelled);
+            }
         }
 
         [HttpGet("{id}/issue-license/notes/{notes}/by-user-id/{userId}", Name = "IssueFirstTimeLicense")]
