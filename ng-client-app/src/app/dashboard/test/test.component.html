@@ -47,19 +47,27 @@
         <div
           class="circle passed"
           [style.background]="
-            'conic-gradient(#4BB543 ' + 50 + '%, #e9ecef ' + 50 + '%)'
+            'conic-gradient(#4BB543 ' +
+            passedTestsPercentage +
+            '%, #e9ecef ' +
+            passedTestsPercentage +
+            '%)'
           "
         >
-          <span>Passed {{ 50 | number : "1.0-2" }}%</span>
+          <span>Passed {{ passedTestsPercentage | number : "1.0-2" }}%</span>
         </div>
         <!-- changgd color into red -->
         <div
           class="circle failed"
           [style.background]="
-            'conic-gradient(#fc100d ' + 60 + '%, #e9ecef ' + 60 + '%)'
+            'conic-gradient(#fc100d ' +
+            failedTestPercentage +
+            '%, #e9ecef ' +
+            failedTestPercentage +
+            '%)'
           "
         >
-          <span>Failed {{ 60 | number : "1.0-2" }}%</span>
+          <span>Failed {{ failedTestPercentage | number : "1.0-2" }}%</span>
         </div>
       </div>
     </div>

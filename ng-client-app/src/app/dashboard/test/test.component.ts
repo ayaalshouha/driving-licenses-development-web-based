@@ -86,10 +86,25 @@ export class TestComponent implements OnInit, OnDestroy {
       femaleCount: this.personService
         .femlePercentage()
         .pipe(takeUntil(this.destroy$)),
-    }).subscribe(({ maleCount, femaleCount }) => {
-      this.malePercentage = maleCount;
-      this.femalePercentage = femaleCount;
-    });
+      passedTestsPercentage: this.testService
+        .passedPercentage()
+        .pipe(takeUntil(this.destroy$)),
+      failedTestPercentage: this.testService
+        .failedPercentage()
+        .pipe(takeUntil(this.destroy$)),
+    }).subscribe(
+      ({
+        maleCount,
+        femaleCount,
+        passedTestsPercentage,
+        failedTestPercentage,
+      }) => {
+        this.malePercentage = maleCount;
+        this.femalePercentage = femaleCount;
+        this.passedTestsPercentage = passedTestsPercentage;
+        this.failedTestPercentage = failedTestPercentage;
+      }
+    );
   }
 
   ngOnDestroy() {
