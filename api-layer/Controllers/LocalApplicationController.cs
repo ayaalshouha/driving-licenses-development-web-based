@@ -269,8 +269,8 @@ namespace api_layer.Controllers
             }
         }
 
-        [HttpGet("{id}/issue-license/notes/{notes}/by-user-id/{userId}", Name = "IssueFirstTimeLicense")]
-        public async Task<ActionResult<int>> IssueFirstTimeLicense(int id, int userId, string notes)
+        [HttpGet("{id}/issue-license/notes/{notes}/user-id/{byUserId}", Name = "IssueFirstTimeLicense")]
+        public async Task<ActionResult<int>> IssueFirstTimeLicense(int id, int byUserId, string notes="")
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
@@ -280,7 +280,7 @@ namespace api_layer.Controllers
             if (app == null)
                 return NotFound("Local Driving License Application Not Found");
 
-            int licenseID = await app.IssueLicenseForTheFirstTime(userId, notes);
+            int licenseID = await app.IssueLicenseForTheFirstTime(byUserId, notes);
 
             if (licenseID > 0)
                 return Ok(licenseID);

@@ -1,3 +1,11 @@
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  message="Are you sure you want to issue license for this application?"
+  title="Confirm"
+  (confirmed)="onDialogResult($event)"
+>
+</app-confirmation-dialog>
+<app-notification></app-notification>
 <app-dialog-wrapper title="Application > Preview Application">
   <div class="container">
     <fieldset>
@@ -77,6 +85,18 @@
           </p>
         </div>
       </div>
+      @if(new_license_id){
+      <div class="control-row">
+        <div class="control">
+          <label for="license-id"
+            >License ID assioated with this application</label
+          >
+          <p id="license-id">
+            {{ new_license_id! }}
+          </p>
+        </div>
+      </div>
+      }
 
       <div class="actions">
         <a
@@ -91,7 +111,12 @@
           @if(current_application?.passedTest == 3 &&
           current_application?.status == 'New'){
 
-          <button class="button">Issue License</button>
+          <button
+            class="button"
+            (click)="issueLicenseFirsttime()"
+          >
+            Issue License
+          </button>
           }
           <button class="button" (click)="onClose()">OK</button>
         </div>

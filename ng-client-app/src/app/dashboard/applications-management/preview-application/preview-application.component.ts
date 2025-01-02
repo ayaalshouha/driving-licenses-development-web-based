@@ -1,24 +1,53 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import { LocalApplicationService } from '../../../services/local-application.service';
-import { catchError, Subject, takeUntil, tap, throwError } from 'rxjs';
+import {
+  catchError,
+  map,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 import { NotificationService } from '../../../services/notification.service';
+import { sign } from 'crypto';
+import { error } from 'console';
+import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 @Component({
   selector: 'app-preview-application',
   standalone: true,
-  imports: [RouterLink, DialogWrapperComponent],
+  imports: [
+    RouterLink,
+    DialogWrapperComponent,
+    NotificationComponent,
+    ConfirmationDialogComponent,
+  ],
   templateUrl: './preview-application.component.html',
   styleUrl: './preview-application.component.css',
 })
 export class PreviewApplicationComponent implements OnInit, OnDestroy {
+  isDialogVisible = signal<boolean>(false);
+  new_license_id = 0;
+  current_user_id = signal<number | undefined>(undefined);
   application_id: number | null = null;
-  licenseIssued: boolean | undefined = undefined;
+  licenseIssued = signal<boolean | undefined>(undefined);
   current_application: LocalApplicationView | undefined = undefined;
   private destroy$ = new Subject<void>();
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private location: Location,
     private localAppServ: LocalApplicationService,
@@ -30,6 +59,18 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
     );
     this.retrieveApplicationData();
     this.checkLicenseIssuance();
+
+    if (isPlatformBrowser(this.platformId)) {
+      const current_user = window.localStorage.getItem('current-user');
+      if (current_user) {
+        try {
+          const user = JSON.parse(current_user);
+          this.current_user_id.set(user.id);
+        } catch (error) {
+          console.error('Error parsing user data from local storage:', error);
+        }
+      }
+    }
   }
 
   retrieveApplicationData() {
@@ -61,7 +102,7 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((error) => throwError(() => new Error(error))),
         tap((isLicenseIssued) => {
-          this.licenseIssued = isLicenseIssued;
+          this.licenseIssued.set(isLicenseIssued);
         })
       )
       .subscribe({
@@ -79,5 +120,44 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
   }
   onClose() {
     this.location.back();
+  }
+
+  issueLicenseFirsttime() {
+    this.isDialogVisible.set(true);
+  }
+
+  issuanceProcess() {
+    this.localAppServ
+      .issueLicenseFisrTime(this.application_id!, this.current_user_id()!, '')
+      .pipe(
+        catchError((error) => throwError(() => new Error(error.message))),
+        tap((new_license_id) => {
+          if (new_license_id > 0) {
+            this.new_license_id = new_license_id;
+            this.licenseIssued.set(true);
+          }
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.notifyServ.showMessage({
+            message: `License issued successfully, New license ID is ${this.new_license_id}`,
+            status: 'success',
+          });
+        },
+        error: (error) => {
+          this.notifyServ.showMessage({
+            message: error.message,
+            status: 'failed',
+          });
+        },
+      });
+  }
+
+  onDialogResult(confirmed: boolean) {
+    if (confirmed) {
+      this.issuanceProcess();
+    }
+    this.isDialogVisible.set(false);
   }
 }
