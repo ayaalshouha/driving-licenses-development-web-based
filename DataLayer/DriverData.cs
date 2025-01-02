@@ -31,7 +31,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -65,8 +65,8 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
-               // Console.WriteLine("Error: " + ex.Message);
+                //DataSettings.LogError(ex.Message.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
             finally
             {
@@ -98,7 +98,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -134,7 +134,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -167,7 +167,7 @@ namespace DataLayer
 
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -189,7 +189,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -213,7 +213,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -236,7 +236,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -250,7 +250,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from Drivers order by CreationDate desc;";
+                string Query = "select * from Drivers_Views order by Date desc;";
                 SqlCommand command = new SqlCommand(Query, Connection);
 
                 Connection.Open();
@@ -271,7 +271,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -315,7 +315,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -355,7 +355,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {
@@ -385,7 +385,7 @@ namespace DataLayer
             }
             catch (Exception ex)
             {
-                DataSettings.LogError(ex.Message.ToString());
+                //DataSettings.LogError(ex.Message.ToString());
             }
             finally
             {

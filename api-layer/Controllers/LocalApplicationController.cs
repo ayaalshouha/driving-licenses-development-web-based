@@ -54,6 +54,20 @@ namespace api_layer.Controllers
 
             return Ok(app.LocalDLAppDTO);
         }
+        [HttpGet("{id}/person", Name = "ReadPersonID")]
+        public async Task<ActionResult<int>> ReadPersonID(int id)
+        {
+            if (!int.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid Local Driving License Application ID Number");
+
+            clsLocalDrivingLicenses app = await clsLocalDrivingLicenses.FindAsync(id);
+
+            if (app == null)
+                return NotFound($"Local Driving License Application With ID {id} Not Found");
+
+            int personID = app.MainApplicationInfo.PersonInfo.ID;
+            return Ok(personID);
+        }
 
         [HttpGet("{id}/view", Name = "ReadLocalApplicationView")]
         public async Task<ActionResult<LocalDLApp_View>> ReadView(int id)

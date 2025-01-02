@@ -5,6 +5,8 @@ export const LOCAL_APPLICATION_API_ENDPOINT = {
   all: `${environment.apiBaseUrl}/localApplication/local-applications`,
   create: `${environment.apiBaseUrl}/localApplication/`,
   read: `${environment.apiBaseUrl}/localApplication/`,
+  readPersonID: (id: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/person`,
   readView: (id: number) =>
     `${environment.apiBaseUrl}/localApplication/${id}/view`,
   passedTestCount: (id: number) =>

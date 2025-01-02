@@ -118,4 +118,14 @@ export class LocalApplicationService {
         })
       );
   }
+
+  personID(id: number): Observable<number> {
+    return this.http
+      .get<number>(LOCAL_APPLICATION_API_ENDPOINT.readPersonID(id))
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
+  }
 }
