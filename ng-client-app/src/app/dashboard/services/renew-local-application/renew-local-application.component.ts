@@ -126,10 +126,8 @@ export class RenewLocalApplicationComponent implements OnDestroy {
   onDialogResult(isConfirmed: boolean) {
     this.isDialogVisible.set(false);
     if (isConfirmed) {
-      console.log('User confirmed the action.');
       this.processWithRenewal();
     } else {
-      console.log('User canceled the action.');
       this.notificationService.showMessage({
         message: 'Renewal process canceled',
         status: 'notification',
@@ -154,8 +152,6 @@ export class RenewLocalApplicationComponent implements OnDestroy {
     this.current_license()!.isActive = false;
   }
   get ValidLicense(): boolean {
-    console.log(`license exprired ${this.expired}`);
-    console.log(`license active ${this.active}`);
     return this.current_license() != undefined && this.expired && this.active;
   }
 

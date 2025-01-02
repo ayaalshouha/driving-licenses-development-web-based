@@ -66,7 +66,7 @@ export class LocalApplicationsComponent implements OnInit {
         String(val).toLowerCase().includes(lowerCaseFilter)
       )
     );
-    console.log('filtered applications', this.filteredApplications);
+    
     this.currentPage = 1;
     this.updateDisplayedData();
   }

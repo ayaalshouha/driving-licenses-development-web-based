@@ -35,7 +35,6 @@ export class ManageAppointmentsComponent {
       .pipe(
         tap((response) => {
           this.testTypes = response;
-          // console.log(this.testTypes[2]);
         }),
         takeUntil(this.destroy$)
       )
@@ -71,7 +70,6 @@ export class ManageAppointmentsComponent {
         String(val).toLowerCase().includes(lowerCaseFilter)
       )
     );
-    console.log('filtered applications', this.filteredappointments);
     this.currentPage = 1;
     this.updateDisplayedData();
   }

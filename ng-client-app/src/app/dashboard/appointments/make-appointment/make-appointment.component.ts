@@ -328,7 +328,6 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
       const date = new Date(this.appointmentDate.value!)
         .toISOString()
         .split('T')[0];
-      console.log(date);
       this.apppointmentService
         .updateDate(this.appointentID!, date)
         .pipe(
@@ -336,7 +335,6 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
             return throwError(() => new Error(err.message));
           }),
           tap((response) => {
-            console.log('Date updated:', response);
           }),
           takeUntil(this.destroy$)
         )

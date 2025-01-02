@@ -63,7 +63,6 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   retrieveApplicationData() {
-    console.log('from preview application id = ' + this.application_id);
     if (this.application_id) {
       this.localAppServ
         .readView(this.application_id)
@@ -119,7 +118,6 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   issuanceProcess() {
-    console.log('application id ' + this.application_id);
     this.localAppServ
       .issueLicenseFisrTime(this.application_id!, this.current_user_id()!, null)
       .pipe(

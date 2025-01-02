@@ -19,7 +19,6 @@ export class AddEditApplicationComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-    console.log('from add edit app - application id = ' + this.application_id);
     this.route.queryParams.subscribe((params) => {
       this.mode = params['mode'];
       this.application_id = +params['application_id'];
