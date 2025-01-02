@@ -85,18 +85,22 @@
           </p>
         </div>
       </div>
-      @if(new_license_id){
       <div class="control-row">
         <div class="control">
           <label for="license-id"
             >License ID assioated with this application</label
           >
           <p id="license-id">
-            {{ new_license_id! }}
+            {{
+              licese_id() !== undefined
+                ? licese_id() != 0
+                  ? licese_id()
+                  : "N/A"
+                : "N/A "
+            }}
           </p>
         </div>
       </div>
-      }
 
       <div class="actions">
         <a
@@ -111,10 +115,7 @@
           @if(current_application?.passedTest == 3 &&
           current_application?.status == 'New'){
 
-          <button
-            class="button"
-            (click)="issueLicenseFirsttime()"
-          >
+          <button class="button" (click)="issueLicenseFirsttime()">
             Issue License
           </button>
           }

@@ -301,7 +301,7 @@ namespace api_layer.Controllers
 
             int licenseID = await app.GetAssociatedLicense();
 
-            if (licenseID > 0)
+            if (licenseID >= 0)
                 return Ok(licenseID);
             else
                 return StatusCode(500, new { message = "Internal Server Error" });

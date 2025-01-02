@@ -11,19 +11,8 @@ import { LocalApplicationView } from '../../../models/local-application.model';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { isPlatformBrowser, Location } from '@angular/common';
 import { LocalApplicationService } from '../../../services/local-application.service';
-import {
-  catchError,
-  map,
-  of,
-  Subject,
-  switchMap,
-  takeUntil,
-  tap,
-  throwError,
-} from 'rxjs';
+import { catchError, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { NotificationService } from '../../../services/notification.service';
-import { sign } from 'crypto';
-import { error } from 'console';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 @Component({
@@ -40,10 +29,10 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 })
 export class PreviewApplicationComponent implements OnInit, OnDestroy {
   isDialogVisible = signal<boolean>(false);
-  new_license_id = 0;
+  licese_id = signal<number | undefined>(undefined);
   current_user_id = signal<number | undefined>(undefined);
   application_id: number | null = null;
-  licenseIssued = signal<boolean | undefined>(undefined);
+  licenseIssued = signal<boolean>(false);
   current_application: LocalApplicationView | undefined = undefined;
   private destroy$ = new Subject<void>();
   constructor(
@@ -98,11 +87,14 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
 
   checkLicenseIssuance() {
     this.localAppServ
-      .isLicenseIssued(this.application_id!)
+      .licenseID(this.application_id!)
       .pipe(
         catchError((error) => throwError(() => new Error(error))),
-        tap((isLicenseIssued) => {
-          this.licenseIssued.set(isLicenseIssued);
+        tap((liceseID) => {
+          if (liceseID > 0) {
+            this.licese_id.set(liceseID);
+            this.licenseIssued.set(true);
+          }
         })
       )
       .subscribe({
@@ -134,7 +126,7 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
         catchError((error) => throwError(() => new Error(error.message))),
         tap((new_license_id) => {
           if (new_license_id > 0) {
-            this.new_license_id = new_license_id;
+            this.licese_id.set(new_license_id);
             this.licenseIssued.set(true);
           }
         })
@@ -142,7 +134,7 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.notifyServ.showMessage({
-            message: `License issued successfully, New license ID is ${this.new_license_id}`,
+            message: `License issued successfully, New license ID is ${this.licese_id()}`,
             status: 'success',
           });
         },
