@@ -137,11 +137,11 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
     this.closed.emit(true);
   }
   checkTests() {
-    if (this.testCount() == 3 && this.applicationStatus() == 'Completed') {
+    if (this.testCount() == 3) {
       this.testTypeID.set(undefined);
       this.notificationService.showMessage({
         message:
-          'This person is already took the three tests, Check there license in Licenses Management section',
+          'This person is already took the three tests, Check there license issuance in Licenses Management section',
         status: 'notification',
       });
     } else if (this.testCount()! < 3) {

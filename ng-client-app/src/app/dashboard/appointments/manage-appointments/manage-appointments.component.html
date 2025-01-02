@@ -36,7 +36,13 @@
         <td>{{ app.id }}</td>
         <td>{{ app.fullName }}</td>
         <td>{{ app.localLicenseApplicationID }}</td>
-        <td>{{ app.isLocked }}</td>
+        <td>
+          <input
+            style="pointer-events: none"
+            type="checkbox"
+            [checked]="app.isLocked"
+          />
+        </td>
         <td>{{ app.date | date }}</td>
         <td>{{ testTypes[app.testType - 1].typeTitle }}</td>
         <td class="actions">
