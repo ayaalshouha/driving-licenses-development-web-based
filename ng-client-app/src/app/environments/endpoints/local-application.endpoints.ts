@@ -1,3 +1,4 @@
+import { env } from 'process';
 import { environment } from '../environment';
 
 export const LOCAL_APPLICATION_API_ENDPOINT = {
@@ -15,6 +16,8 @@ export const LOCAL_APPLICATION_API_ENDPOINT = {
 
   cancel: (id: number) =>
     `${environment.apiBaseUrl}/localApplication/${id}/cancel`,
-  issueLicense: (id: number, notes: string, userID: number) =>
-    `${environment.apiBaseUrl}/localApplication/{id}/issue-license/notes/${notes}/user-id/${userID}`,
+  issueLicense: (id: number, notes: string | null, userID: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/issue-license/${notes}/${userID}`,
+  licenseID: (id: number) =>
+    `${environment.apiBaseUrl}/localApplication/${id}/license-id`,
 };

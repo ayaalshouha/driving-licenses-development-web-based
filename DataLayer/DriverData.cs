@@ -250,7 +250,7 @@ namespace DataLayer
             SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString);
             try
             {
-                string Query = "select * from Drivers_Views order by ID asc;";
+                string Query = "select * from Drivers order by CreationDate desc;";
                 SqlCommand command = new SqlCommand(Query, Connection);
 
                 Connection.Open();

@@ -324,5 +324,38 @@ namespace DataLayer
             }
             return count;
         }
+        public static async Task<int> GetAssociatedLicense(int ApplicationID)
+        {
+            int license_id = 0;
+            try
+            {
+                using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
+                {
+                    string Query = @"select Licenses.ID from Licenses 
+                            INNER JOIN LocalDrivingLicensesApplications 
+                            ON Licenses.ApplicationID = LocalDrivingLicensesApplications.ApplicationID
+                            Where Licenses.ApplicationID = @ApplicationID;";
+                    using (SqlCommand Command = new SqlCommand(Query, Connection))
+                    {
+                        Command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+
+                        Connection.Open();
+                        object result = await Command.ExecuteScalarAsync();
+                        if (result != null && int.TryParse(result.ToString(), out int result_))
+                        {
+                            license_id = result_;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //DataSettings.LogError(ex.Message.ToString());
+
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            return license_id;
+        }
+
     }
 }

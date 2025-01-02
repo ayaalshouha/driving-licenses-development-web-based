@@ -127,8 +127,9 @@ export class PreviewApplicationComponent implements OnInit, OnDestroy {
   }
 
   issuanceProcess() {
+    console.log('application id ' + this.application_id);
     this.localAppServ
-      .issueLicenseFisrTime(this.application_id!, this.current_user_id()!, '')
+      .issueLicenseFisrTime(this.application_id!, this.current_user_id()!, null)
       .pipe(
         catchError((error) => throwError(() => new Error(error.message))),
         tap((new_license_id) => {

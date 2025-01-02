@@ -96,12 +96,22 @@ export class LocalApplicationService {
   issueLicenseFisrTime(
     id: number,
     userid: number,
-    notes: string
+    notes: string | null
   ): Observable<number> {
     return this.http
       .get<number>(
         LOCAL_APPLICATION_API_ENDPOINT.issueLicense(id, notes, userid)
       )
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
+  }
+
+  licenseID(id: number): Observable<number> {
+    return this.http
+      .get<number>(LOCAL_APPLICATION_API_ENDPOINT.licenseID(id))
       .pipe(
         catchError((error) => {
           return throwError(() => new Error(error.message));

@@ -159,7 +159,7 @@ namespace BuisnessLayer
         {
             return await ApplicationData.UpdateStatusAsync(this.ApplicationID, 3); 
         }
-        public async Task<int> IssueLicenseForTheFirstTime(int CreatedByUserID, string Notes)
+        public async Task<int> IssueLicenseForTheFirstTime(int CreatedByUserID, string? Notes)
         {
             int DriverID = -1; 
             clsDrviers Driver = await clsDrviers.Find_ByPersonIDAsync(this.MainApplicationInfo.PersonID);
@@ -203,6 +203,11 @@ namespace BuisnessLayer
         public static async Task<bool> isExistAsync(int appID)
         {
             return await Local_DL_Data.isExistAsync(appID);
+        }
+
+        public async Task<int> GetAssociatedLicense()
+        {
+            return await ApplicationData.GetAssociatedLicense(this.ApplicationID);
         }
     }
 }

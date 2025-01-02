@@ -198,7 +198,7 @@ namespace api_layer.Controllers
             return Ok(issued);
         }
 
-        [HttpGet("{id}/license-id", Name = "ReadLicenseID")]
+        [HttpGet("{id}/active-license-id", Name = "ReadLicenseID")]
         public async Task<ActionResult<int>> ReadLicenseID(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
@@ -269,8 +269,8 @@ namespace api_layer.Controllers
             }
         }
 
-        [HttpGet("{id}/issue-license/notes/{notes}/user-id/{byUserId}", Name = "IssueFirstTimeLicense")]
-        public async Task<ActionResult<int>> IssueFirstTimeLicense(int id, int byUserId, string notes="")
+        [HttpGet("{id}/issue-license/{notes}/{byUserId}", Name = "IssueFirstTimeLicense")]
+        public async Task<ActionResult<int>> IssueFirstTimeLicense(int id, int byUserId, string? notes)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
@@ -281,6 +281,25 @@ namespace api_layer.Controllers
                 return NotFound("Local Driving License Application Not Found");
 
             int licenseID = await app.IssueLicenseForTheFirstTime(byUserId, notes);
+
+            if (licenseID > 0)
+                return Ok(licenseID);
+            else
+                return StatusCode(500, new { message = "Internal Server Error" });
+        }
+
+        [HttpGet("{id}/license-id", Name ="license-id")]
+        public async Task<ActionResult<int>> licenseID(int id)
+        {
+            if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
+                return BadRequest("Invalid ID");
+
+            var app = await clsLocalDrivingLicenses.FindAsync(id);
+
+            if (app == null)
+                return NotFound("Local Driving License Application Not Found");
+
+            int licenseID = await app.GetAssociatedLicense();
 
             if (licenseID > 0)
                 return Ok(licenseID);
