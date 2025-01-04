@@ -1,6 +1,17 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
+
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import { RouterLink } from '@angular/router';
@@ -8,7 +19,8 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { Router } from '@angular/router';
-
+import { AsyncPipe } from '@angular/common';
+import { log } from 'console';
 @Component({
   selector: 'app-local-applications',
   standalone: true,
@@ -17,39 +29,29 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     ConfirmationDialogComponent,
     NotificationComponent,
+    AsyncPipe,
   ],
   templateUrl: './local-applications.component.html',
   styleUrl: './local-applications.component.css',
 })
-export class LocalApplicationsComponent implements OnInit {
+export class LocalApplicationsComponent implements OnInit, OnDestroy {
+  subcriptions: Subscription[] = [];
   current_app_id: number | null = null;
   currentPage = 1;
   pageSize = 5;
   applications: LocalApplicationView[] = [];
+  applications$!: Observable<LocalApplicationView[]>;
   filteredApplications: LocalApplicationView[] = [];
   displayedData: LocalApplicationView[] = [];
-  private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
   isDialogVisible = signal<boolean>(false);
   constructor(
     private localAppService: LocalApplicationService,
-    private notifyServ: NotificationService,
-    private router: Router
+    private notifyServ: NotificationService
   ) {}
 
   ngOnInit(): void {
-    const subscription = this.localAppService
-      .getAll()
-      .pipe(
-        tap((response) => {
-          this.applications = response;
-          this.filteredApplications = response;
-          this.updateDisplayedData();
-        })
-      )
-      .subscribe();
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.loadData();
     this.filter.valueChanges
       .pipe(
         tap((value) => {
@@ -59,6 +61,18 @@ export class LocalApplicationsComponent implements OnInit {
       .subscribe();
   }
 
+  loadData(): void {
+    // this.applications$ = this.localAppService.getAll();
+    const subscription = this.localAppService.getAll().subscribe((data) => {
+      this.applications = data;
+      this.applications = data;
+      this.filteredApplications = data;
+      this.updateDisplayedData();
+    });
+
+    this.subcriptions.push(subscription);
+  }
+
   applyFilter(value: string) {
     const lowerCaseFilter = value.toLowerCase();
     this.filteredApplications = this.applications.filter((item) =>
@@ -66,7 +80,7 @@ export class LocalApplicationsComponent implements OnInit {
         String(val).toLowerCase().includes(lowerCaseFilter)
       )
     );
-    
+
     this.currentPage = 1;
     this.updateDisplayedData();
   }
@@ -90,6 +104,7 @@ export class LocalApplicationsComponent implements OnInit {
   }
 
   onDialogResult(isConfirmed: boolean) {
+    this.isDialogVisible.set(false);
     if (isConfirmed && this.current_app_id !== null) {
       const subscription = this.localAppService
         .cancel(this.current_app_id)
@@ -100,6 +115,7 @@ export class LocalApplicationsComponent implements OnInit {
               message: 'Application cancelled successfully',
               status: 'success',
             });
+            this.loadData();
           },
           error: (error) => {
             this.notifyServ.showMessage({
@@ -108,15 +124,17 @@ export class LocalApplicationsComponent implements OnInit {
             });
           },
         });
-      this.destroyRef.onDestroy(() => subscription.unsubscribe());
-      this.refreshRoute();
+      this.subcriptions.push(subscription);
     }
   }
-  refreshRoute() {
-    this.router.navigate([this.router.url]);
-  }
+
   onCancel(localAppID: number) {
+    console.log(localAppID);
     this.current_app_id = localAppID;
     this.isDialogVisible.set(true);
+  }
+
+  ngOnDestroy(): void {
+    this.subcriptions.forEach((sub) => sub.unsubscribe());
   }
 }

@@ -13,7 +13,6 @@ import {
 import {
   FormControl,
   FormGroup,
-  isFormControl,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -24,7 +23,10 @@ import {
   catchError,
   concatMap,
   forkJoin,
+  pipe,
+  switchAll,
   switchMap,
+  takeUntil,
   tap,
   throwError,
 } from 'rxjs';
@@ -73,6 +75,8 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   private destroyRef = inject(DestroyRef);
   private personService = inject(PersonService);
   isDialogVisible = signal<boolean>(false);
+  // person_id = signal<number | undefined>(undefined);
+  current_person = signal<Person | undefined>(undefined);
   isConfirmed = signal<boolean>(false);
   register_form = new FormGroup({
     firstname: new FormControl('', {
@@ -148,12 +152,11 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
   private handleEditMode(): void {
     if (this.application_mode === enMode.edit && this.application_id) {
+      this.register_form.controls.licenseclass.disable();
       this.retrieveApplication(this.application_id);
     }
   }
-  get invalidForm() {
-    return this.register_form.invalid;
-  }
+
   get invalidEmail() {
     return (
       this.register_form.controls.email.touched &&
@@ -274,28 +277,83 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   editApplicationProcess() {
-    const notify: NotificationBox = {
-      message: `test : Application saved successfully, Application :)`,
-      status: 'success',
+    let updated_person: Person = {
+      id: 0,
+      firstName: this.register_form.controls.firstname.value!,
+      secondName: this.register_form.controls.secondname.value!,
+      thirdName: this.register_form.controls.thirdname.value!,
+      lastName: this.register_form.controls.lastname.value!,
+      nationalNumber: this.register_form.controls.nationalno.value!,
+      phoneNumber: this.register_form.controls.phonenumber.value!,
+      address: this.register_form.controls.address.value!,
+      birthDate: new Date(this.register_form.controls.birthdate.value!)
+        .toISOString()
+        .split('T')[0],
+      createdByUserID: this.current_person()!.createdByUserID,
+      creationDate: this.current_person()!.creationDate,
+      email: this.register_form.controls.email.value!,
+      gender: this.register_form.controls.gender.value!,
+      nationality: this.register_form.controls.country.value!,
+      personalPicture: this.register_form.controls.img.value!,
+      updatedByUserID: this.currentUserSerice.getCurrentUser()!.id,
+      updatedDate: this.current_date,
     };
-    this.notificationSerice.showMessage(notify);
-    return;
+    const licenseClassID = +this.register_form.controls.licenseclass.value!;
+    const subscription = this.licenseClassService
+      .getLicenseClass(licenseClassID)
+      .pipe(
+        switchMap((response) => {
+          const birthdate = new Date(updated_person.birthDate);
+          const age = this.current_date.getFullYear() - birthdate.getFullYear();
+          if (response.minAgeAllowed > age) {
+            return throwError(
+              () =>
+                new Error(
+                  `'Age restriction not met! must be older than ${response.minAgeAllowed}`
+                )
+            );
+          }
+          return this.personService
+            .update(this.current_person()!.id, updated_person)
+            .pipe(
+              catchError((error) => {
+                return throwError(() => new Error(error.message));
+              }),
+              tap((updated_info) => {
+                if (updated_info) {
+                  this.current_person.set(updated_info);
+                }
+              })
+            );
+        })
+      )
+      .subscribe({
+        next: () => {
+          const notify: NotificationBox = {
+            message: `Person information updated successfully :)`,
+            status: 'success',
+          };
+          this.notificationSerice.showMessage(notify);
+        },
+        error: (err) => {
+          const notify: NotificationBox = {
+            message: `${err.message}`,
+            status: 'failed',
+          };
+          this.notificationSerice.showMessage(notify);
+        },
+      });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
+
   onDialogResult(isConfirmed: boolean) {
-    if (this.register_form.valid) {
-      if (isConfirmed && this.application_mode == enMode.edit) {
-        this.editApplicationProcess();
-      } else if (isConfirmed && this.application_mode == enMode.add) {
-        this.newApplicationProcess();
-      } else {
-        this.notificationSerice.showMessage({
-          message: 'Confirmation Cancelled',
-          status: 'notification',
-        });
-      }
+    if (isConfirmed && this.application_mode == enMode.edit) {
+      this.editApplicationProcess();
+    } else if (isConfirmed && this.application_mode == enMode.add) {
+      this.newApplicationProcess();
     } else {
       this.notificationSerice.showMessage({
-        message: 'NOT Valid Form',
+        message: 'Confirmation Cancelled',
         status: 'notification',
       });
     }
@@ -304,7 +362,6 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   retrieveApplication(application_id: number) {
-    // retrieving current application
     if (application_id && this.application_mode == enMode.edit) {
       const subscription = this.localAppService
         .read(application_id)
@@ -324,7 +381,8 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
                     throwError(() => new Error(error.message))
                   ),
                   tap((person_info) => {
-                    this.assignPerson(person_info);
+                    this.current_person.set(person_info);
+                    this.FillForm(this.current_person()!);
                   })
                 );
               })
@@ -344,7 +402,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     }
   }
 
-  assignPerson(person_info: Person) {
+  FillForm(person_info: Person) {
     const stringDate = new Date(person_info.birthDate)
       .toISOString()
       .split('T')[0];

@@ -29,6 +29,7 @@ header {
   gap: 4px;
 }
 form {
+  background-color: transparent;
   width: 60%;
 }
 
@@ -78,7 +79,6 @@ form p {
   text-align: center;
   font-size: 0.7rem;
 }
-
 
 [formgroupname].ng-invalid.ng-touched.ng-dirty input,
 input.ng-invalid.ng-touched.ng-dirty {

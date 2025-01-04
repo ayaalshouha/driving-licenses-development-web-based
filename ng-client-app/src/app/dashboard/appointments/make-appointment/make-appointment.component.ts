@@ -17,6 +17,7 @@ import {
   catchError,
   forkJoin,
   of,
+  single,
   Subject,
   switchMap,
   takeUntil,
@@ -56,6 +57,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
   appointments_mode = this.applicationID == null ? enMode.add : enMode.edit;
   enMode = enMode;
   current_local_application = signal<LocalApplication | null>(null);
+  schadualed = signal<boolean>(false);
   current_main_application = signal<Application | null>(null);
   applicantName = signal<string | undefined>(undefined);
   testCount = signal<number | undefined>(undefined);
@@ -235,6 +237,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onReset() {
+    this.schadualed.set(false);
     this.current_local_application.set(null);
     this.current_main_application.set(null);
     this.applicantName.set(undefined);
@@ -334,8 +337,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
           catchError((err) => {
             return throwError(() => new Error(err.message));
           }),
-          tap((response) => {
-          }),
+          tap((response) => {}),
           takeUntil(this.destroy$)
         )
         .subscribe({
@@ -344,6 +346,7 @@ export class MakeAppointmentComponent implements OnInit, OnChanges, OnDestroy {
               message: 'Appointment date updatted successfully!',
               status: 'success',
             });
+            this.schadualed.set(true);
           },
           error: (error) => {
             this.notificationService.showMessage({

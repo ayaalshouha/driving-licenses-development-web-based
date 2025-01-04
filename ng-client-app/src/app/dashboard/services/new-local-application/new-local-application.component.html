@@ -2,7 +2,14 @@
   <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
   <fieldset>
     <legend>Application form</legend>
-
+    <div class="control-row" style="display: inline">
+      <div class="control">
+        <label for="person-id">Person ID</label>
+        <p type="text" name="person-id" id="person-id">
+          {{ current_person() != undefined ? current_person()!.id : "N/A" }}
+        </p>
+      </div>
+    </div>
     <div class="control-row">
       <div class="control">
         <label for="first-name">First name</label>
