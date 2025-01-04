@@ -75,7 +75,6 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   private destroyRef = inject(DestroyRef);
   private personService = inject(PersonService);
   isDialogVisible = signal<boolean>(false);
-  // person_id = signal<number | undefined>(undefined);
   current_person = signal<Person | undefined>(undefined);
   isConfirmed = signal<boolean>(false);
   register_form = new FormGroup({
@@ -347,6 +346,8 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   onDialogResult(isConfirmed: boolean) {
+    this.isDialogVisible.set(false);
+
     if (isConfirmed && this.application_mode == enMode.edit) {
       this.editApplicationProcess();
     } else if (isConfirmed && this.application_mode == enMode.add) {
@@ -357,8 +358,6 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
         status: 'notification',
       });
     }
-
-    this.isDialogVisible.set(false);
   }
 
   retrieveApplication(application_id: number) {
@@ -431,6 +430,13 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
         status: 'failed',
       };
       this.notificationSerice.showMessage(notify);
+      return;
+    }
+    if (this.register_form.errors) {
+      this.notificationSerice.showMessage({
+        message: 'invalid form',
+        status: 'failed',
+      });
       return;
     }
     this.isDialogVisible.set(true);
