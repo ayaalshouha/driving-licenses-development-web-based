@@ -1,14 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  inject,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  signal,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
@@ -18,9 +8,6 @@ import { RouterLink } from '@angular/router';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
-import { Router } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
-import { log } from 'console';
 @Component({
   selector: 'app-local-applications',
   standalone: true,
@@ -29,7 +16,6 @@ import { log } from 'console';
     ReactiveFormsModule,
     ConfirmationDialogComponent,
     NotificationComponent,
-    AsyncPipe,
   ],
   templateUrl: './local-applications.component.html',
   styleUrl: './local-applications.component.css',
