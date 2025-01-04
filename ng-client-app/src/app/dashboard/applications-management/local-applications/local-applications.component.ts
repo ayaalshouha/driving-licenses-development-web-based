@@ -26,7 +26,6 @@ export class LocalApplicationsComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pageSize = 5;
   applications: LocalApplicationView[] = [];
-  applications$!: Observable<LocalApplicationView[]>;
   filteredApplications: LocalApplicationView[] = [];
   displayedData: LocalApplicationView[] = [];
   filter = new FormControl('', { nonNullable: true });
@@ -48,7 +47,6 @@ export class LocalApplicationsComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    // this.applications$ = this.localAppService.getAll();
     const subscription = this.localAppService.getAll().subscribe((data) => {
       this.applications = data;
       this.applications = data;
