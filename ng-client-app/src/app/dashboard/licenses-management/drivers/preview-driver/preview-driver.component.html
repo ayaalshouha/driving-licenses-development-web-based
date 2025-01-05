@@ -46,7 +46,10 @@
         </div>
       </div>
       <div class="actions">
-        <a routerLink="" [queryParams]="{ id: driver_id }">
+        <a
+          routerLink="person-licenses-history"
+          [queryParams]="{ id: current_driver!.personID }"
+        >
           Show driver's licenses hisory?
         </a>
         <div class="actions">
