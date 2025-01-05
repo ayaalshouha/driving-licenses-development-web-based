@@ -8,3 +8,12 @@ export interface InternationalLicense {
   isActive: boolean;
   createdByUserID: number;
 }
+
+export interface ShortInternationalLicense {
+  licenseID: number;
+  applicationID: number;
+  issuedUsingLocalLicenseID: number;
+  issueDate: Date;
+  expirationDate: Date;
+  isActive: boolean;
+}

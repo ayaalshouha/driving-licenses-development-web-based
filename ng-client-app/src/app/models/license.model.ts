@@ -12,6 +12,16 @@ export interface License {
   createdByUserID: number;
 }
 
+export interface ShortLicense {
+  licenseID: number;
+  applicationID: number;
+  class: string;
+  issueDate: Date;
+  expirationDate: Date;
+  isActive: boolean;
+}
+
+
 export enum enIssueReason {
   'First Time Issuance' = 1,
   'Renew License',

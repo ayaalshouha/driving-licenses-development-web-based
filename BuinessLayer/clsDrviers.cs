@@ -97,7 +97,7 @@ namespace BuisnessLayer
         }
         public static async Task<IEnumerable<ActiveLicense>> getLocalLicensesAsync(int DriverID)
         {
-            return await DriverData.getActiveLicensesAsync(DriverID);
+            return await DriverData.getLicensesAsync(DriverID);
         }
         public static async Task<IEnumerable<DriverInterNationalLicense>> getInternationalLicenses(int DriverID)
         {

@@ -3,6 +3,8 @@ import { DRIVER_API_ENDPOINT } from '../environments/endpoints/driver.endpoints'
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Driver_View } from '../models/driver.model';
+import { ShortLicense } from '../models/license.model';
+import { ShortInternationalLicense } from '../models/internationl-license.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -23,5 +25,19 @@ export class DriverService {
   }
   count(): Observable<number> {
     return this.http.get<number>(DRIVER_API_ENDPOINT.count);
+  }
+
+  localLicenses(driverid: number): Observable<ShortLicense[]> {
+    return this.http.get<ShortLicense[]>(
+      DRIVER_API_ENDPOINT.localLicenses(driverid)
+    );
+  }
+
+  internationalLicenses(
+    driverid: number
+  ): Observable<ShortInternationalLicense[]> {
+    return this.http.get<ShortInternationalLicense[]>(
+      DRIVER_API_ENDPOINT.internationalLicenses(driverid)
+    );
   }
 }

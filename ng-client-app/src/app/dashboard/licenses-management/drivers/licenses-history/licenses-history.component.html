@@ -1,10 +1,210 @@
 <app-dialog-wrapper title="Person Licenses History">
   <div class="container">
     <fieldset>
-      <legend>Peron Inforamtion</legend>
-    </fieldset>
-    <fieldset>
       <legend>Driver's Licenses</legend>
     </fieldset>
   </div>
 </app-dialog-wrapper>
+
+<!-- <fieldset>
+  <legend>Peron Inforamtion</legend>
+  <div class="control-row" style="display: inline">
+    <div class="control">
+      <label for="person-id">Person ID</label>
+      <p type="text" name="person-id" id="person-id">
+        {{ current_person() != undefined ? current_person()!.id : "N/A" }}
+      </p>
+    </div>
+  </div>
+  <div class="control-row">
+    <div class="control">
+      <label for="first-name">First name</label>
+      <input
+        type="text"
+        name="first-name"
+        id="first-name"
+        formControlName="firstname"
+      />
+    </div>
+    <div class="control">
+      <label for="second-name">Second name</label>
+      <input
+        type="text"
+        name="second-name"
+        id="second-name"
+        formControlName="secondname"
+      />
+    </div>
+    <div class="control">
+      <label for="third-name">Third name</label>
+      <input
+        type="text"
+        name="third-name"
+        id="third-name"
+        formControlName="thirdname"
+      />
+    </div>
+  </div>
+
+  <div class="control-row">
+    <div class="control">
+      <label for="last-name">Last name</label>
+      <input
+        type="text"
+        name="last-name"
+        id="last-name"
+        formControlName="lastname"
+      />
+    </div>
+    <div class="control">
+      <label for="national-no">National number</label>
+      <input
+        type="text"
+        name="national-no"
+        id="national-no"
+        inputmode="numeric"
+        formControlName="nationalno"
+      />
+    </div>
+
+    <div class="control">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" formControlName="email" />
+    </div>
+  </div>
+  @if(notUniqueNationalNo){
+  <p class="inline-error" style="margin-left: 320px">
+    **National no. already exist.
+  </p>
+  }
+  <div class="control-row">
+    <div class="control">
+      <label for="phone-number">Phone number</label>
+      <input
+        type="tel"
+        name="phone-number"
+        id="phone-number"
+        pattern="[0-9]+"
+        formControlName="phonenumber"
+      />
+    </div>
+    <div class="control">
+      <label for="gender">Gender</label>
+      <select name="gender" id="gender" formControlName="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="birth-day">Date of birth</label>
+      <input
+        type="date"
+        name="birth-day"
+        id="birth-day"
+        formControlName="birthdate"
+      />
+    </div>
+  </div>
+  <div class="control-row">
+    <div class="control">
+      <label for="address">City-Street</label>
+      <input
+        type="text"
+        id="address"
+        name="address"
+        required
+        formControlName="address"
+      />
+    </div>
+    <div class="control">
+      <label for="license-class">License Class</label>
+      <select
+        name="license-class"
+        id="license-class"
+        formControlName="licenseclass"
+      >
+        <option value="" disabled selected>
+          --select a licesnses class--
+        </option>
+        @if(license_classes){ @for(class of license_classes; track $index) {
+        <option [value]="class.id">{{ class.className }}</option>
+        } }
+      </select>
+    </div>
+    <div class="control">
+      <label for="country">Country</label>
+      <select name="country" id="country" formControlName="country">
+        <option value="" disabled selected>--select a country--</option>
+        @if(countries){ @for(country of countries; track $index) {
+        <option [value]="country">{{ country }}</option>
+        } }
+      </select>
+    </div>
+  </div>
+
+  <div class="control-row">
+    <div class="control">
+      <label for="file">--Select an image--</label>
+      <input type="file" name="file" id="file" formControlName="img" />
+    </div>
+  </div>
+  <div class="control-row"></div>
+
+  @if(invalidNationalNo && application_mode == enMode.add){
+  <p class="error">**National number must consist of exactly 10 digits</p>
+  } @if(invalidPhoneNumber){
+  <p class="error">**Phone number must consist of exactly 10 digits</p>
+  }@if(invalidEmail){
+  <p class="error">**Enter a valid email (e.g., example&#64;ex.com).</p>
+  }
+
+  <div class="actions">
+    <div
+      class="links"
+      style="
+        display: flex;
+        flex-direction: column;
+        /* gap: 5px; */
+        align-items: flex-start;
+        justify-content: flex-start;
+      "
+    >
+      @if(application_mode == enMode.add){
+      <a href="#" onclick="event.preventDefault();"
+        >Already exist person?</a
+      >
+      <p style="font-size: 10px">
+        you can add another application for the same person with different
+        license class
+      </p>
+      }
+    </div>
+
+    <div class="actions">
+      <button
+        type="reset"
+        [disabled]="application_mode == enMode.edit"
+        class="button edit-btn"
+      >
+        Reset
+      </button>
+      <button class="button cancel-btn" (click)="onClosed()">Cancel</button>
+      <button
+        type="submit"
+        name="submit"
+        id="submit"
+        class="button button-primary"
+      >
+        Apply
+      </button>
+      @if(isDialogVisible()){
+      <app-confirmation-dialog
+        [isVisible]="isDialogVisible()"
+        title="Confirm Applying"
+        message="Are you sure you want to submit?"
+        (confirmed)="onDialogResult($event)"
+      ></app-confirmation-dialog>
+      }
+    </div>
+  </div>
+</fieldset> -->

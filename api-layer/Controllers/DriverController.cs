@@ -129,8 +129,8 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
 
-        [HttpGet("{id}/local-active-licenses", Name = "DriverLocalLicenses")]
-        public async Task<ActionResult<IEnumerable<ActiveLicense>>> LocalActiveLicenses(int id)
+        [HttpGet("{id}/local-licenses", Name = "DriverLocalLicenses")]
+        public async Task<ActionResult<IEnumerable<ActiveLicense>>> LocalLicenses(int id)
         {
             bool isExist = await clsDrviers.isExistAsync(id);
 
@@ -138,7 +138,7 @@ namespace api_layer.Controllers
             {
                 var licenseslist = await clsDrviers.getLocalLicensesAsync(id);
                 if (licenseslist.Count() <= 0)
-                    return NotFound("No Active Local Licenses Found");
+                    return NotFound("No Local Licenses Found");
 
                 return Ok(licenseslist);
             }
@@ -146,8 +146,8 @@ namespace api_layer.Controllers
                 return NotFound("Driver Not Found");
         }
         
-        [HttpGet("{id}/international-active-licenses", Name = "DriverInternationalLicenses")]
-        public async Task<ActionResult<IEnumerable<DriverInterNationalLicense>>> InternationalActiveLicenses(int id)
+        [HttpGet("{id}/international-licenses", Name = "DriverInternationalLicenses")]
+        public async Task<ActionResult<IEnumerable<DriverInterNationalLicense>>> InternationalLicenses(int id)
         {
             bool isExist = await clsDrviers.isExistAsync(id);
 
@@ -155,7 +155,7 @@ namespace api_layer.Controllers
             {
                 var licenseslist = await clsDrviers.getInternationalLicenses(id);
                 if (licenseslist.Count() <= 0)
-                    return NotFound("No Active International Licenses Found");
+                    return NotFound("No International Licenses Found");
 
                 return Ok(licenseslist);
             }
