@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 import { DriverService } from '../../../../services/driver.service';
 import { Driver_View } from '../../../../models/driver.model';
 import { NotificationService } from '../../../../services/notification.service';
-import { ConfirmationDialogComponent } from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { NotificationComponent } from '../../../../shared/notification/notification.component';
 import { DialogWrapperComponent } from '../../../../shared/dialog-wrapper/dialog-wrapper.component';
 import { Location } from '@angular/common';
