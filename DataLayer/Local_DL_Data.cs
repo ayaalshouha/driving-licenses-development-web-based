@@ -215,7 +215,7 @@ namespace DataLayer
             {
                 using (SqlConnection Connection = new SqlConnection(DataSettings.ConnectionString))
                 {
-                    string Query = "SELECT * FROM LocalDrivingLicensesApplications_Views order by Status desc;";
+                    string Query = "SELECT * FROM LocalDrivingLicensesApplications_Views order by Status desc, Date desc;";
                     using(SqlCommand command = new SqlCommand(Query, Connection))
                     {
                         Connection.Open();
