@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DriverService } from '../../../../services/driver.service';
-import { Driver, Driver_View } from '../../../../models/driver.model';
-import { error } from 'console';
+import { Driver_View } from '../../../../models/driver.model';
 import { NotificationService } from '../../../../services/notification.service';
+import { ConfirmationDialogComponent } from '../../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationComponent } from '../../../../shared/notification/notification.component';
+import { DialogWrapperComponent } from '../../../../shared/dialog-wrapper/dialog-wrapper.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-preview-driver',
   standalone: true,
-  imports: [],
+  imports: [NotificationComponent, DialogWrapperComponent, RouterLink],
   templateUrl: './preview-driver.component.html',
   styleUrl: './preview-driver.component.css',
 })
@@ -20,7 +23,8 @@ export class PreviewDriverComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private driverService: DriverService,
-    private notufyServ: NotificationService
+    private notufyServ: NotificationService,
+    private location: Location
   ) {}
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -28,7 +32,7 @@ export class PreviewDriverComponent implements OnInit {
     });
 
     if (this.driver_id) {
-      //retrieving driver id
+      this.loadData();
     }
   }
 
@@ -44,5 +48,8 @@ export class PreviewDriverComponent implements OnInit {
         });
       }
     );
+  }
+  onClose() {
+    this.location.back();
   }
 }

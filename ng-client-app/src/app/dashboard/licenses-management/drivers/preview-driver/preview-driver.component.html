@@ -1,1 +1,58 @@
-<p>preview-driver works!</p>
+<app-notification></app-notification>
+<app-dialog-wrapper title="Drvier > Preview Driver">
+  <div class="container">
+    <fieldset>
+      <legend>Driver Info</legend>
+      <div class="control-row">
+        <div class="control">
+          <label for="driver-id">Driver ID</label>
+          <p id="driver-id">
+            {{ current_driver != undefined ? current_driver!.id : "N/A" }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="full-name">Drvier Full Name</label>
+          <p id="full-name">
+            {{ current_driver != undefined ? current_driver!.fullName : "N/A" }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="national-id">National ID</label>
+          <p id="national-id">
+            {{
+              current_driver != undefined ? current_driver!.nationalID : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="person-id">Person ID</label>
+          <p id="person-id">
+            {{ current_driver != undefined ? current_driver!.personID : "N/A" }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="active-licenses"># of Active Licenses</label>
+          <p id="active-licenses">
+            {{
+              current_driver != undefined
+                ? current_driver!.activeLicenses
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="actions">
+        <a routerLink="" [queryParams]="{ id: driver_id }">
+          Show driver's licenses hisory?
+        </a>
+        <div class="actions">
+          <button class="button" (click)="onClose()">OK</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</app-dialog-wrapper>
