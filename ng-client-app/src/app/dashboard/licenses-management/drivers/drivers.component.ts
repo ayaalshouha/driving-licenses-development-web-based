@@ -3,10 +3,11 @@ import { Driver_View } from '../../../models/driver.model';
 import { DriverService } from '../../../services/driver.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-drivers',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './drivers.component.html',
   styleUrl: './drivers.component.css',
 })

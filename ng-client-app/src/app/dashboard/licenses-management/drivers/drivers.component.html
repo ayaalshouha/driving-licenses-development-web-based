@@ -30,7 +30,14 @@
         <td>{{ app.date }}</td>
         <td>{{ app.activeLicenses }}</td>
         <td>
-          <button class="button">Preview</button>
+          <button
+            class="button"
+            routerLink="./preview-driver"
+            [queryParams]="{ id: app.id }"
+            routerLinkActive="router-link-active"
+          >
+            Preview
+          </button>
         </td>
       </tr>
       } @empty {
