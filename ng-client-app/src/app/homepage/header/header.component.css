@@ -13,18 +13,30 @@ header {
 ul {
   display: flex;
   align-items: center;
-  gap: 30px;
 }
 ul li {
   list-style: none;
+  a {
+    padding: 15px;
+  }
 }
 .button {
   font-weight: bold;
-  background-color: #f5f5fa;
-  color: #7878ab;
+  background-color: var(--button-bg-color);
+  color: var(--button-color);
   border-radius: 30px;
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  background-color: var(--button-bg-color);
+  color: var(--hover-color);
 }
