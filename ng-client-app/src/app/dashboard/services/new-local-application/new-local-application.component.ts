@@ -66,6 +66,7 @@ export enum enMode {
 export class NewLocalApplicationComponent implements OnInit, OnChanges {
   @Output() closed = new EventEmitter<boolean>();
   @Input() application_id: number | null = null;
+  person_id: number | null = null;
   application_mode = this.application_id == null ? enMode.add : enMode.edit;
   enMode = enMode;
   countries: string[] = [];
@@ -140,19 +141,29 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['application_id'] && changes['application_id'].currentValue) {
+    if (
+      (changes['application_id'] && changes['application_id'].currentValue) ||
+      (changes['person_id'] && changes['person_id'].currentValue)
+    ) {
       this.initializeMode();
       this.handleEditMode();
     }
   }
   private initializeMode(): void {
     this.application_mode =
-      this.application_id == null ? enMode.add : enMode.edit;
+      this.application_id == null
+        ? this.person_id == null
+          ? enMode.add
+          : enMode.edit
+        : enMode.edit;
   }
   private handleEditMode(): void {
     if (this.application_mode === enMode.edit && this.application_id) {
-      this.register_form.controls.licenseclass.disable();
-      this.retrieveApplication(this.application_id);
+      if (this.person_id == null && this.application_id != null) {
+        this.retrieveApplication(this.application_id);
+      } else {
+        this.retrievePerosn(this.person_id!);
+      }
     }
   }
 
@@ -357,6 +368,30 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
         message: 'Confirmation Cancelled',
         status: 'notification',
       });
+    }
+  }
+
+  retrievePerosn(person_id: number) {
+    if (person_id && this.application_mode == enMode.edit) {
+      const subscription = this.personService
+        .read(person_id)
+        .pipe(
+          catchError((error) => throwError(() => new Error(error.message))),
+          tap((person_info) => {
+            this.current_person.set(person_info);
+            this.FillForm(this.current_person()!);
+          })
+        )
+        .subscribe({
+          next: () => {},
+          error: (error) => {
+            this.notificationSerice.showMessage({
+              message: error.message,
+              status: 'failed',
+            });
+          },
+        });
+      this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
   }
 

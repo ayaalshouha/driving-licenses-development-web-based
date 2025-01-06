@@ -1,0 +1,14 @@
+.control {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 250px;
+}
+table {
+  margin-top: 15px;
+}
+.actions{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}

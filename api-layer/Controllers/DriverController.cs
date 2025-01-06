@@ -137,8 +137,6 @@ namespace api_layer.Controllers
             if (isExist)
             {
                 var licenseslist = await clsDrviers.getLocalLicensesAsync(id);
-                if (licenseslist.Count() <= 0)
-                    return NotFound("No Local Licenses Found");
 
                 return Ok(licenseslist);
             }
@@ -154,8 +152,6 @@ namespace api_layer.Controllers
             if (isExist)
             {
                 var licenseslist = await clsDrviers.getInternationalLicenses(id);
-                if (licenseslist.Count() <= 0)
-                    return NotFound("No International Licenses Found");
 
                 return Ok(licenseslist);
             }

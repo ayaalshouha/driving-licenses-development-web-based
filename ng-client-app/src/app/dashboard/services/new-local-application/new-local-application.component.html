@@ -110,6 +110,7 @@
           formControlName="address"
         />
       </div>
+      @if (application_mode == enMode.add) {
       <div class="control">
         <label for="license-class">License Class</label>
         <select
@@ -125,6 +126,8 @@
           } }
         </select>
       </div>
+      }
+
       <div class="control">
         <label for="country">Country</label>
         <select name="country" id="country" formControlName="country">

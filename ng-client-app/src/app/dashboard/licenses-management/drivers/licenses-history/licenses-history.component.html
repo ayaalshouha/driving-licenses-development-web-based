@@ -2,6 +2,99 @@
   <div class="container">
     <fieldset>
       <legend>Driver's Licenses</legend>
+      <div class="control-row">
+        <div class="control">
+          <select name="" id="licenses" [formControl]="licenses">
+            <option value="local">Local Licenses</option>
+            <option value="international">International Licenses</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Application ID</th>
+                @if (licenses.value == 'local') {
+                <th scope="col">Class</th>
+                }@else {
+                <th scope="col">Local Licenses ID</th>
+                }
+                <th scope="col">Issue Date</th>
+                <th scope="col">Exp. Date</th>
+                <th scope="col">Active Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @if(licenses.value == 'local'){ @for (item of localLicenses; track
+              $index) {
+              <tr>
+                <td>{{ item.licenseID }}</td>
+                <td>{{ item.applicationID }}</td>
+                <td>{{ item.class }}</td>
+                <td>{{ item.issueDate }}</td>
+                <td>{{ item.expirationDate }}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    style="pointer-events: none"
+                    [checked]="item.isActive"
+                  />
+                </td>
+                <td class="actions">
+                  <button class="button">Preview License</button>
+                </td>
+              </tr>
+              }@empty {
+              <tr>
+                <td colspan="7" style="text-align: center">
+                  No local licenses found
+                </td>
+              </tr>
+              } }@else { @for (item of internationalLicenses; track $index) {
+              <tr>
+                <td>{{ item.licenseID }}</td>
+                <td>{{ item.applicationID }}</td>
+                <td>{{ item.issuedUsingLocalLicenseID }}</td>
+                <td>{{ item.issueDate }}</td>
+                <td>{{ item.expirationDate }}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    style="pointer-events: none"
+                    [checked]="item.isActive"
+                  />
+                </td>
+                <td class="actions">
+                  <button class="button">Preview License</button>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="7" style="text-align: center">
+                  No international licenses found
+                </td>
+              </tr>
+              }}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="actions">
+        <a
+          routerLink="../../../applications-management/add-edit-application"
+          [queryParams]="{
+            mode: 'edit',
+            person_id: current_driver!.personID
+          }"
+          >Edit person's basic information?
+        </a>
+        <button class="button" (click)="onCancel()">OK</button>
+      </div>
     </fieldset>
   </div>
 </app-dialog-wrapper>
