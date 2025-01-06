@@ -1,0 +1,30 @@
+header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: black;
+  font-size: 12px;
+  p {
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+ul {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+ul li {
+  list-style: none;
+}
+.button {
+  font-weight: bold;
+  background-color: #f5f5fa;
+  color: #7878ab;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+}
