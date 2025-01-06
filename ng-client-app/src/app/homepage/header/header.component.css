@@ -4,6 +4,7 @@ header {
   align-items: center;
   color: black;
   font-size: 12px;
+  padding: 10px;
   p {
     font-size: 20px;
     font-weight: bold;
@@ -19,16 +20,6 @@ ul li {
   a {
     padding: 15px;
   }
-}
-.button {
-  font-weight: bold;
-  background-color: var(--button-bg-color);
-  color: var(--button-color);
-  border-radius: 30px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  -ms-border-radius: 30px;
-  -o-border-radius: 30px;
 }
 
 a {

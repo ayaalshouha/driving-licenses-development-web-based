@@ -16,7 +16,7 @@
 body {
   font-family: "Poppins";
   background-color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--text-color);
 }
 
@@ -117,7 +117,16 @@ p.inline-error {
   -ms-transition: background 0.3s ease;
   -o-transition: background 0.3s ease;
 }
-
+.homepage-button {
+  font-weight: bold;
+  background-color: var(--button-bg-color);
+  color: var(--button-color);
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+}
 .button-secondary {
   background-color: #f8f9fa;
   color: var(--hover-color);
