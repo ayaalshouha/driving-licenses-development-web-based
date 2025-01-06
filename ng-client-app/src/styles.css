@@ -13,6 +13,24 @@
   gap: 40px;
   background-color: var(--bg-light-color);
 }
+.homepage-container {
+  margin: 50px 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  .section-title {
+    text-transform: uppercase;
+    color: var(--dark-color);
+    font-size: 16px;
+  }
+}
+.withbackground {
+  background-color: var(--bg-light-color);
+  padding: 50px;
+}
 body {
   font-family: "Poppins";
   background-color: #fff;
