@@ -13,6 +13,7 @@ import { Location } from '@angular/common';
 export class AddEditApplicationComponent implements OnInit {
   mode: string | null = null;
   application_id: number | null = null;
+  person_id: number | null = null;
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -22,6 +23,7 @@ export class AddEditApplicationComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.mode = params['mode'];
       this.application_id = +params['application_id'];
+      this.person_id = +params['person_id'];
     });
     this.cdr.detectChanges();
   }

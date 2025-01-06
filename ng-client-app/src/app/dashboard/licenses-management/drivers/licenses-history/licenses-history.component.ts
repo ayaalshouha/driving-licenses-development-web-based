@@ -22,7 +22,7 @@ export class LicensesHistoryComponent implements OnInit, OnDestroy {
   localLicenses: ShortLicense[] | undefined = [];
   internationalLicenses: ShortInternationalLicense[] | undefined = [];
   subscriptions: Subscription[] = [];
-  app_id: number | undefined = undefined;
+  person_id: number | undefined = undefined;
   licenses = new FormControl<'local' | 'international'>('local', {
     validators: Validators.required,
   });
@@ -48,6 +48,8 @@ export class LicensesHistoryComponent implements OnInit, OnDestroy {
         tap((driver) => {
           if (driver) {
             this.current_driver = driver;
+            this.person_id = this.current_driver.personID;
+            console.log('person id = ' + this.person_id);
           }
         }),
         switchMap(() => {
@@ -65,7 +67,6 @@ export class LicensesHistoryComponent implements OnInit, OnDestroy {
         next: ({ local_licenses, international_licenses }) => {
           (this.localLicenses = local_licenses),
             (this.internationalLicenses = international_licenses);
-          this.app_id = this.localLicenses[0].applicationID;
         },
       });
     this.subscriptions.push(subscription);

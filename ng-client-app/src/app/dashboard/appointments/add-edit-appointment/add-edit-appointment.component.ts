@@ -3,7 +3,7 @@ import { MakeAppointmentComponent } from '../make-appointment/make-appointment.c
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { DialogWrapperComponent } from "../../../shared/dialog-wrapper/dialog-wrapper.component";
+import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
 @Component({
   selector: 'app-add-edit-appointment',
   standalone: true,
@@ -14,6 +14,7 @@ import { DialogWrapperComponent } from "../../../shared/dialog-wrapper/dialog-wr
 export class AddEditAppointmentComponent implements OnInit {
   mode: string | null = null;
   application_id: number | null = null;
+  person_id: number | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,

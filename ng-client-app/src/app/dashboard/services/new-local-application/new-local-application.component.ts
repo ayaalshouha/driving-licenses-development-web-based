@@ -52,6 +52,7 @@ import {
   NotificationService,
 } from '../../../services/notification.service';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { throws } from 'assert';
 export enum enMode {
   add = 'Add appointment',
   edit = 'Edit appointment',
@@ -66,7 +67,7 @@ export enum enMode {
 export class NewLocalApplicationComponent implements OnInit, OnChanges {
   @Output() closed = new EventEmitter<boolean>();
   @Input() application_id: number | null = null;
-  person_id: number | null = null;
+  @Input() person_id: number | null = null;
   application_mode = this.application_id == null ? enMode.add : enMode.edit;
   enMode = enMode;
   countries: string[] = [];
@@ -150,18 +151,26 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     }
   }
   private initializeMode(): void {
+    console.log(
+      `initialize mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
+    );
     this.application_mode =
       this.application_id == null
         ? this.person_id == null
           ? enMode.add
           : enMode.edit
         : enMode.edit;
+
+    console.log('mode = ' + this.application_mode);
   }
   private handleEditMode(): void {
-    if (this.application_mode === enMode.edit && this.application_id) {
-      if (this.person_id == null && this.application_id != null) {
-        this.retrieveApplication(this.application_id);
-      } else {
+    console.log(
+      `handling edit mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
+    );
+    if (this.application_mode == enMode.edit) {
+      if (this.application_id) {
+        this.retrieveApplication(this.application_id!);
+      } else if (this.person_id) {
         this.retrievePerosn(this.person_id!);
       }
     }
@@ -378,6 +387,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
         .pipe(
           catchError((error) => throwError(() => new Error(error.message))),
           tap((person_info) => {
+            console.log(`retrieve person method ${person_info}}`);
             this.current_person.set(person_info);
             this.FillForm(this.current_person()!);
           })

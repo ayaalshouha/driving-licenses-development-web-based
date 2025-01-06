@@ -89,7 +89,8 @@
           routerLink="../../../applications-management/add-edit-application"
           [queryParams]="{
             mode: 'edit',
-            person_id: current_driver!.personID
+            application_id: null,
+            person_id: person_id
           }"
           >Edit person's basic information?
         </a>
