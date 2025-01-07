@@ -33,8 +33,11 @@
   }
 }
 .withbackground {
-  background-color: var(--bg-light-color);
+  background: linear-gradient(to left, #f8f9fa, #f5f5fa);
   padding: 50px;
+  /* background: linear-gradient(to left, #f8f9fa, var(--bg-hover-color)); */
+  /* background: linear-gradient(to left, #f8f9fa, #f1f2f7); */
+  /* background-color: var(--bg-light-color); */
 }
 body {
   font-family: "Poppins";
