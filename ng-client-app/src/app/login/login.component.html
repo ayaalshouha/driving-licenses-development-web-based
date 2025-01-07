@@ -1,33 +1,42 @@
-<div class="container">
-  <header>
-    <img src="images/login (6).png" alt="License-Manager-Featured-Image" />
-    <p>Login</p>
-  </header>
+<div class="cont">
+  <div class="img-box">
+    <img src="images\Resume-Building-min-1.png" alt="" />
+  </div>
+  <div class="container">
+    <header>
+      <p class="main-text">Login to your account!</p>
+    </header>
 
-  <form [formGroup]="login_form" (ngSubmit)="onSubmit()">
-    <div class="control">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        [formControl]="login_form.controls.username"
-      />
-    </div>
+    <form [formGroup]="login_form" (ngSubmit)="onSubmit()">
+      <div class="control">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          [formControl]="login_form.controls.username"
+        />
+      </div>
 
-    <div class="control">
-      <label for="password">Password</label>
-      <input type="password" id="password" formControlName="password" />
-    </div>
+      <div class="control">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" />
+      </div>
 
-    <button type="submit">Login &#8594;</button>
+      <button type="submit" class="button homepage-button">
+        Login &#8594;
+      </button>
+      <button routerLink="../" class="button homepage-button">
+        Back to website
+      </button>
 
-    <p>Don't have an accunt? <a href="">Sign up</a></p>
+      <p>Don't have an accunt? <a href="">Sign up</a></p>
 
-    @if(invalidPassword || isExist() == false){
-    <p class="error">invalid username/password</p>
-    } @if(isExist() === true && isActive() === false &&
-    login_form.controls.username.value !== ''){
-    <p class="error">user {{ enteredUsername() }} is NOT active</p>
-    }
-  </form>
+      @if(invalidPassword || isExist() == false){
+      <p class="error">invalid username/password</p>
+      } @if(isExist() === true && isActive() === false &&
+      login_form.controls.username.value !== ''){
+      <p class="error">user {{ enteredUsername() }} is NOT active</p>
+      }
+    </form>
+  </div>
 </div>

@@ -16,13 +16,13 @@ import {
 import { LoginService } from '../services/login.service';
 import { UserService } from '../services/user.service';
 import { concatMap, debounceTime, switchMap, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CurrentUserService } from '../services/current-user.service';
 import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
