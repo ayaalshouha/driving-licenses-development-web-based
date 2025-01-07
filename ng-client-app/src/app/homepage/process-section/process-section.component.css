@@ -5,38 +5,64 @@
 }
 .steps {
   display: grid;
-
-  grid-template-columns: repeat(3, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 0px;
   margin: 50px 20px;
+  padding: 20px;
 }
 
 .step {
+  border: 1px solid var(--bg-hover-color);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  width: 70%;
+  width: 100%;
   padding: 20px;
-  margin: auto;
   color: black;
-  header {
-    font-size: 22px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-  }
+}
+.step header {
+  font-size: 22px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.step img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
 .description {
   font-size: 17px;
+}
+/* Remove top borders for the first row */
+.step:nth-child(-n + 3) {
+  border-top: none;
+  border-right: none;
+}
+/* Remove bottom border for the last row */
+.step:nth-child(n + 4) {
+  border-bottom: none;
+  border-right: none;
+}
+/* Remove left borders for the first column */
+.step:nth-child(3n + 1) {
+  border-left: none;
+}
+
+/* Center Card 4 and Card 5 in Row 2 */
+.step:nth-child(4),
+.step:nth-child(5) {
+  grid-row: 2; /* Place them in the second row */
+}
+
+.step:nth-child(4) {
+  grid-column: 1/2; /* Place Card 4 in the second column */
+  margin-left: 50%;
+}
+
+.step:nth-child(5) {
+  grid-column: 3; /* Place Card 5 in the third column */
+  margin-left: -50%; /* Shift Card 5 closer to Card 4 */
 }

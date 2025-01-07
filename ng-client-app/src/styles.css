@@ -14,12 +14,12 @@
   background-color: var(--bg-light-color);
 }
 .homepage-container {
-  margin: 50px 0 50px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 15px;
+  margin: 50px auto;
 
   .section-title {
     text-transform: uppercase;
@@ -30,6 +30,7 @@
 .withbackground {
   background-color: var(--bg-light-color);
   padding: 50px;
+
 }
 body {
   font-family: "Poppins";
