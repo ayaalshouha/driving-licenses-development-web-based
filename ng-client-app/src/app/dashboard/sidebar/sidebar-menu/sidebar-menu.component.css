@@ -59,3 +59,17 @@ li a.active,
 .submenu li a.active {
   color: var(--hover-color);
 }
+
+
+.logout-li {
+  border-radius: 15px;
+  background-color: var(--bg-hover-color);
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  button {
+    color: var(--dark-color);
+    font-weight:bold;
+  }
+}
