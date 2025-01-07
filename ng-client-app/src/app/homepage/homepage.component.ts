@@ -5,6 +5,7 @@ import { ServicesSectionComponent } from './services-section/services-section.co
 import { ProcessSectionComponent } from './process-section/process-section.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { RouterOutlet } from '@angular/router';
+import { ContactUsComponent } from "./contact-us/contact-us.component";
 @Component({
   selector: 'app-homepage',
   standalone: true,
@@ -14,7 +15,8 @@ import { RouterOutlet } from '@angular/router';
     ServicesSectionComponent,
     ProcessSectionComponent,
     AboutUsComponent,
-  ],
+    ContactUsComponent
+],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
 })

@@ -1,8 +1,4 @@
-.main-text {
-  font-size: 45px;
-  color: black;
-  font-weight: bold;
-}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(200px, 1fr));

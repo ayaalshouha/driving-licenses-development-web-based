@@ -26,11 +26,15 @@
     color: var(--dark-color);
     font-size: 16px;
   }
+  .main-text {
+    font-size: 45px;
+    color: black;
+    font-weight: bold;
+  }
 }
 .withbackground {
   background-color: var(--bg-light-color);
   padding: 50px;
-
 }
 body {
   font-family: "Poppins";
