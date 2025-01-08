@@ -1,9 +1,11 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
 import { DetainedLicense } from '../../../models/detained-license.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DetainedLicenseService } from '../../../services/detained-license.service';
 import { tap } from 'rxjs';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, isPlatformBrowser } from '@angular/common';
+import { LicenseService } from '../../../services/license.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-detained-licenses',
@@ -13,6 +15,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
   styleUrl: './detained-licenses.component.css',
 })
 export class DetainedLicensesComponent {
+  current_user_id: number | null = null;
   currentPage = 1;
   pageSize = 6;
   list: DetainedLicense[] = [];
@@ -21,10 +24,25 @@ export class DetainedLicensesComponent {
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
 
-  constructor(private licenseService: DetainedLicenseService) {}
+  constructor(
+    private detainedlicenseServ: DetainedLicenseService,
+    private licenseServ: LicenseService,
+    private notifyServ: NotificationService
+  ) {}
 
   ngOnInit(): void {
-    const subscription = this.licenseService
+    if (isPlatformBrowser(PLATFORM_ID)) {
+      const current_user = window.localStorage.getItem('current-user');
+      if (current_user) {
+        try {
+          const user = JSON.parse(current_user);
+          this.current_user_id = user.id;
+        } catch (error) {
+          console.error('Error parsing user data from local storage:', error);
+        }
+      }
+    }
+    const subscription = this.detainedlicenseServ
       .all()
       .pipe(
         tap((response) => {
@@ -68,5 +86,26 @@ export class DetainedLicensesComponent {
       this.currentPage--;
       this.updateDisplayedData();
     }
+  }
+
+  onRelease(licenseID: number) {
+    const subscription = this.licenseServ
+      .release(licenseID, this.current_user_id!)
+
+      .subscribe((response) => {
+        if (response) {
+          this.notifyServ.showMessage({
+            message: ` licese ${licenseID} released successfully`,
+            status: 'success',
+          });
+        } else {
+          this.notifyServ.showMessage({
+            message: `Something went wrong, please try again later!`,
+            status: 'failed',
+          });
+        }
+      });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 }

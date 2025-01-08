@@ -22,6 +22,7 @@
         <input type="password" id="password" formControlName="password" />
       </div>
 
+      <a href="#" style="pointer-events: none; text-decoration: none;">Forget your password?</a>
       <button type="submit" class="button homepage-button">
         Login &#8594;
       </button>
@@ -29,7 +30,7 @@
         Back to website
       </button>
 
-      <p>Don't have an accunt? <a href="">Sign up</a></p>
+      <!-- <p>Don't have an accunt? <a href="">Sign up</a></p> -->
 
       @if(invalidPassword || isExist() == false){
       <p class="error">invalid username/password</p>

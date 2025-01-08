@@ -41,7 +41,13 @@
         <td>{{ detain.fineFees | currency }}</td>
         <td>{{ detain.releaseDate | date : "EEE, MMM d, yyyy" }}</td>
         <td>
-          <button [disabled]="detain.isReleased" class="button">Release</button>
+          <button
+            [disabled]="detain.isReleased"
+            class="button"
+            (click)="onRelease(detain.licenseID)"
+          >
+            Release
+          </button>
         </td>
       </tr>
       } @empty {

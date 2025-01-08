@@ -487,6 +487,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     this.isDialogVisible.set(true);
   }
   onClosed() {
+    console.log('cancel clicked');
     this.closed.emit(true);
   }
 }
