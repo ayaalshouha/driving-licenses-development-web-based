@@ -31,3 +31,6 @@ a:hover {
   background-color: var(--button-bg-color);
   color: var(--hover-color);
 }
+button {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
