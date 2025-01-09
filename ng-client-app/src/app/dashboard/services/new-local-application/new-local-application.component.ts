@@ -48,6 +48,7 @@ import {
 } from '../../../services/notification.service';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { User } from '../../../models/user.model';
+import { NotificationComponent } from '../../../shared/notification/notification.component';
 export enum enMode {
   add = 'Add appointment',
   edit = 'Edit appointment',
@@ -55,7 +56,12 @@ export enum enMode {
 @Component({
   selector: 'app-new-local-application',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, ConfirmationDialogComponent],
+  imports: [
+    ReactiveFormsModule,
+    DatePipe,
+    ConfirmationDialogComponent,
+    NotificationComponent,
+  ],
   templateUrl: './new-local-application.component.html',
   styleUrl: './new-local-application.component.css',
 })
@@ -468,9 +474,13 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    if (this.register_form.invalid) {
+    if (
+      this.register_form.invalid &&
+      this.register_form.untouched &&
+      !this.register_form.dirty
+    ) {
       this.notificationSerice.showMessage({
-        message: 'invalid form',
+        message: 'Form is invalid, please check unfilled inputs.',
         status: 'failed',
       });
       return;

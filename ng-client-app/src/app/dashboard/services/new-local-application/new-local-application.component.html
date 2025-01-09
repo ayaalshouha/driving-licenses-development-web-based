@@ -6,7 +6,8 @@
   (confirmed)="onDialogResult($event)"
 ></app-confirmation-dialog>
 }
-<form [formGroup]="register_form" (ngSubmit)="onSubmit()">
+<app-notification />
+<form [formGroup]="register_form">
   <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
   <fieldset>
     <legend>Application form</legend>
@@ -192,12 +193,7 @@
           Reset
         </button>
         <button class="button cancel-btn" (click)="onCancel()">Cancel</button>
-        <button
-          type="submit"
-          name="submit"
-          id="submit"
-          class="button button-primary"
-        >
+        <button class="button button-primary" (click)="onSubmit()">
           Apply
         </button>
       </div>
