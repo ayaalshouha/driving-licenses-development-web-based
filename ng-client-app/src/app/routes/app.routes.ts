@@ -16,7 +16,10 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('../login/login.component').then(
+        (module) => module.LoginComponent
+      ),
   },
   {
     path: 'dashboard',
@@ -25,6 +28,9 @@ export const routes: Routes = [
   },
   {
     path: 'add-new-app',
-    component: NewLocalApplicationComponent,
+    loadComponent: () =>
+      import(
+        '../dashboard/services/new-local-application/new-local-application.component'
+      ).then((module) => module.NewLocalApplicationComponent),
   },
 ];
