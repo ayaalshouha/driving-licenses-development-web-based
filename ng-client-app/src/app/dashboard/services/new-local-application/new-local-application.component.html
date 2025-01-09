@@ -1,3 +1,11 @@
+@if(isDialogVisible() == true){
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  title="Confirm Applying"
+  message="Are you sure you want to submit?"
+  (confirmed)="onDialogResult($event)"
+></app-confirmation-dialog>
+}
 <form [formGroup]="register_form" (ngSubmit)="onSubmit()">
   <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
   <fieldset>
@@ -183,7 +191,7 @@
         >
           Reset
         </button>
-        <button class="button cancel-btn" (click)="onClosed()">Cancel</button>
+        <button class="button cancel-btn" (click)="onCancel()">Cancel</button>
         <button
           type="submit"
           name="submit"
@@ -192,14 +200,6 @@
         >
           Apply
         </button>
-        @if(isDialogVisible()){
-        <app-confirmation-dialog
-          [isVisible]="isDialogVisible()"
-          title="Confirm Applying"
-          message="Are you sure you want to submit?"
-          (confirmed)="onDialogResult($event)"
-        ></app-confirmation-dialog>
-        }
       </div>
     </div>
   </fieldset>

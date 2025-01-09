@@ -1,12 +1,10 @@
 import {
   Component,
   DestroyRef,
-  EventEmitter,
   inject,
   Input,
   OnChanges,
   OnInit,
-  Output,
   signal,
   SimpleChanges,
 } from '@angular/core';
@@ -23,10 +21,7 @@ import {
   catchError,
   concatMap,
   forkJoin,
-  pipe,
-  switchAll,
   switchMap,
-  takeUntil,
   tap,
   throwError,
 } from 'rxjs';
@@ -41,7 +36,7 @@ import { Application } from '../../../models/application.model';
 import { ApplicationService } from '../../../services/application.service';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import { PLATFORM_ID } from '@angular/core';
-
+import { Location } from '@angular/common';
 import {
   ApplicationType,
   ApplicationTypes,
@@ -52,7 +47,7 @@ import {
   NotificationService,
 } from '../../../services/notification.service';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import { throws } from 'assert';
+import { User } from '../../../models/user.model';
 export enum enMode {
   add = 'Add appointment',
   edit = 'Edit appointment',
@@ -65,7 +60,6 @@ export enum enMode {
   styleUrl: './new-local-application.component.css',
 })
 export class NewLocalApplicationComponent implements OnInit, OnChanges {
-  @Output() closed = new EventEmitter<boolean>();
   @Input() application_id: number | null = null;
   @Input() person_id: number | null = null;
   application_mode = this.application_id == null ? enMode.add : enMode.edit;
@@ -78,6 +72,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   private personService = inject(PersonService);
   isDialogVisible = signal<boolean>(false);
   current_person = signal<Person | undefined>(undefined);
+  current_user: User | undefined = undefined;
   isConfirmed = signal<boolean>(false);
   register_form = new FormGroup({
     firstname: new FormControl('', {
@@ -126,10 +121,12 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     private currentUserSerice: CurrentUserService,
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
-    private notificationSerice: NotificationService
+    private notificationSerice: NotificationService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
+    this.current_user = this.currentUserSerice.getCurrentUser();
     // (forkJoin) perform two independent observable and get their results together in one subscription
     const subscription = forkJoin({
       countries: this.countryService.AllCountries(),
@@ -219,7 +216,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       nationality: this.register_form.controls.country.value!,
       personalPicture: this.register_form.controls.img.value!,
       creationDate: this.current_date,
-      createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+      createdByUserID: this.currentUserSerice.getCurrentUser()?.id ?? 1,
       updatedByUserID: null,
       updatedDate: null,
     };
@@ -231,7 +228,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       date: this.current_date,
       paidFees: this.application_types.at(0)!.typeFee,
       lastStatusDate: this.current_date,
-      createdByUserID: this.currentUserSerice.getCurrentUser()!.id,
+      createdByUserID: this.currentUserSerice.getCurrentUser()?.id ?? 1,
     };
     let local_app: LocalApplication = {
       id: 0,
@@ -242,6 +239,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       .getLicenseClass(local_app.licenseClassID)
       .pipe(
         switchMap((response) => {
+          console.log('this is now birthdate check');
           const birthdate = new Date(new_person.birthDate);
           const age = this.current_date.getFullYear() - birthdate.getFullYear();
           if (response.minAgeAllowed > age) {
@@ -256,6 +254,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           }
         }),
         switchMap((response) => {
+          console.log('this is retrievng person data check');
           if (response.id === 0) {
             return throwError(() => new Error('Invalid person info'));
           } else {
@@ -264,6 +263,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           }
         }),
         concatMap((response) => {
+          console.log('this is retrievng application data check');
           if (response.id === 0) {
             return throwError(() => new Error('Invalid application info'));
           } else {
@@ -468,16 +468,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    const currentUser = this.currentUserSerice.getCurrentUser();
-    if (!currentUser) {
-      const notify: NotificationBox = {
-        message: `Current user session might end, login again!`,
-        status: 'failed',
-      };
-      this.notificationSerice.showMessage(notify);
-      return;
-    }
-    if (this.register_form.errors) {
+    if (this.register_form.invalid) {
       this.notificationSerice.showMessage({
         message: 'invalid form',
         status: 'failed',
@@ -486,9 +477,8 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     }
     this.isDialogVisible.set(true);
   }
-  onClosed() {
-    console.log('cancel clicked');
-    this.closed.emit(true);
+  onCancel() {
+    this.location.back();
   }
 }
 

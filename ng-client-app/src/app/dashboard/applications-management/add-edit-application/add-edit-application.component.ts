@@ -28,9 +28,7 @@ export class AddEditApplicationComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  onClose(closed: boolean) {
-    if (closed) {
-      this.location.back();
-    }
-  }
+  // onClose(closed: boolean) {
+  //   this.location.back();
+  // }
 }
