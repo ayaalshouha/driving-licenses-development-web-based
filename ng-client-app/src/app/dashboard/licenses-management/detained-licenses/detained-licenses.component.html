@@ -1,3 +1,9 @@
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  title="Confirm"
+  message="Are your sure you want to release this license?"
+  (confirmed)="onDialogResult($event)"
+></app-confirmation-dialog>
 <div class="container">
   <form class="filteration">
     <div class="flex">
@@ -22,7 +28,6 @@
         <th scope="col">Full Name</th>
         <th scope="col">Detain Date</th>
         <th scope="col">is Released</th>
-        <th scope="col">Release App ID</th>
         <th scope="col">Fine Fees</th>
         <th scope="col">Release Date</th>
         <th scope="col">Actions</th>
@@ -36,8 +41,13 @@
         <td>{{ detain.nationalNo }}</td>
         <td>{{ detain.fullName }}</td>
         <td>{{ detain.detainDate | date : "EEE, MMM d, yyyy" }}</td>
-        <td>{{ detain.isReleased ? "YES" : "NO" }}</td>
-        <td>{{ detain.releaseApplicationID }}</td>
+        <td>
+          <input
+            style="pointer-events: none"
+            type="checkbox"
+            [checked]="detain.isReleased"
+          />
+        </td>
         <td>{{ detain.fineFees | currency }}</td>
         <td>{{ detain.releaseDate | date : "EEE, MMM d, yyyy" }}</td>
         <td>

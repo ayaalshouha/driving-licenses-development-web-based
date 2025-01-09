@@ -113,7 +113,6 @@ export class LocalApplicationsComponent implements OnInit, OnDestroy {
   }
 
   onCancel(localAppID: number) {
-    console.log(localAppID);
     this.current_app_id = localAppID;
     this.isDialogVisible.set(true);
   }

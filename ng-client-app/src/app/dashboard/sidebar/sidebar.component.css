@@ -37,9 +37,9 @@ header {
 }
 header span {
   font-weight: bolder;
-  font-size: 13px;
+  font-size: 16px;
 }
-header img {
+/* header img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -47,4 +47,4 @@ header img {
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
-}
+} */

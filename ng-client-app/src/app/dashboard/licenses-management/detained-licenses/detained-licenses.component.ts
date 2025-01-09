@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Inject,
+  inject,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { DetainedLicense } from '../../../models/detained-license.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DetainedLicenseService } from '../../../services/detained-license.service';
@@ -6,11 +13,17 @@ import { tap } from 'rxjs';
 import { CurrencyPipe, DatePipe, isPlatformBrowser } from '@angular/common';
 import { LicenseService } from '../../../services/license.service';
 import { NotificationService } from '../../../services/notification.service';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-detained-licenses',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, CurrencyPipe],
+  imports: [
+    ReactiveFormsModule,
+    DatePipe,
+    CurrencyPipe,
+    ConfirmationDialogComponent,
+  ],
   templateUrl: './detained-licenses.component.html',
   styleUrl: './detained-licenses.component.css',
 })
@@ -23,15 +36,17 @@ export class DetainedLicensesComponent {
   displayedData: DetainedLicense[] = [];
   private destroyRef = inject(DestroyRef);
   filter = new FormControl('', { nonNullable: true });
-
+  isDialogVisible = signal<boolean>(false);
+  licenseID: number | undefined = undefined;
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private detainedlicenseServ: DetainedLicenseService,
     private licenseServ: LicenseService,
     private notifyServ: NotificationService
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(PLATFORM_ID)) {
+    if (isPlatformBrowser(this.platformId)) {
       const current_user = window.localStorage.getItem('current-user');
       if (current_user) {
         try {
@@ -42,6 +57,13 @@ export class DetainedLicensesComponent {
         }
       }
     }
+    this.loadData();
+    this.filter.valueChanges
+      .pipe(tap((response) => this.applyFilter(response)))
+      .subscribe();
+  }
+
+  loadData() {
     const subscription = this.detainedlicenseServ
       .all()
       .pipe(
@@ -54,12 +76,7 @@ export class DetainedLicensesComponent {
       .subscribe();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
-
-    this.filter.valueChanges
-      .pipe(tap((response) => this.applyFilter(response)))
-      .subscribe();
   }
-
   applyFilter(value: string) {
     const lowerCaseValue = value;
     this.filteredList = this.list.filter((item) =>
@@ -88,24 +105,32 @@ export class DetainedLicensesComponent {
     }
   }
 
+  onDialogResult(confirmed: boolean) {
+    this.isDialogVisible.set(false);
+    if (confirmed) {
+      const subscription = this.licenseServ
+        .release(this.licenseID!, this.current_user_id!)
+
+        .subscribe((response) => {
+          if (response) {
+            this.notifyServ.showMessage({
+              message: ` licese ${this.licenseID} released successfully`,
+              status: 'success',
+            });
+            this.loadData();
+          } else {
+            this.notifyServ.showMessage({
+              message: `Something went wrong, please try again later!`,
+              status: 'failed',
+            });
+          }
+        });
+
+      this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    }
+  }
   onRelease(licenseID: number) {
-    const subscription = this.licenseServ
-      .release(licenseID, this.current_user_id!)
-
-      .subscribe((response) => {
-        if (response) {
-          this.notifyServ.showMessage({
-            message: ` licese ${licenseID} released successfully`,
-            status: 'success',
-          });
-        } else {
-          this.notifyServ.showMessage({
-            message: `Something went wrong, please try again later!`,
-            status: 'failed',
-          });
-        }
-      });
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.licenseID = licenseID;
+    this.isDialogVisible.set(true);
   }
 }

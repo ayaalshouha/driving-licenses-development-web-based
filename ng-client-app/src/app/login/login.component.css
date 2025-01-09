@@ -99,7 +99,7 @@ button {
   -ms-transition: opacity 0.5s;
   -o-transition: opacity 0.5s; */
 /* } */
-*/ button:hover {
+button:hover {
   opacity: 0.8;
 }
 
