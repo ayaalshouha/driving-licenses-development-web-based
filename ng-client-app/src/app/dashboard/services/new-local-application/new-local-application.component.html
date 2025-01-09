@@ -187,13 +187,18 @@
       <div class="actions">
         <button
           type="reset"
+          (click)="onReset()"
           [disabled]="application_mode == enMode.edit"
           class="button edit-btn"
         >
           Reset
         </button>
         <button class="button cancel-btn" (click)="onCancel()">Cancel</button>
-        <button class="button button-primary" (click)="onSubmit()">
+        <button
+          class="button button-primary"
+          [disabled]="!isSubmitting()"
+          (click)="onSubmit()"
+        >
           Apply
         </button>
       </div>

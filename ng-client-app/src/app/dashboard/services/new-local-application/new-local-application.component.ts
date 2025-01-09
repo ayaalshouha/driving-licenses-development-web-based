@@ -79,7 +79,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   isDialogVisible = signal<boolean>(false);
   current_person = signal<Person | undefined>(undefined);
   current_user: User | undefined = undefined;
-  isConfirmed = signal<boolean>(false);
+  isSubmitting = signal<boolean>(true);
   register_form = new FormGroup({
     firstname: new FormControl('', {
       validators: [Validators.required],
@@ -116,7 +116,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       validators: [Validators.required],
     }),
     img: new FormControl(''),
-    licenseclass: new FormControl(1, {
+    licenseclass: new FormControl('', {
       validators: [Validators.required],
     }),
   });
@@ -288,6 +288,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
             status: 'success',
           };
           this.notificationSerice.showMessage(notify);
+          this.isSubmitting.set(false);
         },
         error: (err) => {
           const notify: NotificationBox = {
@@ -419,7 +420,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           catchError((error) => throwError(() => new Error(error.message))),
           tap((local_app) => {
             this.register_form.controls.licenseclass.setValue(
-              local_app.licenseClassID
+              local_app.licenseClassID.toString()
             );
           }),
           switchMap((local_app) => {
@@ -489,6 +490,9 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
   }
   onCancel() {
     this.location.back();
+  }
+  onReset() {
+    this.isSubmitting.set(true);
   }
 }
 
