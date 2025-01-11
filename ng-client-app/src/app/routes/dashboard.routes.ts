@@ -7,6 +7,7 @@ import { system_routes } from './system.routes';
 import { appointments_routes } from './appointments.routes';
 import { TestsManagementComponent } from '../dashboard/tests-management/tests-management.component';
 import { test_management_routes } from './tests-management.route';
+import { AccountsComponent } from '../dashboard/accounts/accounts.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -41,5 +42,9 @@ export const dashboard_routes: Routes = [
   {
     path: 'system',
     children: system_routes,
+  },
+  {
+    path: 'accounts',
+    component: AccountsComponent,
   },
 ];
