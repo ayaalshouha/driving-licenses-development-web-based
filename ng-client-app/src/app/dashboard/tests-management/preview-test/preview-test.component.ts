@@ -6,11 +6,15 @@ import { Test } from '../../../models/test.model';
 import { AppointmentService } from '../../../services/appointment.service';
 import { Appointment_View } from '../../../models/appointment.model';
 import { NotificationService } from '../../../services/notification.service';
-
+import { NotificationComponent } from '../../../shared/notification/notification.component';
+import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
+import { TestType } from '../../../models/test-type.model';
+import { TestTypesService } from '../../../services/test-type.service';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-preview-test',
   standalone: true,
-  imports: [],
+  imports: [NotificationComponent, DialogWrapperComponent],
   templateUrl: './preview-test.component.html',
   styleUrl: './preview-test.component.css',
 })
@@ -18,12 +22,15 @@ export class PreviewTestComponent implements OnInit {
   testID: number | null = null;
   current_test: Test | undefined = undefined;
   current_appointment: Appointment_View | undefined = undefined;
+  testTypesArr: TestType[] = [];
   private destroyRef = inject(DestroyRef);
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
     private testService: TestService,
     private appoitnmentService: AppointmentService,
-    private notifyServ: NotificationService
+    private notifyServ: NotificationService,
+    private testTypeServ: TestTypesService
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +55,13 @@ export class PreviewTestComponent implements OnInit {
             return this.appoitnmentService
               .readView(response.appointmentID)
               .pipe(tap((response) => (this.current_appointment = response)));
+          }),
+          switchMap((response) => {
+            return this.testTypeServ.all().pipe(
+              tap((response) => {
+                this.testTypesArr = response;
+              })
+            );
           })
         )
         .subscribe({
@@ -60,5 +74,9 @@ export class PreviewTestComponent implements OnInit {
         });
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
     }
+  }
+
+  onClose() {
+    this.location.back();
   }
 }

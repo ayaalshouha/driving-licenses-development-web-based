@@ -1,1 +1,86 @@
-<p>preview-test works!</p>
+<app-notification />
+
+<app-dialog-wrapper title="Tests Management > Preview Test">
+  <div class="container">
+    <fieldset>
+      <legend>Test info</legend>
+      <div class="control-row">
+        <div class="control">
+          <label for="test-id">Test ID</label>
+          <p id="test-id">
+            {{ testID != undefined ? testID : "N/A" }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="appointment-id">Appointment ID</label>
+          <p id="appointment-id">
+            {{
+              current_appointment != undefined ? current_appointment!.id : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="full-name">Perosn Full Name</label>
+          <p id="full-name">
+            {{
+              current_appointment != undefined
+                ? current_appointment!.fullName
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="test-type">Test Type</label>
+          <p id="test-type">
+            {{
+              current_appointment != undefined
+                ? testTypesArr[current_appointment!.testType + 1].typeTitle
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="app-id">Local Application ID</label>
+          <p id="app-id">
+            {{
+              current_appointment != undefined
+                ? current_appointment!.localLicenseApplicationID
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="result">Result</label>
+          <p id="result">
+            {{
+              current_test != undefined
+                ? current_test!.result
+                  ? "PASSED"
+                  : "FAILED"
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="locked-status">Locked Status</label>
+          <p id="locked-status">
+            {{
+              current_appointment != undefined
+                ? current_appointment!.isLocked
+                : "N/A"
+            }}
+          </p>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="actions">
+          <button class="button" (click)="onClose()">OK</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</app-dialog-wrapper>
