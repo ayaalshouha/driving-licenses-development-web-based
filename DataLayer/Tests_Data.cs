@@ -28,6 +28,7 @@ namespace DataLayer
                              reader.GetInt32(reader.GetOrdinal("ID")),
                             reader.GetInt32(reader.GetOrdinal("AppointmentID")),
                             reader.GetBoolean(reader.GetOrdinal("Result")),
+                            reader.IsDBNull(reader.GetOrdinal("Notes"))? string.Empty : 
                             reader.GetString(reader.GetOrdinal("Notes")),
                             reader.GetInt32(reader.GetOrdinal("CreateByUserID"))
                         );

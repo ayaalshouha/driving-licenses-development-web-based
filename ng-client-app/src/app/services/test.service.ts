@@ -10,7 +10,7 @@ import { TESTS_API_ENDPOINTS } from '../environments/endpoints/test.endpoints';
 export class TestService {
   constructor(private http: HttpClient) {}
   read(id: number): Observable<Test> {
-    return this.http.get<Test>(`${TESTS_API_ENDPOINTS.read}${id}`).pipe(
+    return this.http.get<Test>(TESTS_API_ENDPOINTS.read(id)).pipe(
       catchError((error) => throwError(() => new Error(error.message))),
       map((response) => {
         return response;

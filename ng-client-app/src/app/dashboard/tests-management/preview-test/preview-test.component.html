@@ -36,7 +36,7 @@
           <p id="test-type">
             {{
               current_appointment != undefined
-                ? testTypesArr[current_appointment!.testType + 1].typeTitle
+                ? testTypesArr[current_appointment!.testType - 1].typeTitle
                 : "N/A"
             }}
           </p>
@@ -71,6 +71,18 @@
             {{
               current_appointment != undefined
                 ? current_appointment!.isLocked
+                  ? "LOCKED"
+                  : "NOT LOCKED YET"
+                : "N/A"
+            }}
+          </p>
+        </div>
+        <div class="control">
+          <label for="date">Appoitnment Date</label>
+          <p id="date">
+            {{
+              current_appointment != undefined
+                ? (current_appointment!.date | date)
                 : "N/A"
             }}
           </p>

@@ -10,11 +10,11 @@ import { NotificationComponent } from '../../../shared/notification/notification
 import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
 import { TestType } from '../../../models/test-type.model';
 import { TestTypesService } from '../../../services/test-type.service';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 @Component({
   selector: 'app-preview-test',
   standalone: true,
-  imports: [NotificationComponent, DialogWrapperComponent],
+  imports: [NotificationComponent, DialogWrapperComponent, DatePipe],
   templateUrl: './preview-test.component.html',
   styleUrl: './preview-test.component.css',
 })
