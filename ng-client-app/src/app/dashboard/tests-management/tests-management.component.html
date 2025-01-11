@@ -27,7 +27,13 @@
         <td>{{ app.result ? "PASSED" : "FAILED" }}</td>
         <td>{{ app.notes }}</td>
         <td class="actions">
-          <button routerLink="" class="button">Preview</button>
+          <button
+            routerLink="../preview-test"
+            [queryParams]="{ id: app.id }"
+            class="button"
+          >
+            Preview
+          </button>
         </td>
       </tr>
       } @empty {

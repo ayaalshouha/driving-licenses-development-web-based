@@ -9,6 +9,14 @@ import { TESTS_API_ENDPOINTS } from '../environments/endpoints/test.endpoints';
 })
 export class TestService {
   constructor(private http: HttpClient) {}
+  read(id: number): Observable<Test> {
+    return this.http.get<Test>(`${TESTS_API_ENDPOINTS.read}${id}`).pipe(
+      catchError((error) => throwError(() => new Error(error.message))),
+      map((response) => {
+        return response;
+      })
+    );
+  }
   create(new_test: Test): Observable<Test> {
     return this.http.post<Test>(TESTS_API_ENDPOINTS.add, new_test).pipe(
       catchError((error) => throwError(() => new Error(error.message))),
@@ -25,12 +33,12 @@ export class TestService {
     return this.http.get<number>(TESTS_API_ENDPOINTS.count);
   }
 
-    failedPercentage(): Observable<number> {
-      return this.http.get<number>(TESTS_API_ENDPOINTS.faieldPercentage);
-    }
-    passedPercentage(): Observable<number> {
-      return this.http.get<number>(TESTS_API_ENDPOINTS.passedPercentage);
-    }
+  failedPercentage(): Observable<number> {
+    return this.http.get<number>(TESTS_API_ENDPOINTS.faieldPercentage);
+  }
+  passedPercentage(): Observable<number> {
+    return this.http.get<number>(TESTS_API_ENDPOINTS.passedPercentage);
+  }
 
   // getFees(type_id: number) {
   //   return this.http.get<Observable<number>>(TEST_TYPE_API_ENDPOINT.fee(type_id));
