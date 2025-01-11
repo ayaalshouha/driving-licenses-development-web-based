@@ -3,6 +3,7 @@
   padding: 30px;
   margin-bottom: 0;
   border-top: 1px solid var(--bg-hover-color);
+  gap: 0;
 }
 p {
   text-align: left;

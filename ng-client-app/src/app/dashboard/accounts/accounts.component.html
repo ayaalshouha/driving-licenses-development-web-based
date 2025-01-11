@@ -1,1 +1,74 @@
-<p>accounts works!</p>
+<!-- <app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  title="Confirm"
+  message="Are your sure you want to cancel this application?"
+  (confirmed)="onDialogResult($event)"
+>
+</app-confirmation-dialog> -->
+<app-notification />
+<div class="container">
+  <form class="filteration">
+    <div class="flex">
+      <input
+        type="text"
+        [formControl]="filter"
+        placeholder="Full Text Search..."
+      />
+      <div class="add-btn">
+        <button class="button">+ Add New User</button>
+      </div>
+    </div>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Username</th>
+        <th scope="col">Person ID</th>
+        <th scope="col">Active Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (app of displayedData; track $index) {
+      <tr>
+        <td>{{ app.id }}</td>
+        <td>{{ app.username }}</td>
+        <td>{{ app.personID }}</td>
+        <td>{{ app.isActive ? "Active" : "NOT Active" }}</td>
+        <td class="actions">
+          <button class="button">Preview</button>
+          @if(app.isActive){
+          <button class="button">Deactivate</button>
+          }@else {
+          <button class="button">Activate</button>
+
+          }
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="5" style="text-align: center">No Users found</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button
+      class="prev-btn"
+      (click)="onPrevious()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="next-btn"
+      (click)="onNext()"
+      [disabled]="currentPage * pageSize >= filteredUsers.length"
+    >
+      Next
+    </button>
+  </div>
+</div>
