@@ -3,11 +3,12 @@ import { Test } from '../../models/test.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TestService } from '../../services/test.service';
 import { tap } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tests-management',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './tests-management.component.html',
   styleUrl: './tests-management.component.css',
 })
