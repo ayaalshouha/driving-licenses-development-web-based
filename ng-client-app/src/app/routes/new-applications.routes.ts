@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { NewInternationalApplicationComponent } from '../dashboard/services/new-international-application/new-international-application.component';
 import { canDeactivate } from '../dashboard/services/new-local-application/new-local-application.component';
 
 export const new_applications_routes: Routes = [
