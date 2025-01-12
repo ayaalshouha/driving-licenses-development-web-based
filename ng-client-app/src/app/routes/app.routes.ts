@@ -1,9 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from '../login/login.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { dashboard_routes } from './dashboard.routes';
 import { HomepageComponent } from '../homepage/homepage.component';
-import { NewLocalApplicationComponent } from '../dashboard/services/new-local-application/new-local-application.component';
 export const routes: Routes = [
   {
     path: '',
@@ -23,8 +19,12 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
-    children: dashboard_routes,
+    loadComponent: () =>
+      import('../dashboard/dashboard.component').then(
+        (mod) => mod.DashboardComponent
+      ),
+    loadChildren: () =>
+      import('./dashboard.routes').then((mod) => mod.dashboard_routes),
   },
   {
     path: 'add-new-app',
