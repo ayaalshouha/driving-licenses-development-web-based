@@ -6,16 +6,18 @@ import { NotificationService } from '../../../../services/notification.service';
 import { switchMap, tap } from 'rxjs';
 import { DriverService } from '../../../../services/driver.service';
 import { Driver_View } from '../../../../models/driver.model';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
+import { NotificationComponent } from '../../../../shared/notification/notification.component';
+import { DialogWrapperComponent } from '../../../../shared/dialog-wrapper/dialog-wrapper.component';
 @Component({
   selector: 'app-preview-license',
   standalone: true,
-  imports: [],
+  imports: [NotificationComponent, DialogWrapperComponent, DatePipe],
   templateUrl: './preview-license.component.html',
   styleUrl: './preview-license.component.css',
 })
 export class PreviewLicenseComponent {
-  testID: number | null = null;
+  licenseID: number | null = null;
   current_license: InternationalLicense | undefined = undefined;
   current_driver: Driver_View | undefined = undefined;
   private destroyRef = inject(DestroyRef);
@@ -29,16 +31,16 @@ export class PreviewLicenseComponent {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.testID = params['id'];
+      this.licenseID = params['id'];
     });
 
     this.loadTest();
   }
 
   loadTest() {
-    if (this.testID) {
+    if (this.licenseID) {
       const subscription = this.internationLicenseServ
-        .read(this.testID!)
+        .read(this.licenseID!)
         .pipe(
           tap((response) => {
             if (response) {

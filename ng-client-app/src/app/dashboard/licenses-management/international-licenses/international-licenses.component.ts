@@ -4,11 +4,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InternationlLicenseService } from '../../../services/international-license.service';
 import { tap } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-international-licenses',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe],
+  imports: [ReactiveFormsModule, DatePipe, RouterLink],
   templateUrl: './international-licenses.component.html',
   styleUrl: './international-licenses.component.css',
 })
@@ -40,35 +41,35 @@ export class InternationalLicensesComponent {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
 
     this.filter.valueChanges
-    .pipe(tap((response) => this.applyFilter(response)))
-    .subscribe();
-}
+      .pipe(tap((response) => this.applyFilter(response)))
+      .subscribe();
+  }
 
-applyFilter(value: string) {
-  const lowerCaseValue = value;
-  this.filteredLicenses = this.licenses.filter((item) =>
-    Object.values(item).some((val) =>
-      String(val).toLowerCase().includes(lowerCaseValue)
-    )
-  );
-  this.currentPage = 1;
-  this.updateDisplayedData();
-}
-updateDisplayedData() {
-  const startIndex = (this.currentPage - 1) * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  this.displayedData = this.filteredLicenses.slice(startIndex, endIndex);
-}
-onNext() {
-  if (this.currentPage * this.pageSize < this.licenses.length) {
-    this.currentPage++;
+  applyFilter(value: string) {
+    const lowerCaseValue = value;
+    this.filteredLicenses = this.licenses.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(lowerCaseValue)
+      )
+    );
+    this.currentPage = 1;
     this.updateDisplayedData();
   }
-}
-onPrevious() {
-  if ((this, this.currentPage > 1)) {
-    this.currentPage--;
-    this.updateDisplayedData();
+  updateDisplayedData() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayedData = this.filteredLicenses.slice(startIndex, endIndex);
   }
-}
+  onNext() {
+    if (this.currentPage * this.pageSize < this.licenses.length) {
+      this.currentPage++;
+      this.updateDisplayedData();
+    }
+  }
+  onPrevious() {
+    if ((this, this.currentPage > 1)) {
+      this.currentPage--;
+      this.updateDisplayedData();
+    }
+  }
 }

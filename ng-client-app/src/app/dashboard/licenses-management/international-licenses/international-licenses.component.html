@@ -36,7 +36,13 @@
         <td>{{ app.expDate | date : "EEE, MMM d, yyyy" }}</td>
         <td>{{ app.isActive ? "YES" : "NO" }}</td>
         <td>
-          <button class="button">Preview</button>
+          <button
+            routerLink="preview-internatioanl-license"
+            [queryParams]="{ id: app.id }"
+            class="button"
+          >
+            Preview
+          </button>
         </td>
       </tr>
       } @empty {
