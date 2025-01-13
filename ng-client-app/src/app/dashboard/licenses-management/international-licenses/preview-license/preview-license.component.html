@@ -81,6 +81,11 @@
         </div>
       </div>
       <div class="actions">
+        <a
+          routerLink="../../drivers/preview-driver"
+          [queryParams]="{ id: current_driver!.id }"
+          >Preview Drive's Info?</a
+        >
         <div class="actions">
           <button class="button" (click)="onClose()">OK</button>
         </div>

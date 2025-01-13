@@ -324,33 +324,17 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       updatedByUserID: this.currentUserSerice.getCurrentUser()!.id,
       updatedDate: this.current_date,
     };
-    const licenseClassID = +this.register_form.controls.licenseclass.value!;
-    const subscription = this.licenseClassService
-      .getLicenseClass(licenseClassID)
+
+    const subscription = this.personService
+      .update(this.current_person()!.id, updated_person)
       .pipe(
-        switchMap((response) => {
-          const birthdate = new Date(updated_person.birthDate);
-          const age = this.current_date.getFullYear() - birthdate.getFullYear();
-          if (response.minAgeAllowed > age) {
-            return throwError(
-              () =>
-                new Error(
-                  `'Age restriction not met! must be older than ${response.minAgeAllowed}`
-                )
-            );
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        }),
+        tap((updated_info) => {
+          if (updated_info) {
+            this.current_person.set(updated_info);
           }
-          return this.personService
-            .update(this.current_person()!.id, updated_person)
-            .pipe(
-              catchError((error) => {
-                return throwError(() => new Error(error.message));
-              }),
-              tap((updated_info) => {
-                if (updated_info) {
-                  this.current_person.set(updated_info);
-                }
-              })
-            );
         })
       )
       .subscribe({

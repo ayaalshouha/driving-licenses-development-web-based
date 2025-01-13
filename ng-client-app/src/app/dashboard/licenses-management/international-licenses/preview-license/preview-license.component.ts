@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { InternationalLicense } from '../../../../models/internationl-license.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InternationlLicenseService } from '../../../../services/international-license.service';
 import { NotificationService } from '../../../../services/notification.service';
 import { switchMap, tap } from 'rxjs';
@@ -12,7 +12,12 @@ import { DialogWrapperComponent } from '../../../../shared/dialog-wrapper/dialog
 @Component({
   selector: 'app-preview-license',
   standalone: true,
-  imports: [NotificationComponent, DialogWrapperComponent, DatePipe],
+  imports: [
+    NotificationComponent,
+    DialogWrapperComponent,
+    DatePipe,
+    RouterLink,
+  ],
   templateUrl: './preview-license.component.html',
   styleUrl: './preview-license.component.css',
 })
