@@ -1,5 +1,12 @@
 <app-notification />
 
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  message="Are you sure?"
+  title="CONFIRM"
+  (confirmed)="onDialogResult($event)"
+></app-confirmation-dialog>
+
 <app-dialog-wrapper title="Add/Edit Type">
   <div class="container">
     <fieldset>
@@ -15,19 +22,29 @@
         <div class="control">
           <label for="type-title">Type Title</label>
           <input id="type-title" />
-          <!-- {{
-                 != undefined ? current_appointment!.id : "N/A"
-            }} -->
+          @if(type==='application'){
+          {{
+            current_app_type != undefined ? current_app_type!.typeTitle : "N/A"
+          }}
+          }@else {
+          {{
+            current_test_type != undefined
+              ? current_test_type!.typeTitle
+              : "N/A"
+          }}
+          }
         </div>
 
         <div class="control">
           <label for="type-fees">Type Fees</label>
           <input id="type-fees" />
-          <!-- {{
-              current_appointment != undefined
-                ? current_appointment!.fullName
-                : "N/A"
-            }} -->
+          @if(type==='application'){
+          {{
+            current_app_type != undefined ? current_app_type!.typeFee : "N/A"
+          }}
+          }@else {
+          {{ current_test_type != undefined ? current_test_type!.fees : "N/A" }}
+          }
         </div>
       </div>
 
@@ -47,7 +64,8 @@
 
       <div class="actions">
         <div class="actions">
-          <button class="button" (click)="onClose()">OK</button>
+          <button class="button" (click)="onSubmit()">Submit</button>
+          <button class="button btn-cancel" (click)="onClose()">Cancel</button>
         </div>
       </div>
     </fieldset>

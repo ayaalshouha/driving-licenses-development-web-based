@@ -4,11 +4,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationTypesService } from '../../../services/application-type.service';
 import { tap } from 'rxjs';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-application-types',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, CurrencyPipe, RouterLink],
   templateUrl: './application-types.component.html',
   styleUrl: './application-types.component.css',
 })

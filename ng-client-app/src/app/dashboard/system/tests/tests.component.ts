@@ -4,11 +4,12 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TestTypesService } from '../../../services/test-type.service';
 import { tap } from 'rxjs';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tests',
   standalone: true,
-  imports: [CurrencyPipe, ReactiveFormsModule],
+  imports: [CurrencyPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './tests.component.html',
   styleUrl: './tests.component.css',
 })

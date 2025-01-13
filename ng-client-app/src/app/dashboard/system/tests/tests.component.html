@@ -8,7 +8,17 @@
         placeholder="Full Text Search"
       />
       <div class="add-btn">
-        <button routerLink="" class="button">+ Add New Type</button>
+        <button
+          routerLink="add-edit-type"
+          [queryParams]="{
+            id: null,
+            mode: 'add',
+            type: 'test'
+          }"
+          class="button"
+        >
+          + Add New Type
+        </button>
       </div>
     </div>
   </form>
@@ -31,7 +41,17 @@
         <td>{{ type.fees | currency }}</td>
         <td>{{ type.description }}</td>
         <td>
-          <button class="button">Edit</button>
+          <button
+            routerLink="add-edit-type"
+            [queryParams]="{
+              id: type.id,
+              mode: 'edit',
+              type: 'test'
+            }"
+            class="button"
+          >
+            Edit
+          </button>
         </td>
       </tr>
       } @empty {
