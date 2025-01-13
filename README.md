@@ -34,4 +34,4 @@ a .NET Desktop Application that structured with a N-tier Architecture, seamlessl
 - **DTO Layer**: Structures data for efficient transmission between the API and the client, ensuring that data is appropriately formatted and secure.
 
 ## Front-End Development
-The front-end layer is currently under development and will be integrated to provide a complete user interface for interacting with the application.
+The front end of the application is being developed using Angular and is integrated within the same repository. It aims to provide a user-friendly interface that seamlessly interacts with the back-end APIs. The design follows a minimalist approach and ensures consistency with the application's overall functionality. The front-end includes essential components such as a homepage, login, dashboard, and various sections for license management.
