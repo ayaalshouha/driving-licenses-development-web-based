@@ -1,0 +1,55 @@
+<app-notification />
+
+<app-dialog-wrapper title="Add/Edit Type">
+  <div class="container">
+    <fieldset>
+      <legend>Type info</legend>
+      <div class="control-row">
+        <div class="control">
+          <label for="type-id">Type ID</label>
+          <input id="type-id" />
+          {{ typeID != undefined ? typeID : "N/A" }}
+        </div>
+      </div>
+      <div class="control-row">
+        <div class="control">
+          <label for="type-title">Type Title</label>
+          <input id="type-title" />
+          <!-- {{
+                 != undefined ? current_appointment!.id : "N/A"
+            }} -->
+        </div>
+
+        <div class="control">
+          <label for="type-fees">Type Fees</label>
+          <input id="type-fees" />
+          <!-- {{
+              current_appointment != undefined
+                ? current_appointment!.fullName
+                : "N/A"
+            }} -->
+        </div>
+      </div>
+
+      @if(type==='test'){
+      <div class="control-row">
+        <div class="control">
+          <label for="description">Description</label>
+          <input id="description" />
+          {{
+            current_test_type != undefined
+              ? current_test_type!.description
+              : "N/A"
+          }}
+        </div>
+      </div>
+      }
+
+      <div class="actions">
+        <div class="actions">
+          <button class="button" (click)="onClose()">OK</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</app-dialog-wrapper>

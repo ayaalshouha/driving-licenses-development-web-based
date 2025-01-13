@@ -12,12 +12,7 @@ import { DialogWrapperComponent } from '../../../../../shared/dialog-wrapper/dia
 @Component({
   selector: 'app-preview-license',
   standalone: true,
-  imports: [
-    NotificationComponent,
-    DialogWrapperComponent,
-    DatePipe,
-    RouterLink,
-  ],
+  imports: [NotificationComponent, DialogWrapperComponent, DatePipe],
   templateUrl: './preview-license.component.html',
   styleUrl: './preview-license.component.css',
 })
