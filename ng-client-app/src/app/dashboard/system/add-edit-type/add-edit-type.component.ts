@@ -9,10 +9,17 @@ import { TestType } from '../../../models/test-type.model';
 import { NotificationComponent } from '../../../shared/notification/notification.component';
 import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 @Component({
   selector: 'app-add-edit-type',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     NotificationComponent,
     DialogWrapperComponent,
     ConfirmationDialogComponent,
@@ -34,17 +41,46 @@ export class AddEditTypeComponent implements OnInit {
     private applicationTypeServ: ApplicationTypesService,
     private testTypeServ: TestTypesService
   ) {}
+
+  type_form = new FormGroup({
+    typeTitle: new FormControl('', {
+      validators: [Validators.required],
+    }),
+    typeFees: new FormControl(0, {
+      validators: [Validators.required],
+    }),
+    typeDescription: new FormControl('', {
+      validators: [Validators.required],
+    }),
+  });
+
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.typeID = params['id'];
       this.mode = params['mode'];
       this.type = params['type'];
     });
-
-    this.initializeMode();
+    console.log(this.typeID);
+    console.log(this.mode);
+    console.log(this.type);
+    // this.initializeMode();
   }
 
-  initializeMode() {
+  AddEditApplication() {
+    if (this.type == 'application') {
+      if (this.mode == 'add') {
+        this.current_app_type = {
+          id: 0,
+          typeTitle: this.type_form.controls.typeTitle.value!,
+          typeFee: this.type_form.controls.typeFees.value!,
+        };
+        this.applicationTypeServ.add();
+      } else {
+      }
+    }
+  }
+
+  AddEditProcess() {
     if (this.mode == 'add') {
       if (this.type == 'application') {
         //add application type
@@ -59,9 +95,16 @@ export class AddEditTypeComponent implements OnInit {
       }
     }
   }
-  onDialogResult(confirmed: boolean) {}
+  onDialogResult(confirmed: boolean) {
+    this.isDialogVisible.set(false);
+    if (confirmed) {
+      this.AddEditProcess();
+    }
+  }
 
-  onSubmit() {}
+  onSubmit() {
+    this.isDialogVisible.set(true);
+  }
   onClose() {
     this.location.back();
   }

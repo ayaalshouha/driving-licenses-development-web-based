@@ -9,7 +9,7 @@
       />
       <div class="add-btn">
         <button
-          routerLink="add-edit-type"
+          routerLink="../add-edit-type"
           [queryParams]="{
             id: null,
             mode: 'add',
@@ -40,7 +40,7 @@
         <td>{{ type.typeFee | currency }}</td>
         <td>
           <button
-            routerLink="add-edit-type"
+            routerLink="../add-edit-type"
             [queryParams]="{
               id: type.id,
               mode: 'edit',

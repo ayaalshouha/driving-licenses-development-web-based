@@ -9,65 +9,68 @@
 
 <app-dialog-wrapper title="Add/Edit Type">
   <div class="container">
-    <fieldset>
-      <legend>Type info</legend>
-      <div class="control-row">
-        <div class="control">
-          <label for="type-id">Type ID</label>
-          <input id="type-id" />
-          {{ typeID != undefined ? typeID : "N/A" }}
+    <form [formGroup]="type_form">
+      <fieldset>
+        <legend>Type info</legend>
+        <div class="control-row">
+          <div class="control">
+            <label for="type-id">Type ID</label>
+            <input id="type-id" [value]="typeID || 'N/A'" />
+          </div>
         </div>
-      </div>
-      <div class="control-row">
-        <div class="control">
-          <label for="type-title">Type Title</label>
-          <input id="type-title" />
-          @if(type==='application'){
-          {{
-            current_app_type != undefined ? current_app_type!.typeTitle : "N/A"
-          }}
-          }@else {
-          {{
-            current_test_type != undefined
-              ? current_test_type!.typeTitle
-              : "N/A"
-          }}
-          }
+        <div class="control-row">
+          <div class="control">
+            <label for="type-title">Type Title</label>
+            @if(type=='application'){
+            <input
+              id="type-title"
+              [value]="current_app_type?.typeTitle || 'N/A'"
+              formControlName="typeTitle"
+            />
+            }@else if(type=='test'){
+            <input
+              id="type-title"
+              [value]="current_test_type?.typeTitle || 'N/A'"
+              formControlName="typeTitle"
+            />
+            }
+          </div>
+          <div class="control">
+            <label for="type-fees">Type Fees</label>
+            @if(type==='application'){
+            <input
+              id="type-fees"
+              [value]="current_app_type?.typeFee || 'N/A'"
+              formControlName="typeFees"
+            />
+            }@else if(type=='test'){
+            <input
+              id="type-fees"
+              [value]="current_test_type?.fees || 'N/A'"
+              formControlName="typeFees"
+            />
+            }
+          </div>
         </div>
 
-        <div class="control">
-          <label for="type-fees">Type Fees</label>
-          <input id="type-fees" />
-          @if(type==='application'){
-          {{
-            current_app_type != undefined ? current_app_type!.typeFee : "N/A"
-          }}
-          }@else {
-          {{ current_test_type != undefined ? current_test_type!.fees : "N/A" }}
-          }
+        @if(type==='test'){
+        <div class="control-row">
+          <div class="control">
+            <label for="description">Description</label>
+            <input
+              id="description"
+              [value]="current_test_type?.description || 'N/A'"
+              formControlName="typeDescription"
+            />
+          </div>
         </div>
-      </div>
+        }
 
-      @if(type==='test'){
-      <div class="control-row">
-        <div class="control">
-          <label for="description">Description</label>
-          <input id="description" />
-          {{
-            current_test_type != undefined
-              ? current_test_type!.description
-              : "N/A"
-          }}
-        </div>
-      </div>
-      }
-
-      <div class="actions">
         <div class="actions">
+          <button class="button cancel-btn" (click)="onClose()">Cancel</button>
           <button class="button" (click)="onSubmit()">Submit</button>
-          <button class="button btn-cancel" (click)="onClose()">Cancel</button>
         </div>
-      </div>
-    </fieldset>
+      </fieldset>
+    </form>
   </div>
 </app-dialog-wrapper>
