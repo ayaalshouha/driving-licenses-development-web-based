@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Subscription, tap } from 'rxjs';
+import { catchError, Subscription, tap, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NotificationService } from '../../services/notification.service';
@@ -11,7 +11,7 @@ import { NotificationComponent } from '../../shared/notification/notification.co
   selector: 'app-accounts',
   standalone: true,
   imports: [
-    // ConfirmationDialogComponent,
+    ConfirmationDialogComponent,
     NotificationComponent,
     ReactiveFormsModule,
   ],
@@ -20,7 +20,7 @@ import { NotificationComponent } from '../../shared/notification/notification.co
 })
 export class AccountsComponent implements OnInit, OnDestroy {
   subcriptions: Subscription[] = [];
-  current_app_id: number | null = null;
+  user_id: number | null = null;
   currentPage = 1;
   pageSize = 5;
   users: User[] = [];
@@ -84,35 +84,35 @@ export class AccountsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // onDialogResult(isConfirmed: boolean) {
-  //   this.isDialogVisible.set(false);
-  //   if (isConfirmed && this.current_app_id !== null) {
-  //     const subscription = this.localAppService
-  //       .cancel(this.current_app_id)
-  //       .pipe(catchError((error) => throwError(() => new Error(error))))
-  //       .subscribe({
-  //         next: () => {
-  //           this.notifyServ.showMessage({
-  //             message: 'Application cancelled successfully',
-  //             status: 'success',
-  //           });
-  //           this.loadData();
-  //         },
-  //         error: (error) => {
-  //           this.notifyServ.showMessage({
-  //             message: error.message,
-  //             status: 'failed',
-  //           });
-  //         },
-  //       });
-  //     this.subcriptions.push(subscription);
-  //   }
-  // }
+  onDialogResult(isConfirmed: boolean) {
+    this.isDialogVisible.set(false);
+    if (isConfirmed && this.user_id !== null) {
+      const subscription = this.userService
+        .delete(this.user_id)
+        .pipe(catchError((error) => throwError(() => new Error(error))))
+        .subscribe({
+          next: () => {
+            this.notifyServ.showMessage({
+              message: 'User deletted successfully',
+              status: 'success',
+            });
+            this.loadData();
+          },
+          error: (error) => {
+            this.notifyServ.showMessage({
+              message: error.message,
+              status: 'failed',
+            });
+          },
+        });
+      this.subcriptions.push(subscription);
+    }
+  }
 
-  // onCancel(localAppID: number) {
-  //   this.current_app_id = localAppID;
-  //   this.isDialogVisible.set(true);
-  // }
+  onDelete(id: number) {
+    this.user_id = id;
+    this.isDialogVisible.set(true);
+  }
 
   ngOnDestroy(): void {
     this.subcriptions.forEach((sub) => sub.unsubscribe());

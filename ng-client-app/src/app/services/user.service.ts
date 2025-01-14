@@ -21,4 +21,14 @@ export class UserService {
       `${USER_API_ENDPOINTS.readByUsername}${username}`
     );
   }
+
+  delete(id: number): Observable<boolean> {
+    return this.httpClient
+      .delete<boolean>(`${USER_API_ENDPOINTS.delete}${id}`)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
+  }
 }

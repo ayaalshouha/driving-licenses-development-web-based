@@ -1,10 +1,10 @@
-<!-- <app-confirmation-dialog
+<app-confirmation-dialog
   [isVisible]="isDialogVisible()"
   title="Confirm"
-  message="Are your sure you want to cancel this application?"
+  message="Are your sure you want to delete this user?"
   (confirmed)="onDialogResult($event)"
 >
-</app-confirmation-dialog> -->
+</app-confirmation-dialog>
 <app-notification />
 <div class="container">
   <form class="filteration">
@@ -38,13 +38,10 @@
         <td>{{ app.personID }}</td>
         <td>{{ app.isActive ? "Active" : "NOT Active" }}</td>
         <td class="actions">
-          <button class="button">Preview</button>
-          @if(app.isActive){
-          <button class="button">Deactivate</button>
-          }@else {
-          <button class="button">Activate</button>
-
-          }
+          <button class="button">Edit</button>
+          <button class="button cancel-btn" (click)="onDelete(app.id)">
+            Delete
+          </button>
         </td>
       </tr>
       } @empty {

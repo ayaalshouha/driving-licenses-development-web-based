@@ -107,7 +107,7 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteUser")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
@@ -119,7 +119,7 @@ namespace api_layer.Controllers
 
             bool isDeleted = await clsUser.DeleteAsync(id); 
             if (isDeleted)
-                return Ok("User with ID {ID} Deletted Successfully");
+                return Ok(isDeleted);
             else
                 return StatusCode(500, new { Message = "Error Deletting Person" });
         }
