@@ -24,13 +24,13 @@
             @if(type=='application'){
             <input
               id="type-title"
-              [value]="current_app_type?.typeTitle || 'N/A'"
+              [value]="current_app_type()?.typeTitle || 'N/A'"
               formControlName="typeTitle"
             />
             }@else if(type=='test'){
             <input
               id="type-title"
-              [value]="current_test_type?.typeTitle || 'N/A'"
+              [value]="current_test_type()?.typeTitle || 'N/A'"
               formControlName="typeTitle"
             />
             }
@@ -40,13 +40,13 @@
             @if(type==='application'){
             <input
               id="type-fees"
-              [value]="current_app_type?.typeFee || 'N/A'"
+              [value]="current_app_type()?.typeFee || 'N/A'"
               formControlName="typeFees"
             />
             }@else if(type=='test'){
             <input
               id="type-fees"
-              [value]="current_test_type?.fees || 'N/A'"
+              [value]="current_test_type()?.fees || 'N/A'"
               formControlName="typeFees"
             />
             }
@@ -59,7 +59,7 @@
             <label for="description">Description</label>
             <input
               id="description"
-              [value]="current_test_type?.description || 'N/A'"
+              [value]="current_test_type()?.description || 'N/A'"
               formControlName="typeDescription"
             />
           </div>

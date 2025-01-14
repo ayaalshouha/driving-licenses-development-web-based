@@ -15,6 +15,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { catchError, tap, throwError } from 'rxjs';
+import { error } from 'console';
 @Component({
   selector: 'app-add-edit-type',
   standalone: true,
@@ -31,8 +33,8 @@ export class AddEditTypeComponent implements OnInit {
   @Input() typeID: number | null = null;
   @Input() mode: 'add' | 'edit' | null = null;
   @Input() type: 'application' | 'test' | null = null;
-  current_app_type: ApplicationType | undefined = undefined;
-  current_test_type: TestType | undefined = undefined;
+  current_app_type = signal<ApplicationType | undefined>(undefined);
+  current_test_type = signal<TestType | undefined>(undefined);
   isDialogVisible = signal<boolean>(false);
   constructor(
     private route: ActivatedRoute,
@@ -63,36 +65,93 @@ export class AddEditTypeComponent implements OnInit {
     console.log(this.typeID);
     console.log(this.mode);
     console.log(this.type);
-    // this.initializeMode();
   }
 
   AddEditApplication() {
     if (this.type == 'application') {
       if (this.mode == 'add') {
-        this.current_app_type = {
+        this.current_app_type.set({
           id: 0,
           typeTitle: this.type_form.controls.typeTitle.value!,
           typeFee: this.type_form.controls.typeFees.value!,
-        };
-        this.applicationTypeServ.add();
+        });
+        this.applicationTypeServ
+          .add(this.current_app_type()!)
+          .pipe(
+            catchError((error) => {
+              return throwError(() => new Error(error.message));
+            }),
+            tap((response) => {
+              if (response) {
+                this.current_app_type.set(response);
+                this.mode = 'edit';
+              }
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.notifyService.showMessage({
+                message: 'Type Added Successfully.',
+                status: 'success',
+              });
+            },
+            error: (error) => {
+              this.notifyService.showMessage({
+                message: error.message,
+                status: 'failed',
+              });
+            },
+          });
       } else {
       }
     }
   }
 
+  AddEditTest() {
+    if (this.type == 'test') {
+      if (this.mode == 'add') {
+        this.current_test_type.set({
+          id: 0,
+          typeTitle: this.type_form.controls.typeTitle.value!,
+          fees: this.type_form.controls.typeFees.value!,
+          description: this.type_form.controls.typeDescription.value!,
+        });
+        this.testTypeServ
+          .add(this.current_test_type()!)
+          .pipe(
+            catchError((error) => {
+              return throwError(() => new Error(error.message));
+            }),
+            tap((response) => {
+              if (response) {
+                this.current_test_type.set(response);
+                this.mode = 'edit';
+              }
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.notifyService.showMessage({
+                message: 'Type Added Successfully.',
+                status: 'success',
+              });
+            },
+            error: (error) => {
+              this.notifyService.showMessage({
+                message: error.message,
+                status: 'failed',
+              });
+            },
+          });
+      } else {
+      }
+    }
+  }
   AddEditProcess() {
-    if (this.mode == 'add') {
-      if (this.type == 'application') {
-        //add application type
-      } else {
-        //add test type
-      }
-    } else {
-      if (this.type == 'application') {
-        //edit application type
-      } else {
-        //edit test type
-      }
+    if (this.type == 'application') {
+      this.AddEditApplication();
+    } else if (this.type == 'test') {
+      this.AddEditTest();
     }
   }
   onDialogResult(confirmed: boolean) {
