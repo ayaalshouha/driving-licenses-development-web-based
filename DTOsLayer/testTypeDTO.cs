@@ -12,12 +12,12 @@ namespace DTOsLayer
         public string TypeTitle { get; set; }
         public decimal Fees { get; set; }
         public string Description { get; set; }
-        public TestType(int id, string typetitle, decimal fee, string desc)
+        public TestType(int id, string typeTitle, decimal fees, string description)
         {
-            this.Description = desc;
+            this.Description = description;
             this.ID = id;
-            this.Fees = fee;
-            this.TypeTitle = typetitle;
+            this.Fees = fees;
+            this.TypeTitle = typeTitle;
         }
     }
 }

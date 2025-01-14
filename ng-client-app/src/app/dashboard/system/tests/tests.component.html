@@ -61,7 +61,9 @@
           >
             Edit
           </button>
-          <button class="button cancel-btn">Delete</button>
+          <button class="button cancel-btn" (click)="onDelete(type.id)">
+            Delete
+          </button>
         </td>
       </tr>
       } @empty {

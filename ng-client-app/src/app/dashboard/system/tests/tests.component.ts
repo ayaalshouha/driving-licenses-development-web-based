@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { TestType } from '../../../models/test-type.model';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TestTypesService } from '../../../services/test-type.service';
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
@@ -91,21 +91,26 @@ export class TestsComponent {
     this.isDialogVisible.set(false);
     if (confirm) {
       if (this.test_id) {
-        this.typesService.delete(this.test_id!).subscribe({
-          next: () => {
-            this.notifyService.showMessage({
-              message: 'Test deletted successfully',
-              status: 'success',
-            });
-            this.loadTypes();
-          },
-          error: (error) => {
-            this.notifyService.showMessage({
-              message: error.message,
-              status: 'failed',
-            });
-          },
-        });
+        this.typesService
+          .delete(this.test_id!)
+          .pipe(
+            catchError((error) => throwError(() => new Error(error.message)))
+          )
+          .subscribe({
+            next: () => {
+              this.notifyService.showMessage({
+                message: 'Test deletted successfully',
+                status: 'success',
+              });
+              this.loadTypes();
+            },
+            error: (error) => {
+              this.notifyService.showMessage({
+                message: error.message,
+                status: 'failed',
+              });
+            },
+          });
       }
     }
   }

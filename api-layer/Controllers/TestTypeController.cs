@@ -64,13 +64,13 @@ namespace api_layer.Controllers
             clsTestTypes type = AssignDataToTypeType(newType);
 
             if (await type.SaveAsync())
-                return CreatedAtRoute("ReadTestTypeByID", new { type.ID }, newType);
+                return CreatedAtRoute("ReadTestTypeByID", new { type.ID }, type.TestTypeDTO);
             else
                 return StatusCode(500, new { message = "Error Creating Test Type" });
         }
 
         [HttpPut("{id}", Name = "UpdateTestType")]
-        public async Task<ActionResult<TestType>> Update(enTestType id, TestType newType)
+        public async Task<ActionResult<TestType>> Update(int id, TestType newType)
         {
             if (newType == null)
                 return BadRequest("invalid object data");
@@ -81,7 +81,7 @@ namespace api_layer.Controllers
             if (!isExist)
                 return NotFound("Test Type NOT Found");
 
-            clsTestTypes type =  AssignDataToTypeType(newType, (int)id);
+            clsTestTypes type =  AssignDataToTypeType(newType,id);
 
             if (type != null && await type.SaveAsync())
                 return Ok(type.TestTypeDTO);
@@ -90,12 +90,12 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteTestType")]
-        public async Task<ActionResult<bool>> Delete(enTestType id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative((int)id))
                 return BadRequest("Invalid ID");
 
-            bool isExist = await clsTestTypes.isExistAsync((int)id);
+            bool isExist = await clsTestTypes.isExistAsync(id);
 
             if (isExist)
             {

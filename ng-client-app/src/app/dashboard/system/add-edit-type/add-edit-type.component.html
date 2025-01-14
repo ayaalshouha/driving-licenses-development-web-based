@@ -15,7 +15,11 @@
         <div class="control-row">
           <div class="control">
             <label for="type-id">Type ID</label>
+            @if (type==='application') {
             <input id="type-id" [value]="current_app_type()?.id" />
+            }@else if(type==='test'){
+            <input id="type-id" [value]="current_test_type()?.id" />
+            }
           </div>
         </div>
         <div class="control-row">
