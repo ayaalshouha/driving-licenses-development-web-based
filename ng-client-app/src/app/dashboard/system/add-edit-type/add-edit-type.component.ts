@@ -16,7 +16,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { catchError, tap, throwError } from 'rxjs';
-import { error } from 'console';
 @Component({
   selector: 'app-add-edit-type',
   standalone: true,
@@ -68,6 +67,7 @@ export class AddEditTypeComponent implements OnInit {
   }
 
   AddEditApplication() {
+    this.isDialogVisible.set(false);
     if (this.type == 'application') {
       if (this.mode == 'add') {
         this.current_app_type.set({

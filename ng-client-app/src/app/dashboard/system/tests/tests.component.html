@@ -1,3 +1,12 @@
+<app-notification />
+<app-confirmation-dialog
+  (confirmed)="onDialogResult($event)"
+  [isVisible]="isDialogVisible()"
+  message="Are you sure you want to delete this test type?
+  type is associated with many tests and this is going to affect applicant's data"
+  title="CONFIRM"
+></app-confirmation-dialog>
+
 <div class="container">
   <form class="filteration">
     <div class="flex">
@@ -40,7 +49,7 @@
         <td>{{ type.typeTitle }}</td>
         <td>{{ type.fees | currency }}</td>
         <td>{{ type.description }}</td>
-        <td>
+        <td class="actions">
           <button
             routerLink="../add-edit-type"
             [queryParams]="{
@@ -52,6 +61,7 @@
           >
             Edit
           </button>
+          <button class="button cancel-btn">Delete</button>
         </td>
       </tr>
       } @empty {

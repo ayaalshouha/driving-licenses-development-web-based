@@ -25,4 +25,12 @@ export class TestTypesService {
       TEST_TYPE_API_ENDPOINT.fee(type_id)
     );
   }
+
+  delete(id: number) {
+    return this.http.delete(`${TEST_TYPE_API_ENDPOINT.delete}${id}`).pipe(
+      catchError((error) => {
+        return throwError(() => new Error(error.messages));
+      })
+    );
+  }
 }

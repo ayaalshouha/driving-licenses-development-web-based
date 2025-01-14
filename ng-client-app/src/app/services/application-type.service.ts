@@ -21,13 +21,13 @@ export class ApplicationTypesService {
   all(): Observable<ApplicationType[]> {
     return this.http.get<ApplicationType[]>(APPLICATION_TYPE_API_ENDPOINT.all);
   }
-  // getFees(type_id: number) {
-  //   return this.http.get<Observable<number>>(
-  //     `${APPLICATION_TYPE_API_ENDPOINT.fees}${type_id}`
-  //   );
-  // }
-
-  // getApplicationTypeById(id: number): Observable<ApplicationType> {
-  //   return this.http.get<ApplicationType>(`${this.apiUrl}/${id}`);
-  // }
+  delete(id: number) {
+    return this.http
+      .delete(`${APPLICATION_TYPE_API_ENDPOINT.delete}${id}`)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.messages));
+        })
+      );
+  }
 }

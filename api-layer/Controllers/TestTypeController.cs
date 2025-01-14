@@ -90,7 +90,7 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteTestType")]
-        public async Task<ActionResult> Delete(enTestType id)
+        public async Task<ActionResult<bool>> Delete(enTestType id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative((int)id))
                 return BadRequest("Invalid ID");
@@ -101,7 +101,7 @@ namespace api_layer.Controllers
             {
                 bool isDeleted = await clsTestTypes.DeleteAsync((int)id);
                 if (isDeleted)
-                    return Ok($"Test Type with ID {id} Deletted Successfully");
+                    return Ok(isDeleted);
                 else
                     return StatusCode(500, new { Message = "Error Deletting Test Type" });
             }
@@ -115,5 +115,7 @@ namespace api_layer.Controllers
             decimal fee = await clsTestTypes.FeeAsync((int)id);
             return Ok(fee);
         }
+    
+        
     }
 }

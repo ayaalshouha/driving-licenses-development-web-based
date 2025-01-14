@@ -15,7 +15,7 @@
         <div class="control-row">
           <div class="control">
             <label for="type-id">Type ID</label>
-            <input id="type-id" [value]="typeID || 'N/A'" />
+            <input id="type-id" [value]="current_app_type()?.id" />
           </div>
         </div>
         <div class="control-row">
@@ -24,13 +24,13 @@
             @if(type=='application'){
             <input
               id="type-title"
-              [value]="current_app_type()?.typeTitle || 'N/A'"
+              [value]="current_app_type()?.typeTitle"
               formControlName="typeTitle"
             />
             }@else if(type=='test'){
             <input
               id="type-title"
-              [value]="current_test_type()?.typeTitle || 'N/A'"
+              [value]="current_test_type()?.typeTitle"
               formControlName="typeTitle"
             />
             }
@@ -40,13 +40,13 @@
             @if(type==='application'){
             <input
               id="type-fees"
-              [value]="current_app_type()?.typeFee || 'N/A'"
+              [value]="current_app_type()?.typeFee"
               formControlName="typeFees"
             />
             }@else if(type=='test'){
             <input
               id="type-fees"
-              [value]="current_test_type()?.fees || 'N/A'"
+              [value]="current_test_type()?.fees"
               formControlName="typeFees"
             />
             }

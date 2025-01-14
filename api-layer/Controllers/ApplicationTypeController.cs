@@ -64,7 +64,7 @@ namespace api_layer.Controllers
             clsApplicationTypes app = await AssignDataToAppType(newApp);
 
             if (await app.SaveAsync())
-                return CreatedAtRoute("ReadApplicationTypeByID", new { app.ID }, newApp);
+                return CreatedAtRoute("ReadApplicationTypeByID", new { app.ID }, app.AppTypeDTO);
             else
                 return StatusCode(500, new { message = "Error Creating Application" });
         }
@@ -92,7 +92,7 @@ namespace api_layer.Controllers
         }
 
         [HttpDelete("{id}", Name = "DleteApplicationType")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (!Int32.TryParse(id.ToString(), out _) || Int32.IsNegative(id))
                 return BadRequest("Invalid ID");
@@ -103,7 +103,8 @@ namespace api_layer.Controllers
             {
                 bool isDeleted = await clsApplicationTypes.DeleteAsync(id);
                 if (isDeleted)
-                    return Ok($"Application Type with ID {id} Deletted Successfully");
+                    return Ok(isDeleted);
+
                 else
                     return StatusCode(500, new { Message = "Error Deletting Application Type" });
             }

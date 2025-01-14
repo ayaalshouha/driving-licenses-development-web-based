@@ -1,3 +1,12 @@
+<app-notification />
+<app-confirmation-dialog
+  (confirmed)="onDialogResult($event)"
+  [isVisible]="isDialogVisible()"
+  message="Are you sure you want to delete this application type?
+  type is associated with many applications and this is going to affect applicant's data"
+  title="CONFIRM"
+></app-confirmation-dialog>
+
 <div class="container">
   <form class="filteration">
     <div class="flex">
@@ -38,7 +47,7 @@
         <td>{{ type.id }}</td>
         <td>{{ type.typeTitle }}</td>
         <td>{{ type.typeFee | currency }}</td>
-        <td>
+        <td class="actions">
           <button
             routerLink="../add-edit-type"
             [queryParams]="{
@@ -49,6 +58,9 @@
             class="button"
           >
             Edit
+          </button>
+          <button class="button cancel-btn" (click)="onDelete(type.id)">
+            Delete
           </button>
         </td>
       </tr>
