@@ -1,7 +1,7 @@
 # Driving and Vehicles Licenses Development Web-Based
 
 ## Overview
-a .NET Desktop Application that structured with a N-tier Architecture, seamlessly integrated with a Microsoft SQL Server Database. It utilizes the capabilities of .NET Windows Form technology , written in C# programming language and follows the principles of Object-Oriented Programming (OOP).
+ an Angular and .NET Application structured with an N-tier Architecture, seamlessly integrated with a Microsoft SQL Server Database. The application utilizes the capabilities of Angular for the front-end and .NET for the back-end, written in C# programming language. It adheres to the principles of Object-Oriented Programming (OOP) and provides a dynamic and user-friendly interface powered by Angular while ensuring robust data management and processing through the .NET backend.
 
 ## Key Features
 - **Login Logs**: Records login activities for users.
