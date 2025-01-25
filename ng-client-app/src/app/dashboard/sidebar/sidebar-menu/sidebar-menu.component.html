@@ -47,32 +47,13 @@
     @if(menuOpen['services']() === true){
     <ul class="submenu">
       <li>
-        <a (click)="ontoggle('new-app')">
+        <a
+          routerLink="services/new-application/local"
+          routerLinkActive="active"
+        >
           <span>New Driving License App</span>
-          <i class="fa fa-caret-down"></i>
         </a>
       </li>
-      <!-- new application sub-submenu -->
-      @if(menuOpen['new-app']()){
-      <ul class="submenu">
-        <li>
-          <a
-            routerLink="services/new-application/local"
-            routerLinkActive="active"
-          >
-            <span>New Local Application </span>
-          </a>
-        </li>
-        <li>
-          <a
-            routerLink="services/new-application/international"
-            routerLinkActive="active"
-          >
-            <span>New International App</span>
-          </a>
-        </li>
-      </ul>
-      }
       <li>
         <a routerLink="services/renew-local-app" routerLinkActive="active">
           <span>Renew Driving Licence</span>
@@ -209,14 +190,14 @@
           <span>Manage Detained Licenses</span>
         </a>
       </li>
-      <li>
+      <!-- <li>
         <a
           routerLink="licenses-management/international-licenses"
           routerLinkActive="active"
         >
           <span>Manage International Licenses</span>
         </a>
-      </li>
+      </li> -->
     </ul>
     }
     <!-- Tests -->

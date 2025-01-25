@@ -101,7 +101,6 @@ p.inline-error {
 }
 .backdrop .dialog-box,
 .notification-box {
-  max-width: 800px;
   background: slategray;
   color: var(--text-color-light);
   padding: 20px;

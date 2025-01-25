@@ -1,5 +1,5 @@
 export interface Test {
-  id: number;
+  id?: number;
   appointmentID: number;
   result: boolean;
   notes: string | null;

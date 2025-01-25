@@ -39,7 +39,7 @@ export class TakeTestComponent implements OnInit, OnDestroy {
   testTypes: TestType[] | null = null;
   current_user_id = signal<number>(0);
 
-  result = new FormControl<true | false>(true, {
+  result = new FormControl<string>("true", {
     validators: [Validators.required],
   });
   notes = new FormControl<string | null>(null);
@@ -116,10 +116,9 @@ export class TakeTestComponent implements OnInit, OnDestroy {
     // declaring test object
     this.test = {
       appointmentID: this.appointment!.id,
-      id: 0,
       createdByUserID: this.current_user_id()!,
       notes: this.notes.value,
-      result: this.result.value!,
+      result: this.result.value === "0"?false:true,
     };
     console.log('test result = ' + this.test.result);
 
