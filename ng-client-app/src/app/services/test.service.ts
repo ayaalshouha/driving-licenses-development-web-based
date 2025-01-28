@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Test } from '../models/test.model';
 import { TESTS_API_ENDPOINTS } from '../environments/endpoints/test.endpoints';
-import { log } from 'node:console';
 
 @Injectable({
   providedIn: 'root',
