@@ -12,6 +12,7 @@ export const dashboard_routes: Routes = [
     path: 'test',
     component: TestComponent,
   },
+
   {
     path: 'services',
     loadChildren: () =>
