@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { TestComponent } from '../dashboard/test/test.component';
-import { AccountsComponent } from '../dashboard/accounts/accounts.component';
+import { UserAccountComponent } from '../dashboard/user-account/user-account.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -12,7 +12,10 @@ export const dashboard_routes: Routes = [
     path: 'test',
     component: TestComponent,
   },
-
+  {
+    path: 'user-account',
+    component: UserAccountComponent,
+  },
   {
     path: 'services',
     loadChildren: () =>

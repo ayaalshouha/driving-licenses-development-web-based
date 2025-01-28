@@ -27,6 +27,7 @@ header .logo {
   background: none;
   border: none;
   color: #1f384c;
+  cursor: pointer;
 }
 .avatar {
   border: 1px solid lightgray;

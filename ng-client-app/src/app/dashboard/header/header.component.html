@@ -2,7 +2,7 @@
   <div class="logo">
     <p>Dashboard</p>
   </div>
-  <button class="user-section">
+  <button routerLink="../user-account" class="user-section">
     <img src="images/user (4).png" alt="" class="avatar" />
     <span class="username">
       {{ currentUserService.getCurrentUser()?.username }}
