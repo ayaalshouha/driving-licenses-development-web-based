@@ -1,1 +1,35 @@
-<p>user-account works!</p>
+<div class="container">
+  <p>Welcome, username</p>
+
+  <div class="wrapper">
+    <div class="user-box">
+      <img src="images/user (4).png" alt="" />
+      <p class="username">Aya AlShouha</p>
+    </div>
+
+    <div class="user-info-box">
+      <app-new-local-application [person_id]="3"></app-new-local-application>
+
+      <div class="form">
+        <div class="control-row">
+          <div class="control">
+            <label for="user-id">User ID</label>
+            <input type="text" name="user-id" id="user-id" />
+          </div>
+          <div class="control">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" />
+          </div>
+          <div class="control">
+            <label for="activity-state">Activity State</label>
+            <select name="activity-state" id="activity-state">
+              <option value="1">Active</option>
+              <option value="0">NOT Active</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="">Change user password?</a>
+  </div>
+</div>

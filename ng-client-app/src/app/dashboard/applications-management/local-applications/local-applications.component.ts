@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { catchError, Observable, Subscription, tap, throwError } from 'rxjs';
+import { catchError, Subscription, tap, throwError } from 'rxjs';
 import { LocalApplicationView } from '../../../models/local-application.model';
 import { LocalApplicationService } from '../../../services/local-application.service';
 import { RouterLink } from '@angular/router';

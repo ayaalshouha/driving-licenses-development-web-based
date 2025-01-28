@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   inject,
@@ -26,7 +27,7 @@ import {
   throwError,
 } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { CanDeactivateFn } from '@angular/router';
+import { ActivatedRoute, CanDeactivateFn } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { isExist } from '../../custom-validator';
 import { PersonService } from '../../../services/person.service';
@@ -58,7 +59,7 @@ export enum enMode {
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    DatePipe,
+    // DatePipe,
     ConfirmationDialogComponent,
     NotificationComponent,
   ],
@@ -68,6 +69,7 @@ export enum enMode {
 export class NewLocalApplicationComponent implements OnInit, OnChanges {
   @Input() application_id: number | null = null;
   @Input() person_id: number | null = null;
+  with_cancelation: boolean = true;
   application_mode = this.application_id == null ? enMode.add : enMode.edit;
   enMode = enMode;
   countries: string[] = [];
@@ -128,7 +130,9 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     private applicationService: ApplicationService,
     private localAppService: LocalApplicationService,
     private notificationSerice: NotificationService,
-    private location: Location
+    private location: Location,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -143,6 +147,12 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+
+    this.route.queryParams.subscribe((params) => {
+      this.with_cancelation = params['with_cancelation'] === 'true';
+    });
+    this.cdr.detectChanges();
+    console.log('new application cancelation ' + this.with_cancelation);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (

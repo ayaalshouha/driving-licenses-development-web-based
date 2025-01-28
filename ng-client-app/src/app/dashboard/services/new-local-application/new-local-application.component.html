@@ -8,9 +8,9 @@
 }
 <app-notification />
 <form [formGroup]="register_form">
-  <p style="text-align: right">{{ current_date | date : "fullDate" }}</p>
+  <!-- <p style="text-align: right">{{ current_date | date : "fullDate" }}</p> -->
   <fieldset>
-    <legend>Application form</legend>
+    <legend>Person Information</legend>
     <div class="control-row" style="display: inline">
       <div class="control">
         <label for="person-id">Person ID</label>
@@ -175,13 +175,13 @@
           justify-content: flex-start;
         "
       >
-        @if(application_mode == enMode.add){
+        <!-- @if(application_mode == enMode.add){
         <a href="#" onclick="event.preventDefault();">Already exist person?</a>
         <p style="font-size: 10px">
           you can add another application for the same person with different
           license class
         </p>
-        }
+        } !-->
       </div>
 
       <div class="actions">
@@ -193,7 +193,9 @@
         >
           Reset
         </button>
+        @if(with_cancelation){
         <button class="button cancel-btn" (click)="onCancel()">Cancel</button>
+        }
         <button
           class="button button-primary"
           [disabled]="!isSubmitting()"
