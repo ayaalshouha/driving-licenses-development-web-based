@@ -1,13 +1,5 @@
-.container p {
-  color: #1b2568;
-  font-weight: bold;
-  font-size: 22px;
-}
-
-.container {
-  background-color: transparent;
-}
 .wrapper {
+  margin: 30px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -28,11 +20,15 @@
 
   p {
     font-size: 17px;
+    color: #1b2568;
+    font-weight: bold;
   }
 
   img {
+    border: 1px solid lightgrey;
     width: 80px;
     height: 80px;
+    margin: 0px 20px;
   }
 }
 
