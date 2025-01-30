@@ -1,6 +1,5 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 type MenuKeys =
   | 'services'
