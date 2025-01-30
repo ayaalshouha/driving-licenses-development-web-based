@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { User } from '../../models/user.model';
 import { PersonService } from '../../services/person.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-user-account',
   standalone: true,
@@ -18,6 +19,7 @@ export class UserAccountComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private personService: PersonService,
+    private userService: UserService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -46,5 +48,9 @@ export class UserAccountComponent implements OnInit {
         }
       }
     }
+  }
+
+  onSubmit(username: string) {
+    //change username process
   }
 }

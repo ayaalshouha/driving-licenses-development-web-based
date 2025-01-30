@@ -22,6 +22,7 @@
             name="username"
             id="username"
             [value]="current_user?.username"
+            #username
           />
         </div>
         <div class="control">
@@ -30,6 +31,14 @@
             {{ this.current_user?.isActive ? "Active" : "NOT Active" }}
           </p>
         </div>
+      </div>
+      <div class="actions">
+        <button
+          class="button"
+          (click)="onSubmit(current_user?.username ?? 'undefined')"
+        >
+          Submit
+        </button>
       </div>
     </div>
   </div>
