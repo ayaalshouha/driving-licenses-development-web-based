@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { NewLocalApplicationComponent } from '../services/new-local-application/new-local-application.component';
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { User } from '../../models/user.model';
 import { PersonService } from '../../services/person.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -31,11 +31,10 @@ export class UserAccountComponent implements OnInit {
           this.person_id = user.personID;
           console.log('current user is done ', this.current_user?.personID);
 
-          // Directly fetch full name as a string
           if (this.person_id) {
             this.personService.getFullName(this.person_id).subscribe({
               next: (response) => {
-                this.full_name = response; // Assign full name directly
+                this.full_name = response;
                 console.log('Full Name:', this.full_name);
               },
               error: (err) => console.error('Error fetching full name:', err),
