@@ -291,3 +291,11 @@
     </li>
   </ul>
 </main>
+
+<app-confirmation-dialog
+  [isVisible]="isDialogVisible()"
+  title="Confirm"
+  message="Are your sure you want to logout?"
+  (confirmed)="onDialogResult($event)"
+>
+</app-confirmation-dialog>

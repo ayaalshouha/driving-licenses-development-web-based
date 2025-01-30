@@ -1,5 +1,7 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { DialogWrapperComponent } from '../../../shared/dialog-wrapper/dialog-wrapper.component';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 type MenuKeys =
   | 'services'
   | 'apps'
@@ -12,12 +14,13 @@ type MenuKeys =
 @Component({
   selector: 'app-sidebar-menu',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, ConfirmationDialogComponent],
   templateUrl: './sidebar-menu.component.html',
   styleUrl: './sidebar-menu.component.css',
 })
 export class SidebarMenuComponent {
   private router = inject(Router);
+  isDialogVisible = signal<boolean>(false);
   menuOpen: Record<MenuKeys, WritableSignal<boolean>> = {
     services: signal(false),
     apps: signal(false),
@@ -43,6 +46,7 @@ export class SidebarMenuComponent {
       hierarchy[menuKey]?.includes(targetMenu)
     );
   }
+
   ontoggle(menu: MenuKeys) {
     for (const key in this.menuOpen) {
       if (key === menu) {
@@ -54,11 +58,14 @@ export class SidebarMenuComponent {
       }
     }
   }
-
-  logout() {
-    if (window.confirm('Are you sure you want to logout?')) {
+  onDialogResult(isConfirmed: boolean) {
+    this.isDialogVisible.set(false);
+    if (isConfirmed) {
       window.localStorage.setItem('current-user', JSON.stringify(undefined));
       this.router.navigate(['/login']);
     }
+  }
+  logout() {
+    this.isDialogVisible.set(true);
   }
 }
