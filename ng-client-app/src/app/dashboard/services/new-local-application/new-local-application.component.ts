@@ -152,7 +152,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       this.with_cancelation = params['with_cancelation'] === 'true';
     });
     this.cdr.detectChanges();
-    console.log('new application cancelation ' + this.with_cancelation);
+    // console.log('new application cancelation ' + this.with_cancelation);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -164,9 +164,9 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
     }
   }
   private initializeMode(): void {
-    console.log(
-      `initialize mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
-    );
+    // console.log(
+    //   `initialize mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
+    // );
     this.application_mode =
       this.application_id == null
         ? this.person_id == null
@@ -174,12 +174,12 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           : enMode.edit
         : enMode.edit;
 
-    console.log('mode = ' + this.application_mode);
+    // console.log('mode = ' + this.application_mode);
   }
   private handleEditMode(): void {
-    console.log(
-      `handling edit mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
-    );
+    // console.log(
+    //   `handling edit mode {app id = ${this.application_id}, perosn id = ${this.person_id}}`
+    // );
     if (this.application_mode == enMode.edit) {
       if (this.application_id) {
         this.retrieveApplication(this.application_id!);
@@ -255,7 +255,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
       .getLicenseClass(local_app.licenseClassID)
       .pipe(
         switchMap((response) => {
-          console.log('this is now birthdate check');
+          // console.log('this is now birthdate check');
           const birthdate = new Date(new_person.birthDate);
           const age = this.current_date.getFullYear() - birthdate.getFullYear();
           if (response.minAgeAllowed > age) {
@@ -270,7 +270,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           }
         }),
         switchMap((response) => {
-          console.log('this is retrievng person data check');
+          // console.log('this is retrievng person data check');
           if (response.id === 0) {
             return throwError(() => new Error('Invalid person info'));
           } else {
@@ -279,7 +279,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
           }
         }),
         concatMap((response) => {
-          console.log('this is retrievng application data check');
+          // console.log('this is retrievng application data check');
           if (response.id === 0) {
             return throwError(() => new Error('Invalid application info'));
           } else {
@@ -388,7 +388,7 @@ export class NewLocalApplicationComponent implements OnInit, OnChanges {
         .pipe(
           catchError((error) => throwError(() => new Error(error.message))),
           tap((person_info) => {
-            console.log(`retrieve person method ${person_info}}`);
+            // console.log(`retrieve person method ${person_info}}`);
             this.current_person.set(person_info);
             this.FillForm(this.current_person()!);
           })
