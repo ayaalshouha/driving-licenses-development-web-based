@@ -5,10 +5,11 @@ import { User } from '../../models/user.model';
 import { PersonService } from '../../services/person.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-user-account',
   standalone: true,
-  imports: [NewLocalApplicationComponent],
+  imports: [NewLocalApplicationComponent, RouterLink],
   templateUrl: './user-account.component.html',
   styleUrl: './user-account.component.css',
 })
