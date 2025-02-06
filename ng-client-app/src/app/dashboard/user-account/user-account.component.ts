@@ -49,8 +49,4 @@ export class UserAccountComponent implements OnInit {
       }
     }
   }
-
-  onSubmit(username: string) {
-    //change username process
-  }
 }
