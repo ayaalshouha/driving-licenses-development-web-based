@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { TestComponent } from '../dashboard/test/test.component';
-import { UserAccountComponent } from '../dashboard/user-account/user-account.component';
 
 export const dashboard_routes: Routes = [
   {
@@ -14,8 +13,8 @@ export const dashboard_routes: Routes = [
   },
   {
     path: 'user-account',
-    component: UserAccountComponent,
-    
+    loadChildren: () =>
+      import('./user-account.routes').then((mod) => mod.user_account_routes),
   },
   {
     path: 'services',
