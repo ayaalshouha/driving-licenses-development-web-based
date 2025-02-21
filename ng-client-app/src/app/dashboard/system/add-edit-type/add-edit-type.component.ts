@@ -22,6 +22,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { catchError, tap, throwError } from 'rxjs';
+import { error } from 'node:console';
 @Component({
   selector: 'app-add-edit-type',
   standalone: true,
@@ -76,8 +77,36 @@ export class AddEditTypeComponent implements OnInit {
   RetrievingOnEdit() {
     if (this.type == 'test' && this.mode == 'edit') {
       //retrieve test type
+      this.testTypeServ
+        .get(this.id!)
+        .pipe(
+          tap((response) => {
+            this.current_test_type.set(response);
+          })
+        )
+        .subscribe({
+          error: (error) =>
+            this.notifyService.showMessage({
+              message: error.message,
+              status: 'failed',
+            }),
+        });
     } else if (this.type == 'application' && this.mode == 'edit') {
       // retrieve application type
+      this.applicationTypeServ
+        .get(this.id!)
+        .pipe(
+          tap((response) => {
+            this.current_app_type.set(response);
+          })
+        )
+        .subscribe({
+          error: (error) =>
+            this.notifyService.showMessage({
+              message: error.message,
+              status: 'failed',
+            }),
+        });
     }
   }
 
