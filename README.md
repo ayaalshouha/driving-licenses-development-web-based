@@ -38,3 +38,19 @@
 - It aims to provide a user-friendly interface that seamlessly interacts with the back-end APIs. 
 - The design follows a minimalist approach and ensures consistency with the application's overall functionality. 
 - The front-end includes essential components such as a homepage, login, dashboard, and various sections for license management.
+
+## Screenshots
+
+![landing](https://github.com/user-attachments/assets/2e6626e9-3470-46c4-965a-b8e2c3333853)
+![login](https://github.com/user-attachments/assets/560ef1c4-50d7-42e1-9eb8-50e5d06e9f74)
+![process](https://github.com/user-attachments/assets/5e19625c-1e5f-4bc6-b891-8c76c9486594)
+![whoweare](https://github.com/user-attachments/assets/0de4f61e-5c8f-4977-b7f1-be70a4bb48ef)
+![contact](https://github.com/user-attachments/assets/6d343bc8-23e1-4ace-a7ca-62825184e603)
+![dashboard](https://github.com/user-attachments/assets/e125b241-7d70-4397-bb83-79a5081d076c)
+![appointments](https://github.com/user-attachments/assets/8eb394d6-15c7-4751-99b9-d85a6b70c4aa)
+![applications](https://github.com/user-attachments/assets/0a8fe7b6-3896-44e6-8c65-6027f91dbf10)
+![adding-new-application](https://github.com/user-attachments/assets/f48d2020-b8f4-4e95-b44e-cebc9f08b624)
+![history](https://github.com/user-attachments/assets/a2919c68-42e2-4b45-aaef-4c5103b7fd3d)
+![notification](https://github.com/user-attachments/assets/bc31e29b-3703-4123-84d7-4a772cd4ac1c)
+
+
