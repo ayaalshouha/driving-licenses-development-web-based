@@ -12,7 +12,7 @@ export class ApplicationTypesService {
 
   get(id: number): Observable<ApplicationType> {
     return this.http
-      .get<ApplicationType>(`${APPLICATION_TYPE_API_ENDPOINT.read}/${id}`)
+      .get<ApplicationType>(`${APPLICATION_TYPE_API_ENDPOINT.read}${id}`)
       .pipe(
         catchError((error) => {
           return throwError(() => new Error(error.messages));

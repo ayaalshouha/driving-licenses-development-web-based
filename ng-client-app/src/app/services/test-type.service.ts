@@ -11,9 +11,9 @@ export class TestTypesService {
   constructor(private http: HttpClient) {}
 
   get(id: number): Observable<TestType> {
-    return this.http.get<TestType>(`${TEST_TYPE_API_ENDPOINT.read}/${id}`).pipe(
+    return this.http.get<TestType>(`${TEST_TYPE_API_ENDPOINT.read}${id}`).pipe(
       catchError((error) => {
-        return throwError(() => new Error(error.messages));
+        return throwError(() => new Error(error.message));
       })
     );
   }

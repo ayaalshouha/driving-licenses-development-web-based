@@ -22,7 +22,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { catchError, tap, throwError } from 'rxjs';
-import { error } from 'node:console';
 @Component({
   selector: 'app-add-edit-type',
   standalone: true,
