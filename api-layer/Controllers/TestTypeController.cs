@@ -44,10 +44,10 @@ namespace api_layer.Controllers
         }
 
         [HttpGet("{id}", Name = "ReadTestTypeByID")]
-        public async Task<ActionResult<TestType>> Read(enTestType id)
+        public async Task<ActionResult<TestType>> Read(int id)
         {
 
-            clsTestTypes type = await clsTestTypes.FindAsync((int)id);
+            clsTestTypes type = await clsTestTypes.FindAsync(id);
 
             if (type == null)
                 return NotFound($"Test Type With ID {id} Not Found");
