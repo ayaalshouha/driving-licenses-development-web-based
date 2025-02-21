@@ -10,6 +10,13 @@ import { TestType } from '../models/test-type.model';
 export class TestTypesService {
   constructor(private http: HttpClient) {}
 
+  get(id: number): Observable<TestType> {
+    return this.http.get<TestType>(`${TEST_TYPE_API_ENDPOINT.read}/${id}`).pipe(
+      catchError((error) => {
+        return throwError(() => new Error(error.messages));
+      })
+    );
+  }
   add(new_test: TestType): Observable<TestType> {
     return this.http.post<TestType>(TEST_TYPE_API_ENDPOINT.add, new_test).pipe(
       catchError((error) => {

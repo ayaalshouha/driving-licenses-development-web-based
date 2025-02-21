@@ -9,6 +9,17 @@ import { APPLICATION_TYPE_API_ENDPOINT } from '../environments/endpoints/applica
 })
 export class ApplicationTypesService {
   constructor(private http: HttpClient) {}
+
+  get(id: number): Observable<ApplicationType> {
+    return this.http
+      .get<ApplicationType>(`${APPLICATION_TYPE_API_ENDPOINT.read}/${id}`)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.messages));
+        })
+      );
+  }
+
   add(new_application: ApplicationType): Observable<ApplicationType> {
     return this.http
       .post<ApplicationType>(APPLICATION_TYPE_API_ENDPOINT.add, new_application)
