@@ -24,6 +24,16 @@ export class TestTypesService {
       })
     );
   }
+
+  update(id: number, updated_type: TestType): Observable<TestType> {
+    return this.http
+      .put<TestType>(`${TEST_TYPE_API_ENDPOINT.update}${id}`, updated_type)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.messages));
+        })
+      );
+  }
   all(): Observable<TestType[]> {
     return this.http.get<TestType[]>(TEST_TYPE_API_ENDPOINT.all);
   }

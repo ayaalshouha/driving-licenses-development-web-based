@@ -29,6 +29,22 @@ export class ApplicationTypesService {
         })
       );
   }
+  update(
+    id: number,
+    updated_type: ApplicationType
+  ): Observable<ApplicationType> {
+    return this.http
+      .put<ApplicationType>(
+        `${APPLICATION_TYPE_API_ENDPOINT.update}${id}`,
+        updated_type
+      )
+      .pipe(
+        catchError((error) => {
+          return throwError(() => new Error(error.messages));
+        })
+      );
+  }
+
   all(): Observable<ApplicationType[]> {
     return this.http.get<ApplicationType[]>(APPLICATION_TYPE_API_ENDPOINT.all);
   }
