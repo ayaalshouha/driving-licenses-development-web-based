@@ -81,6 +81,11 @@ export class AddEditTypeComponent implements OnInit {
         .pipe(
           tap((response) => {
             this.current_test_type.set(response);
+            this.type_form.controls.typeTitle.setValue(response.typeTitle);
+            this.type_form.controls.typeFees.setValue(response.fees);
+            this.type_form.controls.typeDescription.setValue(
+              response.description
+            );
           })
         )
         .subscribe({
@@ -97,6 +102,8 @@ export class AddEditTypeComponent implements OnInit {
         .pipe(
           tap((response) => {
             this.current_app_type.set(response);
+            this.type_form.controls.typeTitle.setValue(response.typeTitle);
+            this.type_form.controls.typeFees.setValue(response.typeFee);
           })
         )
         .subscribe({
@@ -112,12 +119,12 @@ export class AddEditTypeComponent implements OnInit {
   AddEditApplication() {
     this.isDialogVisible.set(false);
     if (this.type == 'application') {
+      this.current_app_type.set({
+        id: 0,
+        typeTitle: this.type_form.controls.typeTitle.value!,
+        typeFee: this.type_form.controls.typeFees.value!,
+      });
       if (this.mode == 'add') {
-        this.current_app_type.set({
-          id: 0,
-          typeTitle: this.type_form.controls.typeTitle.value!,
-          typeFee: this.type_form.controls.typeFees.value!,
-        });
         this.applicationTypeServ
           .add(this.current_app_type()!)
           .pipe(
@@ -146,19 +153,46 @@ export class AddEditTypeComponent implements OnInit {
             },
           });
       } else {
+        this.applicationTypeServ
+          .update(this.id!, this.current_app_type()!)
+          .pipe(
+            catchError((error) => {
+              return throwError(() => new Error(error.message));
+            }),
+            tap((response) => {
+              if (response) {
+                this.current_app_type.set(response);
+              }
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.notifyService.showMessage({
+                message: 'Type Updatted Successfully.',
+                status: 'success',
+              });
+            },
+            error: (error) => {
+              this.notifyService.showMessage({
+                message: error.message,
+                status: 'failed',
+              });
+            },
+          });
       }
     }
   }
 
   AddEditTest() {
     if (this.type == 'test') {
+      this.current_test_type.set({
+        id: 0,
+        typeTitle: this.type_form.controls.typeTitle.value!,
+        fees: this.type_form.controls.typeFees.value!,
+        description: this.type_form.controls.typeDescription.value!,
+      });
+
       if (this.mode == 'add') {
-        this.current_test_type.set({
-          id: 0,
-          typeTitle: this.type_form.controls.typeTitle.value!,
-          fees: this.type_form.controls.typeFees.value!,
-          description: this.type_form.controls.typeDescription.value!,
-        });
         this.testTypeServ
           .add(this.current_test_type()!)
           .pipe(
@@ -187,6 +221,32 @@ export class AddEditTypeComponent implements OnInit {
             },
           });
       } else {
+        this.testTypeServ
+          .update(this.id!, this.current_test_type()!)
+          .pipe(
+            catchError((error) => {
+              return throwError(() => new Error(error.message));
+            }),
+            tap((response) => {
+              if (response) {
+                this.current_test_type.set(response);
+              }
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.notifyService.showMessage({
+                message: 'Type Updatted Successfully.',
+                status: 'success',
+              });
+            },
+            error: (error) => {
+              this.notifyService.showMessage({
+                message: error.message,
+                status: 'failed',
+              });
+            },
+          });
       }
     }
   }
