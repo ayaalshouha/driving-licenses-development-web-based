@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotificationService } from '../../../services/notification.service';
@@ -29,18 +35,20 @@ import { catchError, tap, throwError } from 'rxjs';
   styleUrl: './add-edit-type.component.css',
 })
 export class AddEditTypeComponent implements OnInit {
-  @Input() typeID: number | null = null;
+  @Input() id: number | null = null;
   @Input() mode: 'add' | 'edit' | null = null;
   @Input() type: 'application' | 'test' | null = null;
   current_app_type = signal<ApplicationType | undefined>(undefined);
   current_test_type = signal<TestType | undefined>(undefined);
   isDialogVisible = signal<boolean>(false);
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
     private notifyService: NotificationService,
     private applicationTypeServ: ApplicationTypesService,
-    private testTypeServ: TestTypesService
+    private testTypeServ: TestTypesService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   type_form = new FormGroup({
@@ -57,13 +65,20 @@ export class AddEditTypeComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.typeID = params['id'];
+      this.id = params['id'];
       this.mode = params['mode'];
       this.type = params['type'];
     });
-    console.log(this.typeID);
-    console.log(this.mode);
-    console.log(this.type);
+    this.cdRef.detectChanges();
+    this.RetrievingOnEdit();
+  }
+
+  RetrievingOnEdit() {
+    if (this.type == 'test' && this.mode == 'edit') {
+      //retrieve test type
+    } else if (this.type == 'application' && this.mode == 'edit') {
+      // retrieve application type
+    }
   }
 
   AddEditApplication() {
@@ -147,6 +162,7 @@ export class AddEditTypeComponent implements OnInit {
       }
     }
   }
+
   AddEditProcess() {
     if (this.type == 'application') {
       this.AddEditApplication();
@@ -154,6 +170,7 @@ export class AddEditTypeComponent implements OnInit {
       this.AddEditTest();
     }
   }
+
   onDialogResult(confirmed: boolean) {
     this.isDialogVisible.set(false);
     if (confirmed) {
